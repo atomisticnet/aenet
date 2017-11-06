@@ -1,0 +1,162 @@
+#+AUTHOR: Nongnuch Artrith
+#+TITLE: Input file format for =train.x=
+
+* Alphabetic list of keywords
+
+  All keywords are case insensitive and independent of the order.  Blank
+  lines and lines starting with =!=, =#=, or =%= are ignored.
+
+  - =debug= (optional) :: Activate debugging mode; additional output files
+       will be created.
+  - =iterations= (optional) :: Specifies the number of training
+       iterations/epochs (default: 10).
+  - =maxenergy= (optional) :: Highest formation energy to include in the
+       training set.
+  - =method= (optional) :: Specifies the training method/algorithm to be
+       used for the weight optimization.  The line following the keyword
+       contains as first item the name of the method (e.g., =bfgs=,
+       =online_gd=, =lm=) and as further items the parameters of the
+       method (if applicable).  The default method is =bfgs=.
+  - =networks= (required) :: Defines the architectures and specifies
+       files for all ANNs.  Each of the =<NT>= (= number of types) lines
+       following the keyword contains the chemical symbol =<T_i>= of the
+       /i/-th atomic species in the training set, the path to the ANN
+       output file (binary), and the architecture of the hidden network
+       layers.  The latter is defined by the number of hidden layers
+       followed by the number of nodes and the activation function
+       separated by a colon (see example below for two hidden layers of
+       5 nodes each and the hyperbolic tangent activation).
+  - =save_energies= (optional) :: Activate output of the final energies
+       of all training and testing structures.  The resulting output
+       files can be used to visualize the quality of the ANN fit and to
+       identify structures that are not well represented.  One file per
+       process will be generated, containing only the energies of all
+       structures handled by the process.  The files can simply be
+       concatenated.
+  - =testpercent= (optional) :: Specifies the percentage of reference
+       structures to be used as independent testing set (default: 10%).
+  - =timing= (optional) :: Activate timing; additional output files will
+       be created.
+  - =trainingset= (required) :: Defines the name/path to the binary
+       training set file (output of generate.x, e.g., "refdata.train").
+
+* Training methods
+
+  The training method is specified with the *method* keyword followed by
+  the identifier of the method and its parameters.  Currently, =train.x=
+  offers three different optimization methods: online gradient descent,
+  the limited-memory BFGS algorithm and the Levenberg-Marquardt method.
+
+** Online gradient descent (=online_gd=)
+
+   Gradient descent is implemented as /online/ learning method which
+   currently prevents efficient parallelization.  The method is selected
+   with the identifier =online_gd= and has two parameters, the /learning
+   rate/ (=gamma=) that is a measure of the stepsize per iteration, and
+   the /momentum parameter/ (=alpha=) that controls fluctuations.
+
+   An example definition with reasonable parameters is:
+
+#+BEGIN_EXAMPLE
+  METHOD
+  online_gd gamma=3.0d-2 alpha=0.05d0
+#+END_EXAMPLE
+
+** Limited-Memory Broyden-Fletcher-Goldfarb-Shanno (L-BFGS) method
+
+   The L-BFGS method is implemented as /batch/ training method, which
+   enables efficient parallelization of the error function evaluation.
+   The method is selected with the identifier =bfgs= and does not
+   currently offer any adjustable parameters:
+
+#+BEGIN_EXAMPLE
+  METHOD
+  bfgs
+#+END_EXAMPLE
+
+** Levenberg-Marquardt method
+
+   The Levenberg-Marquardt method that is presently only available in
+   serial is selected with the identifier =lm=.  The method supports a
+   number of parameters: =batchsize= sets the number of training points
+   that are used to evaluate the error function at a time.  This /batch
+   size/ determines the computational requirements of the method, but
+   should be chosen as large as possible to guarantee convergence.  The
+   =learnrate= is the initial value of the learning rate (see online
+   gradient descent).  The parameter =iter= determines the number of
+   iterations per optimization step used to adjust the learning rate,
+   and the factor used for this adjustment is defined with =adjust=.
+   Finally, a convergence threshold for the error function can be
+   specified with =conv=.
+
+   Example of reasonable parameters
+
+#+BEGIN_EXAMPLE
+  METHOD
+  lm batchsize=5000 learnrate=0.1d0 iter=3 conv=0.001 adjust=5.0
+#+END_EXAMPLE
+
+* Input file template (train.in)
+
+#+BEGIN_EXAMPLE
+TRAININGSET <path/to/data/file>
+TESTPERCENT <percentage>
+ITERATIONS  <NI>
+MAXENERGY <emax e.g. -0.05 eV>
+SAVE_ENERGIES
+
+METHOD
+<method name>  <parameters>
+
+# Examples
+#
+# (1) online steepest descent
+# METHOD
+# online_gd gamma=5.0d-7 alpha=0.25d0
+# (2) BFGS
+# METHOD
+# bfgs
+# (3) Levenberg-Marquardt
+# METHOD
+# lm batchsize=1000 learnrate=0.1 iter=1 conv=0.001 adjust=10.0
+
+NETWORKS
+# atom   network           hidden
+# types  file-name         layers   nodes:activation
+<T_1>    <path/to/net-1>     2      5:tanh  5:tanh
+<T_2>    <path/to/net-2>     2      5:tanh  5:tanh
+...
+<T_NT>   <path/to/net-NT>    2      5:tanh  5:tanh
+
+# Example using different activation functions:
+# For details see Eq. (1) in:
+# N. Artrith and A. Urban, Comput. Mater. Sci. 114 (2016) 135-150.
+#
+# <T_1>    <path/to/net-1>     2      5:linear  5:linear
+# <T_2>    <path/to/net-2>     2      5:linear  5:linear
+
+# <T_1>    <path/to/net-1>     2      5:tanh    5:tanh
+# <T_2>    <path/to/net-2>     2      5:tanh    5:tanh
+
+# <T_1>    <path/to/net-1>     2      5:sigmoid 5:sigmoid
+# <T_2>    <path/to/net-2>     2      5:twist   5:twist
+#+END_EXAMPLE
+
+* Example input file (train.in)
+
+#+BEGIN_EXAMPLE
+TRAININGSET TiO2.train
+TESTPERCENT  10
+ITERATIONS  500
+
+TIMING
+
+METHOD
+lm batchsize=5000 learnrate=0.1d0 iter=3 conv=0.001 adjust=5.0
+
+NETWORKS
+! atom   network        hidden
+! types  file-name      layers  nodes:activation
+  O       O.10t-10t.ann    2    10:twist 10:twist
+  Ti     Ti.10t-10t.ann    2    10:twist 10:twist
+#+END_EXAMPLE

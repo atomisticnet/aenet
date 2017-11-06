@@ -1,0 +1,10 @@
+ ----------------------------------------------------------------------
+       Modules used by AENET that are shared with other packages
+ ----------------------------------------------------------------------
+
+ This directory contains Fortran modules that are not only used by
+ AENET, but also by other software packages.
+
+ ----------------------------------------------------------------------
+         2015-10-19 Alexander Urban and Nongnuch Artrith
+ ----------------------------------------------------------------------

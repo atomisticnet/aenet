@@ -1,0 +1,56 @@
+#+AUTHOR: Nongnuch Artrith
+#+TITLE: JSON input files for =aenet-predict.py= and =aenet-md.py=
+
+* Alphabetic list of keywords
+
+  The input files of =aenet-predict.py= and =aenet-md.py= both use the
+  [[http://www.json.org/][JSON]] format.  Keywords that are specific to one tool are ignored by
+  the other.
+
+  - =potentials= (required) :: Specifies the ANN potentials for all atomic
+       species.
+  - =structure_file= (MD only) :: Path to the file with the initial
+       structure.  Every structure format that is understood by ASE can
+       be used.
+  - =trajectory_file= (MD only) :: Path to the trajectory file (in ASE's
+       format) to be generated during the MD simulation.
+  - =temperature= (MD only) :: Temperatur for MD simulations in the
+       canonical ensemble.
+  - =md_steps= (MD only) :: Number of MD steps.
+  - =print_steps= (MD only) :: Number of MD steps between writing output.
+  - =time_step= (MD only) :: MD time step in femtoseconds.
+
+* Input file template (input.json)
+
+#+BEGIN_EXAMPLE
+{
+    "potentials" : {
+        <T1> : <potential1>,
+        <T2> : <potential2>,
+        ...
+    },
+    "structure_file" : <initial-structure>,
+    "trajectory_file" : <output-file>,
+    "temperature" : <T>,
+    "md_steps"    : <N_MD>,
+    "time_step"   : <dt>,
+    "print_steps" : <N_print>
+}
+#+END_EXAMPLE
+
+* Input file example (input.json)
+
+#+BEGIN_EXAMPLE
+{
+    "potentials" : {
+        "Ti" : "Ti.10t-10t.ann",
+        "O"  : "O.10t-10t.ann"
+    },
+    "structure_file" : "input.vasp",
+    "trajectory_file" : "md.traj",
+    "temperature" : 300.0,
+    "md_steps"    : 100,
+    "time_step"   : 1.0,
+    "print_steps" : 1
+}
+#+END_EXAMPLE

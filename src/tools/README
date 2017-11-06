@@ -1,0 +1,20 @@
+ ----------------------------------------------------------------------
+           Additional tools included in the AENET package
+ ----------------------------------------------------------------------
+
+ This directory contains additional tools, such as converters, that are
+ specific to the AENET package.
+
+ Available tools:
+
+   fingerprint.f90     Compute the structural fingerprints
+
+   neighbors.f90       Find all atoms within a specified range from a
+                       reference atom.
+
+   trnset2ASCII.f90    Conversion of binary training set files to an
+                       ASCII format.
+
+ ----------------------------------------------------------------------
+         2016-06-02 Alexander Urban and Nongnuch Artrith
+ ----------------------------------------------------------------------

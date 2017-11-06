@@ -1,0 +1,37 @@
+ ----------------------------------------------------------------------
+                  Makefiles for the AENET Package
+ ----------------------------------------------------------------------
+
+ Compile from the main 'src' directory with:
+
+   make -f ./makefiles/MAKEFILE
+
+ where MAKEFILE is one of the files listed below.
+
+ GNU Fortran Compiler
+ --------------------
+
+ Makefile.gfortran_serial          - Serial version using system BLAS
+                                     and LAPACK libraries
+ Makefile.gfortran_openblas_serial - Serial version using the OpenBLAS
+                                     library
+ Makefile.gfortran_mkl_serial      - Serial version using the Intel Math
+                                     Kernel Library (MKL)
+
+ Makefile.gfortran_mpi             - OpenMPI parallelized; using LAPACK/BLAS
+ Makefile.gfortran_openblas_mpi    - OpenMPI; using OpenBLAS
+ Makefile.gfortran_mkl_mpi         - OpenMPI; using Intel MKL
+
+ Makefile.gfortran_debug           - Debugging flags activated
+ Makefile.gfortran_mpi_debug       - OpenMPI; Debugging flags activated
+
+ Intel Fortran Compiler + Math Kernel Library (MKL)
+ --------------------------------------------------
+
+ Makefile.ifort_serial      - Serial version
+ Makefile.ifort_mpi         - OpenMPI parallelization
+ Makefile.ifort_intelmpi    - Intel MPI
+
+ ----------------------------------------------------------------------
+         2016-01-10 Nongnuch Artrith and Alexander Urban
+ ----------------------------------------------------------------------

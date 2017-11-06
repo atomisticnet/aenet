@@ -1,0 +1,19 @@
+ ----------------------------------------------------------------------
+                   Unit tests for AENET modules
+ ----------------------------------------------------------------------
+
+ This directory contains unit tests for some of the AENET
+ functionality.
+
+ Available unit tests:
+
+   test_feedforward.f90    artificial neural network module
+   test_geometry.f90       atomic structure module
+   test_lclist.f90         neighbor list
+   test_sfsetup.f90        structural fingerprint setup
+   test_symmfunc.f90       Behler-Parrinello symmetry functions
+   test_xsflib.f90         XSF structure format parser
+
+ ----------------------------------------------------------------------
+         2015-10-16 Alexander Urban and Nongnuch Artrith
+ ----------------------------------------------------------------------

@@ -1,0 +1,868 @@
+ ======================================================================
+                  Atomic Energy Network Interpolation                  
+ ======================================================================
+                                                                       
+                          2013-12-30  14:19:56                         
+                                                                       
+ 
+ Copyright (C) 2013 Nongnuch Artrith and Alexander Urban
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License in file `LICENSE' for more details.
+ 
+ ----------------------------------------------------------------------
+                         Atomic Energy Networks                        
+ ----------------------------------------------------------------------
+ 
+ Atomic species : Au
+ File name      : Au.05t-05t.nn
+ 
+ ----------------------------------------------------------------------
+                           Training set info.                          
+ ----------------------------------------------------------------------
+ 
+ Training set file                   : CuAuOH.train.scaled
+ Number of structures in the data set: 18149
+ 
+ Atomic species in training set      : 4
+   Species : Au Cu O H
+ 
+ Average energy (eV/atom) : 0.564715
+ Minimum energy (eV/atom) : -1.000000
+ Maximum energy (eV/atom) : 1.000979
+ 
+ The input and output values have been normalized to [-1.0, 1.0].
+ Structures outside of this interval will not be used for training.
+   Energy scaling factor: 1.444312
+   Atomic energy shift  : -3.192371
+ 
+ Number of layers :   4
+ 
+ Number of nodes (without bias) 
+ and activation type per layer :
+ 
+       1 :   148
+       2 :     5  tanh
+       3 :     5  tanh
+       4 :     1  linear
+ 
+ Dynamically allocated words :    6708787 (  52412.40 KB)
+ 
+ Total number of weights (incl. bias) :      781
+ 
+ Symmetry function (SF) set-up for Au
+ 
+   Symmetry function setup for copper.
+   Ref.: Nongnuch Artrith, thesis, Ruhr-University Bochum (2012)
+ 
+ environment types: Cu Au O  H  
+ minimal distance : 0.75 Angstrom
+ maximal cut-off  : 6.50 Angstrom
+ number of SFs    : 148
+ evaluations      : 540960
+ 
+ Symmetry function type Behler2011
+ 
+ [see also: J. Behler, J. Chem. Phys. 134 (2011) 074106]
+ 
+ 
+      G  parameters
+ 
+   1  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.001
+   2  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.001
+   3  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.001
+   4  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.001
+   5  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.010
+   6  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.010
+   7  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.010
+   8  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.010
+   9  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.020
+  10  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.020
+  11  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.020
+  12  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.020
+  13  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.035
+  14  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.035
+  15  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.035
+  16  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.035
+  17  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.060
+  18  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.060
+  19  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.060
+  20  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.060
+  21  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.100
+  22  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.100
+  23  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.100
+  24  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.100
+  25  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.200
+  26  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.200
+  27  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.200
+  28  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.200
+  29  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  30  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  31  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  32  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  33  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  34  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  35  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  36  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  37  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  38  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  39  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  40  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  41  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  42  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  43  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  44  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  45  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  46  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  47  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  48  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  49  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  50  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  51  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  52  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  53  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  54  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  55  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  56  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  57  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  58  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  59  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  60  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  61  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  62  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  63  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  64  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  65  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  66  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  67  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  68  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  69  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  70  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  71  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  72  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  73  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  74  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  75  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  76  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  77  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  78  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  79  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  80  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  81  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  82  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  83  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  84  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  85  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  86  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  87  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  88  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  89  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  90  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  91  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  92  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  93  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  94  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  95  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  96  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  97  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  98  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  99  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 100  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 101  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 102  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 103  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 104  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 105  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 106  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 107  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 108  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 109  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 110  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 111  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 112  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 113  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 114  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 115  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 116  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 117  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 118  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 119  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 120  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 121  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 122  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 123  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 124  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 125  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 126  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 127  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 128  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 129  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 130  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 131  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 132  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 133  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 134  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 135  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 136  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 137  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 138  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 139  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 140  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 141  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 142  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 143  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 144  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 145  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 146  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 147  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 148  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 
+ Atomic species : Cu
+ File name      : Cu.05t-05t.nn
+ 
+ ----------------------------------------------------------------------
+                           Training set info.                          
+ ----------------------------------------------------------------------
+ 
+ Training set file                   : CuAuOH.train.scaled
+ Number of structures in the data set: 18149
+ 
+ Atomic species in training set      : 4
+   Species : Au Cu O H
+ 
+ Average energy (eV/atom) : 0.564715
+ Minimum energy (eV/atom) : -1.000000
+ Maximum energy (eV/atom) : 1.000979
+ 
+ The input and output values have been normalized to [-1.0, 1.0].
+ Structures outside of this interval will not be used for training.
+   Energy scaling factor: 1.444312
+   Atomic energy shift  : -3.192371
+ 
+ Number of layers :   4
+ 
+ Number of nodes (without bias) 
+ and activation type per layer :
+ 
+       1 :   148
+       2 :     5  tanh
+       3 :     5  tanh
+       4 :     1  linear
+ 
+ Dynamically allocated words :    6708787 (  52412.40 KB)
+ 
+ Total number of weights (incl. bias) :      781
+ 
+ Symmetry function (SF) set-up for Cu
+ 
+   Symmetry function setup for copper.
+   Ref.: Nongnuch Artrith, thesis, Ruhr-University Bochum (2012)
+ 
+ environment types: Cu Au O  H  
+ minimal distance : 0.75 Angstrom
+ maximal cut-off  : 6.50 Angstrom
+ number of SFs    : 148
+ evaluations      : 629556
+ 
+ Symmetry function type Behler2011
+ 
+ [see also: J. Behler, J. Chem. Phys. 134 (2011) 074106]
+ 
+ 
+      G  parameters
+ 
+   1  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.001
+   2  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.001
+   3  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.001
+   4  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.001
+   5  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.010
+   6  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.010
+   7  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.010
+   8  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.010
+   9  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.020
+  10  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.020
+  11  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.020
+  12  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.020
+  13  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.035
+  14  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.035
+  15  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.035
+  16  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.035
+  17  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.060
+  18  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.060
+  19  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.060
+  20  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.060
+  21  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.100
+  22  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.100
+  23  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.100
+  24  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.100
+  25  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.200
+  26  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.200
+  27  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.200
+  28  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.200
+  29  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  30  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  31  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  32  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  33  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  34  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  35  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  36  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  37  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  38  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  39  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  40  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  41  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  42  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  43  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  44  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  45  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  46  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  47  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  48  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  49  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  50  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  51  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  52  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  53  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  54  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  55  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  56  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  57  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  58  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  59  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  60  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  61  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  62  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  63  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  64  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  65  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  66  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  67  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  68  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  69  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  70  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  71  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  72  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  73  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  74  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  75  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  76  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  77  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  78  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  79  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  80  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  81  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  82  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  83  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  84  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  85  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  86  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  87  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  88  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  89  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  90  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  91  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  92  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  93  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  94  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  95  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  96  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  97  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  98  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  99  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 100  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 101  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 102  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 103  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 104  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 105  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 106  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 107  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 108  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 109  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 110  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 111  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 112  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 113  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 114  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 115  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 116  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 117  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 118  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 119  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 120  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 121  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 122  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 123  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 124  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 125  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 126  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 127  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 128  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 129  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 130  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 131  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 132  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 133  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 134  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 135  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 136  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 137  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 138  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 139  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 140  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 141  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 142  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 143  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 144  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 145  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 146  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 147  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 148  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 
+ Atomic species : O
+ File name      : O.05t-05t.nn
+ 
+ ----------------------------------------------------------------------
+                           Training set info.                          
+ ----------------------------------------------------------------------
+ 
+ Training set file                   : CuAuOH.train.scaled
+ Number of structures in the data set: 18149
+ 
+ Atomic species in training set      : 4
+   Species : Au Cu O H
+ 
+ Average energy (eV/atom) : 0.564715
+ Minimum energy (eV/atom) : -1.000000
+ Maximum energy (eV/atom) : 1.000979
+ 
+ The input and output values have been normalized to [-1.0, 1.0].
+ Structures outside of this interval will not be used for training.
+   Energy scaling factor: 1.444312
+   Atomic energy shift  : -3.192371
+ 
+ Number of layers :   4
+ 
+ Number of nodes (without bias) 
+ and activation type per layer :
+ 
+       1 :   148
+       2 :     5  tanh
+       3 :     5  tanh
+       4 :     1  linear
+ 
+ Dynamically allocated words :    6708787 (  52412.40 KB)
+ 
+ Total number of weights (incl. bias) :      781
+ 
+ Symmetry function (SF) set-up for O
+ 
+   Symmetry function setup for copper.
+   Ref.: Nongnuch Artrith, thesis, Ruhr-University Bochum (2012)
+ 
+ environment types: Cu Au O  H  
+ minimal distance : 0.75 Angstrom
+ maximal cut-off  : 6.50 Angstrom
+ number of SFs    : 148
+ evaluations      : 82632
+ 
+ Symmetry function type Behler2011
+ 
+ [see also: J. Behler, J. Chem. Phys. 134 (2011) 074106]
+ 
+ 
+      G  parameters
+ 
+   1  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.001
+   2  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.001
+   3  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.001
+   4  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.001
+   5  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.010
+   6  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.010
+   7  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.010
+   8  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.010
+   9  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.020
+  10  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.020
+  11  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.020
+  12  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.020
+  13  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.035
+  14  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.035
+  15  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.035
+  16  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.035
+  17  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.060
+  18  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.060
+  19  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.060
+  20  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.060
+  21  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.100
+  22  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.100
+  23  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.100
+  24  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.100
+  25  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.200
+  26  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.200
+  27  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.200
+  28  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.200
+  29  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  30  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  31  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  32  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  33  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  34  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  35  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  36  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  37  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  38  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  39  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  40  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  41  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  42  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  43  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  44  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  45  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  46  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  47  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  48  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  49  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  50  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  51  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  52  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  53  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  54  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  55  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  56  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  57  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  58  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  59  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  60  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  61  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  62  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  63  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  64  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  65  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  66  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  67  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  68  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  69  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  70  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  71  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  72  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  73  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  74  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  75  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  76  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  77  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  78  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  79  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  80  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  81  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  82  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  83  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  84  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  85  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  86  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  87  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  88  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  89  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  90  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  91  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  92  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  93  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  94  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  95  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  96  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  97  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  98  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  99  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 100  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 101  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 102  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 103  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 104  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 105  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 106  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 107  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 108  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 109  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 110  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 111  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 112  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 113  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 114  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 115  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 116  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 117  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 118  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 119  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 120  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 121  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 122  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 123  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 124  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 125  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 126  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 127  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 128  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 129  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 130  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 131  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 132  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 133  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 134  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 135  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 136  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 137  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 138  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 139  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 140  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 141  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 142  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 143  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 144  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 145  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 146  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 147  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 148  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 
+ Atomic species : H
+ File name      : H.05t-05t.nn
+ 
+ ----------------------------------------------------------------------
+                           Training set info.                          
+ ----------------------------------------------------------------------
+ 
+ Training set file                   : CuAuOH.train.scaled
+ Number of structures in the data set: 18149
+ 
+ Atomic species in training set      : 4
+   Species : Au Cu O H
+ 
+ Average energy (eV/atom) : 0.564715
+ Minimum energy (eV/atom) : -1.000000
+ Maximum energy (eV/atom) : 1.000979
+ 
+ The input and output values have been normalized to [-1.0, 1.0].
+ Structures outside of this interval will not be used for training.
+   Energy scaling factor: 1.444312
+   Atomic energy shift  : -3.192371
+ 
+ Number of layers :   4
+ 
+ Number of nodes (without bias) 
+ and activation type per layer :
+ 
+       1 :   148
+       2 :     5  tanh
+       3 :     5  tanh
+       4 :     1  linear
+ 
+ Dynamically allocated words :    6708787 (  52412.40 KB)
+ 
+ Total number of weights (incl. bias) :      781
+ 
+ Symmetry function (SF) set-up for H
+ 
+   Symmetry function setup for copper.
+   Ref.: Nongnuch Artrith, thesis, Ruhr-University Bochum (2012)
+ 
+ environment types: Cu Au O  H  
+ minimal distance : 0.75 Angstrom
+ maximal cut-off  : 6.50 Angstrom
+ number of SFs    : 148
+ evaluations      : 165682
+ 
+ Symmetry function type Behler2011
+ 
+ [see also: J. Behler, J. Chem. Phys. 134 (2011) 074106]
+ 
+ 
+      G  parameters
+ 
+   1  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.001
+   2  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.001
+   3  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.001
+   4  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.001
+   5  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.010
+   6  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.010
+   7  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.010
+   8  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.010
+   9  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.020
+  10  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.020
+  11  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.020
+  12  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.020
+  13  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.035
+  14  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.035
+  15  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.035
+  16  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.035
+  17  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.060
+  18  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.060
+  19  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.060
+  20  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.060
+  21  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.100
+  22  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.100
+  23  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.100
+  24  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.100
+  25  2  type2=O   Rc =   6.500  Rs =   0.000  eta =   0.200
+  26  2  type2=Au  Rc =   6.500  Rs =   0.000  eta =   0.200
+  27  2  type2=Cu  Rc =   6.500  Rs =   0.000  eta =   0.200
+  28  2  type2=H   Rc =   6.500  Rs =   0.000  eta =   0.200
+  29  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  30  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  31  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  32  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  33  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  34  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  35  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  36  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  37  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  38  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.000
+  39  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  40  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  41  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  42  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  43  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  44  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  45  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  46  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  47  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  48  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.000
+  49  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  50  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  51  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  52  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  53  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  54  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  55  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  56  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  57  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  58  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.000
+  59  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  60  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  61  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  62  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  63  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  64  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  65  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  66  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  67  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  68  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.000
+  69  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  70  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  71  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  72  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  73  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  74  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  75  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  76  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  77  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  78  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.003
+  79  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  80  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  81  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  82  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  83  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  84  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  85  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  86  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  87  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  88  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.003
+  89  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  90  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  91  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  92  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  93  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  94  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  95  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  96  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  97  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  98  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.003
+  99  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 100  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 101  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 102  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 103  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 104  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 105  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 106  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 107  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 108  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.003
+ 109  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 110  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 111  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 112  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 113  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 114  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 115  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 116  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 117  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 118  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   1.000  eta =   0.008
+ 119  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 120  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 121  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 122  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 123  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 124  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 125  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 126  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 127  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 128  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   1.000  eta =   0.008
+ 129  4  type2=O   type3=O   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 130  4  type2=O   type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 131  4  type2=O   type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 132  4  type2=O   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 133  4  type2=Au  type3=Au  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 134  4  type2=Au  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 135  4  type2=Au  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 136  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 137  4  type2=Cu  type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 138  4  type2=H   type3=H   Rc =   6.500  lambda =   1.000  zeta =   4.000  eta =   0.008
+ 139  4  type2=O   type3=O   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 140  4  type2=O   type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 141  4  type2=O   type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 142  4  type2=O   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 143  4  type2=Au  type3=Au  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 144  4  type2=Au  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 145  4  type2=Au  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 146  4  type2=Cu  type3=Cu  Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 147  4  type2=Cu  type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 148  4  type2=H   type3=H   Rc =   6.500  lambda =  -1.000  zeta =   4.000  eta =   0.008
+ 
+ ----------------------------------------------------------------------
+                           Energy evaluation                           
+ ----------------------------------------------------------------------
+ 
+ Structure number  : 1
+ File name         : dimer-x07.9.xsf
+ Number of atoms   : 2
+ Number of species : 1
+ 
+ Lattice vectors (Angstrom):
+ 
+   a = (        7.90020000       0.00000000       0.00000000 )
+   b = (        0.00000000       0.00020000       0.00000000 )
+   c = (        0.00000000       0.00000000       0.00020000 )
+ 
+ Cartesian atomic coordinates (input) and corresponding atomic forces:
+ 
+          x             y             z             Fx           Fy            Fz      
+         (Ang)         (Ang)         (Ang)       (eV/Ang)      (eV/Ang)      (eV/Ang)  
+ --------------------------------------------------------------------------------------
+ Cu      0.000100      0.000100      0.000100      0.000000      0.000000      0.000000
+ Cu      7.900100      0.000100      0.000100      0.000000      0.000000      0.000000
+ 
+ Cohesive energy            :           -2.93740631 eV
+ Total energy               :       -90488.19449349 eV
+ Mean force (must be zero)  :      0.000000      0.000000      0.000000
+ Mean absolute force        :      0.000000      0.000000      0.000000
+ Maximum force              :      0.000000      0.000000      0.000000
+ RMS force                  :      0.000000
+ The maximum force is acting on atom 0.
+ All forces are given in eV/Angstrom.
+ 
+                                                                       
+                          2013-12-30  14:19:56                         
+                                                                       
+ ======================================================================
+                      Atomic Energy Network done.                      
+ ======================================================================

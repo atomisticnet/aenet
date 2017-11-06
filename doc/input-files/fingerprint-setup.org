@@ -1,0 +1,76 @@
+#+AUTHOR: Nongnuch Artrith
+#+TITLE: Input file format for structural fingerprint setups
+
+* List of keywords
+
+  All keywords are case insensitive, but currently have to occur in the
+  given order.  Blank lines and lines starting with =!=, =#=, or =%= are
+  ignored.
+
+  - =descr= (optional) :: Short text that describes the structural
+       fingerprint setup and possible reference citations.  Has to be
+       terminated by "end descr".
+  - =atom= (required) :: The chemical species (symbol) of the central
+       atom whose environment is captured by the setup.
+  - =env= (required) :: A list of all atomic species that may occur in the
+                      environment of the central atom and are captured
+                      by this setup.  No blank lines are allowed.
+  - =rmin= (required) :: The minimal allowed distance between two atoms
+       (in the distance unit used in the XSF files).  This value is used
+       by the neighbor list.
+  - =functions= (required) :: Type and parameters of the basis functions.
+       The example below is for functions of type 'Behler2011', and the
+       names of the various functions and parameters follows the
+       original publication. No blank lines allowed.
+
+* Input file template (atomtype.stp)
+
+#+BEGIN_EXAMPLE
+DESCR
+  short desscription and reference
+END DESCR
+
+ATOM <atom type>
+
+ENV  <N>
+<T_1>
+<T_2>
+...
+<T_N>
+
+RMIN <R>
+
+FUNCTIONS type=<basis type>
+<NF>
+<parameters of function 1>
+<parameters of function 2>
+...
+<parameters of function NF>
+#+END_EXAMPLE
+
+* Input file example (Ti.fingerprint.stp)
+
+#+BEGIN_EXAMPLE
+DESCR
+  Structural fingerprint setup for Ti in bulk TiO2.
+  Ref.: N. Artrith and A. Urban,
+        Comput. Mater. Sci. 114 (2016) 135-150.
+END DESCR
+
+ATOM Ti
+
+ENV  2
+Ti
+O
+
+RMIN 0.75d0
+
+FUNCTIONS type=Behler2011
+70
+G=2 type2=O  eta=0.003214 Rs=0.0000 Rc=6.5
+G=2 type2=Ti eta=0.003214 Rs=0.0000 Rc=6.5
+...
+G=4 type2=O type3=O  eta=0.000357 lambda=-1.0 zeta=1.0 Rc=6.5
+G=4 type2=O type3=Ti eta=0.000357 lambda=-1.0 zeta=1.0 Rc=6.5
+...
+#+END_EXAMPLE

@@ -1,0 +1,7 @@
+atomic-energy.pdf
+aenet-doc.md
+*~
+*.aux
+*.log
+*.synctex.gz
+*.tex

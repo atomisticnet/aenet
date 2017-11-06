@@ -1,0 +1,18 @@
+TYPES
+4
+Au
+Cu
+O
+H
+
+NETWORKS
+Au  Au.05t-05t.nn
+Cu  Cu.05t-05t.nn
+O   O.05t-05t.nn
+H   H.05t-05t.nn
+
+FORCES
+
+!RELAX
+!method=bfgs  F_conv=1.0d-2  E_conv=1.0d-6  steps=99
+

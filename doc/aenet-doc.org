@@ -1,0 +1,334 @@
+#+AUTHOR: Nongnuch Artrith
+#+TITLE: *The Atomic Energy Network (ænet) (release 1.0.0)*
+
+#+OPTIONS: ^:{}
+#+LATEX_HEADER: \usepackage{microtype}
+#+LATEX_HEADER_extra: \hypersetup{colorlinks, linkcolor=blue, urlcolor=blue}
+#+LATEX_HEADER_extra: \setlength{\parindent}{0pt}\setlength{\parskip}{0.5em}
+
+# This document is written in Emacs's org-mode format, which can be
+# exported to many other common formats (e.g., HTML, plain text, LaTeX).
+# If you are not an Emacs user, one of the alternative formats are
+# probably more readable.
+
+# contents from the main README.org file
+#+INCLUDE: "../README.org" :lines "3-"
+
+* General concepts
+  <<concepts>>
+
+  *ænet* provides tools for the construction and application of
+  artificial neural network (ANN) potentials.  Users who just want to
+  use *ænet* for simulations based on existing ANN potentials can safely
+  skip over section [[construction]] that explains the construction of ANN
+  potentials directly to section [[simulation]].
+
+  Potential construction using *ænet* is broken down into two separate
+  tasks: (i) the compilation of reference structures and energies into a
+  single training set file using the tool =generate.x= and (ii) the
+  actual fit of the ANN potentials using the tool =train.x=.  The usage
+  of these tools is described in section [[construction]].
+
+  Simulations based on existing ANN potentials is enabled by the
+  =ænetLib= library.  =ænetLib= provides routines for parsing ANN
+  potential files and for energy and force evaluation.  Part of the
+  *ænet* package are sample implementations in Fortran and Python that
+  interface with =ænetLib=.  These tools are discussed in section
+  [[simulation]].
+
+  # The =ænetLib= library itself is discussed in the developer's manual.
+
+  A schematic of the interplay of the different *ænet* tools is shown in
+  figure [[flowchart]] (taken from reference [[[bibliography][1]]]).
+
+  #+CAPTION: Schematic of the connection and workflow between the *ænet* tools (see reference [[[bibliography][1]]]).
+  #+ATTR_LaTeX: :width 0.7\textwidth :placement [p]
+  #+ATTR_HTML: :width 400px
+  #+ATTR_org: :width 400
+  #+NAME: flowchart
+  [[./figures/flowchart.png]]
+
+  The *ænet* tools =generate.x=, =train.x=, and =predict.x= are
+  controlled via keyword-based input files.  The keywords understood by
+  each of the tools are discussed in their corresponding section; the
+  order in which keywords appear in the input files is arbitrary.
+  Keywords are not case sensitive.
+
+* References
+  <<references>>
+
+  Every scientific publication containing results that were produced
+  with *ænet* should cite the appropriate original references.
+
+  The reference for the *ænet* package itself is: [[[bibliography][1]]] N. Artrith and
+  A. Urban, /Comput. Mater. Sci./ *114* (2016) 135-150.
+
+  The interpolation of /atomic/ energies with ANNs was first published
+  in: [[[bibliography][2]]] J. Behler and M. Parrinello, /Phys. Rev. Lett./ *98*
+  (2007) 146401.
+
+  If the local structural environment is represented by /symmetry
+  functions/, please cite: [[[bibliography][3]]] J. Behler, /J. Chem. Phys./ *134*
+  (2011) 074106.
+
+  If the generalized spherical harmonics are used for the representation
+  of the local structural environment, please cite: [[[bibliography][4]]] A. P. Bartók,
+  M. C. Payne, R. Kondor, and G. Csányi, /Phys. Rev. Lett./ *104*
+  (2010) 136403.
+
+  The L-BFGS-B method is provided by a third party library.  Whenever
+  the method is used for training, please cite: [[[bibliography][5]]] R. H. Byrd, P. Lu
+  and J. Nocedal, /SIAM J. Sci. Stat. Comp./ *16* (1995) 1190-1208.
+
+  The references for the Levenberg-Marquardt method are: [[[bibliography][6]]]
+  K. Levenberg, /Q. Appl. Math./ *2* (1944) 164–168; [[[bibliography][7]]]
+  D. W. Marquardt, /SIAM J. Appl. Math./ *11* (1963) 431–441.
+
+* ANN potential construction
+  <<construction>>
+
+  The construction of a new ANN potential is accomplished by
+  interpolation of structural energies in a reference data set.  The
+  structure format used by *ænet* is explained in section [[reference-set]].
+
+  To be useful for general atomistic simulations, ANN potentials have to
+  be invariant with respect to rotation/translation of the structure and
+  exchange of equivalent atoms.  Hence, the atomic coordinates have to
+  be represented in a basis that fulfills these conditions.  The
+  specification of basis setups (/structural fingerprint/ setups) is
+  topic of section [[invariant-basis]].
+
+  The transformation from Cartesian coordinates to invariant coordinates
+  is the purpose of the tool =generate.x=, which iterates through a list
+  of reference structures and transforms each structure's coordinates
+  using the method specified in the input file.  The input file format
+  for =generate.x= is discussed in section [[generate]].
+
+  Finally, =train.x= implements different optimization algorithms that
+  can be used for the training of ANN potentials.  See section [[train]]
+  for the usage of =train.x= and its input file format.
+
+** Structural energy reference data
+   <<reference-set>>
+
+   The atomic structure format used by *ænet* for this purpose is a
+   subset of the /XCrySDen Structure Format/ (XSF) defined on the
+   [[http://www.xcrysden.org/doc/XSF.html][XCrySDen homepage]].  Only the atomic positions of single isolated and
+   periodic structures are parsed by *ænet*, i.e., *ænet* does neither
+   support animated XSF files (trajectories) nor scalar fields
+   (volumetric data).  Additionally, *ænet* expects atomic symbols as
+   type specifier, atomic numbers are currently not supported.  The
+   structural energy is included in the XSF file as a comment of the
+   form ~# total energy = XXX~, where ~XXX~ is the energy value.  This
+   has the advantage that the resulting file is still a valid XSF file
+   and can be visualized with XCrySDen and various other visualization
+   programs, such as [[http://www.ks.uiuc.edu/Research/vmd/][VMD]] and [[http://jp-minerals.org/vesta/en/][VESTA]].
+
+*** Example *ænet* XSF file of an isolated structure
+
+The following is an example XSF file of an isolated (non-periodic)
+structure.  Each line following the keyword =ATOMS= contains the atomic
+symbol, the three Cartesian coordinates, and the three components of the
+Cartesian force vector.  In principle, any unit system may be used, but
+the length, energy, and force units have to be consistent.  The example
+below uses Å, eV, and eV/Å.
+
+Note that it is advisable to work with a greater number of decimals for
+the coordinates and atomic forces than used in the example to avoid loss
+of accuracy.
+
+#+BEGIN_EXAMPLE
+# total energy = -19543.67017695 eV
+
+ATOMS
+O   5.900  3.922  0.851 -0.001  0.001 -0.001
+C   5.133  4.445  0.095  0.082  0.104  0.206
+O   4.104  5.151  0.087  0.003 -0.001  0.000
+#+END_EXAMPLE
+
+*** Example *ænet* XSF file of a periodic structure
+
+The following is an example of an XSF file of a periodic structure.  The
+=PRIMVEC= block contains the lattice vectors in rows.  For periodic
+structures, the number of atoms in the simulation cell has to be
+specified on the line following the keyword =PRIMCOORD= (the example is
+for 6 atoms).  Note that the number 1 following the atom count is not
+relevant for *ænet*.  The same comments as for the isolated structure
+example above apply.
+
+#+BEGIN_EXAMPLE
+# total energy = -4990.44928342 eV
+
+CRYSTAL
+PRIMVEC
+   2.967  0.000  0.000
+   0.000  4.648  0.000
+   0.000 -0.000  4.648
+PRIMCOORD
+6 1
+Ti 1.483  2.324  2.324  0.000  0.000  0.000
+Ti 0.000  0.000  0.000  0.000  0.000  0.000
+O  1.483  0.905  0.905  0.000 -0.004 -0.004
+O  1.483  3.742  3.742  0.000  0.004  0.004
+O  0.000  1.418  3.230  0.000  0.004 -0.004
+O  0.000  3.230  1.418  0.000 -0.004  0.004
+#+END_EXAMPLE
+
+** Invariant basis (structural fingerprint)
+   <<invariant-basis>>
+
+   Currently, *ænet* implements the invariant /symmetry function/ basis
+   by Behler and Parrinello [[[bibliography][2,3]]] but the code is designed such that
+   implementing further methods is straightforward.
+
+#+INCLUDE: "./input-files/fingerprint-setup.org" :lines "3-"
+
+** Training set generation with =generate.x=
+   <<generate>>
+
+   Provided a principle input file and all required structural
+   fingerprint setups, =generate.x= is run on the command line simply
+   with
+
+   ~$ generate.x generate.in > generate.out~
+
+   where ~generate.in~ is the principal input file, and the output will
+   be written to ~generate.out~.  The code will generate a training set
+   file that can be used for the training of ANN potentials.
+
+   The format and keywords of the principal input file are described in
+   the following.
+
+#+INCLUDE: "./input-files/generate.x-input.org" :lines "3-"
+
+** ANN potential training with =train.x=
+   <<train>>
+
+   ANN potential training with =train.x= requires a training set file
+   compiled by =generate.x= (section [[generate]]).  A number of
+   optimization methods are implemented by =train.x=.  Apart from the
+   algorithmic differences, the methods differ in their support for
+   parallelization and follow different learning strategies (/batch/
+   versus /online/).  For a comparison of the different training methods
+   see the *ænet* implementation reference [[[bibliography][1]]].
+
+   =train.x= expects a principal input file (named "train.in" in the
+   example below).  The tool is run from the command line with:
+
+   ~$ train.x train.in > train.out~
+
+   where the output is written to the file ~train.out~.
+
+   The format and keywords of the principal input file are described in
+   the following.
+
+#+INCLUDE: "./input-files/train.x-input.org" :lines "3-"
+
+** Restarting training from existing ANN potential
+
+   During the training process, *ænet* creates the restart files
+   =train.restart= and =train.rngstate= that contain all information needed
+   to continue the training where it was interrupted.  These files will
+   automatically be used when present.  If =train.x= was terminated it
+   might additionally be necessary to copy the most recent ANN weights
+   stored in the final =*.ann-XXX= files (where =XXX= is the number of the
+   final training epoch) to corresponding files without epoch number
+   (i.e., simply =*.ann=).
+
+   If no restart is desired, the file =train.restart= has to be deleted.
+
+   *Note: Currently, restarting is only implemented for the BFGS training method.*
+
+* Using ANN potentials for atomistic simulations
+  <<simulation>>
+
+  It is not the aim of the *ænet* package to compete with
+  well-established and feature-rich software for molecular dynamics and
+  Monte-Carlo simulations, such as [[http://lammps.sandia.gov/][=LAMMPS=]], [[http://www.ccp5.ac.uk/DL_POLY_CLASSIC][=DL_POLY=,]] [[http://dasher.wustl.edu/tinker/][=TINKER=]], or
+  [[https://wiki.fysik.dtu.dk/ase][=ASE=]]. Instead, *ænet* provides a library with C and Fortran APIs,
+  *ænetLib*, that can be used to extend existing software by the
+  capability to evaluate ANN potentials constructed with *ænet*'s
+  =train.x=.  Note that software developed in many other programming
+  languages (e.g., C++, Python, and Java) can interface with C libraries
+  and, hence, is compatible with *ænetLib*.
+
+  A documentation of the *ænetLib* APIs will be included in a future
+  version of this manual.  For the moment, *ænet* provides two reference
+  implementations for the evaluation of structural energies and forces
+  by linking agains *ænetLib*: =predict.x= is written in Fortran and
+  directly uses the Fortran API, and =aenet-predict.py=, which
+  implements an [[https://wiki.fysik.dtu.dk/ase][ASE]] /calculator/ in Python.  In addition, an example
+  Python script for performing simple molecular dynamics simulations
+  with ASE, =aenet-md.py=, is included in the *ænet* package.
+
+** Prediction of structural energies and atomic forces with =predict.x=
+   <<predict>>
+
+   =predict.x= expects a principal input file (named "predict.in" in the
+   example below) and one or more atomic structure files in the XSF
+   format.  The path(s) to the structure files may either be specified
+   in the input file for batch processing, or directly on the command
+   line. The tool is run from the command line with:
+
+   ~$ predict.x predict.in [<structure1.xsf> ...]~
+
+   All output will be written to standard out.
+
+   The format and keywords of the principal input file are described in
+   the following.
+
+#+INCLUDE: "./input-files/predict.x-input.org" :lines "3-"
+
+** ASE Interface: =aenet-predict.py= and =aenet-md.py=
+   <<ase>>
+
+   The [[https://wiki.fysik.dtu.dk/ase/index.html][/Atomic Simulation Environment/ (ASE)]] is a Python framework for
+   atomistic simulations and for the manipulation of atomic structures.
+   ASE provides a simple API, /calculators/, for interfacing with
+   third-party software for the evaluation of structural energies and
+   atomic forces.  The *ænet* package includes an implementation of an
+   ASE calculator linked to *ænetLib*.  The script =aenet-predict.py=
+   uses this calculator to essentially replicate the features of
+   =predict.x= (see above), and =aenet-md.py= provides simple molecular
+   dynamics capabilities.
+
+   The input files for both Python scripts use the [[http://www.json.org/][JSON]] format and are
+   compatible.  Any structure format supported by [[https://wiki.fysik.dtu.dk/ase/index.html][ASE]] can be used as
+   input, however, as of writing, the support of the XSF structure
+   format in ASE is incomplete and other formats (e.g., VASP's POSCAR
+   format, FHI-aims geometry.in format, XYZ, etc.) are recommended.
+
+#+INCLUDE: "./input-files/aenet-predict.py-input.org" :lines "3-"
+
+* Acknowledgment
+
+This work used the [[https://www.xsede.org][Extreme Science and Engineering Discovery Environment
+(XSEDE)]], which is supported by National Science Foundation grant number
+ACI-1053575.
+
+* Questions?
+
+If you run into problems with *ænet* or if you have a general question,
+please contact Dr. Nongnuch Artrith (nartrith@atomistic.net).
+
+* Bibliography
+  <<bibliography>>
+
+  =[1]= N. Artrith and A. Urban,
+  [[http://dx.doi.org/10.1016/j.commatsci.2015.11.047][/Comput. Mater. Sci./ *114* (2016) 135-150]].
+
+  =[2]= J. Behler and M. Parrinello,
+  [[http://dx.doi.org/10.1103/PhysRevLett.98.146401][/Phys. Rev. Lett./ *98* (2007) 146401]].
+
+  =[3]= J. Behler, [[http://scitation.aip.org/content/aip/journal/jcp/134/7/10.1063/1.3553717][/J. Chem. Phys./ *134* (2011) 074106]].
+
+  =[4]= A. P. Bartók, M. C. Payne, R. Kondor, and G. Csányi,
+  [[http://link.aps.org/doi/10.1103/PhysRevLett.104.136403][/Phys. Rev. Lett./ *104* (2010) 136403]].
+
+  =[5]= R. H. Byrd, P. Lu and J. Nocedal,
+  [[http://epubs.siam.org/doi/abs/10.1137/0916069][/SIAM J. Sci. Stat. Comp./ *16* (1995) 1190-1208]].
+
+  =[6]= K. Levenberg, /Q. Appl. Math./ *2* (1944) 164–168.
+
+  =[7]= D. W. Marquardt,
+  [[http://dx.doi.org/10.1137/0111030][/SIAM J. Appl. Math./ *11* (1963) 431–441]].
