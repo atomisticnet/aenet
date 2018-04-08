@@ -1,0 +1,28 @@
+TRAININGSET TiO.train 
+TESTPERCENT 10
+ITERATIONS  5000
+
+MAXENERGY 10.0
+
+TIMING
+
+!SAVE_ENERGIES
+
+METHOD
+bfgs
+
+!METHOD 2 Steepest Descent
+!online_sd gamma=5.0d-7 alpha=0.25d0
+!online_sd gamma=1.0d-8 alpha=0.25d0
+!
+!METHOD 3 Extended Kalman Filter
+!ekf
+!
+!METHOD 4 Levenberg-Marquardt
+!lm batchsize=8000 learnrate=0.1d0 iter=3 conv=0.001 adjust=5.0
+
+NETWORKS
+! atom   network         hidden
+! types  file-name       layers  nodes:activation
+  Ti     Ti.10t-10t.nn    2      10:tanh 10:tanh
+  O       O.10t-10t.nn    2      10:tanh 10:tanh

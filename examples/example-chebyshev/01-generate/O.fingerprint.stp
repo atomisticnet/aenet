@@ -1,0 +1,15 @@
+DESCR
+  N. Artrith and A. Urban, Comput. Mater. Sci. 114 (2016) 135-150.
+  N. Artrith, A. Urban, and G. Ceder, Phys. Rev. B 96 (2017) 014112.
+END DESCR
+
+ATOM O
+
+ENV 2
+Ti
+O
+
+RMIN 0.55d0
+
+BASIS type=Chebyshev
+radial_Rc = 8.0  radial_N = 16 angular_Rc = 6.5  angular_N = 4

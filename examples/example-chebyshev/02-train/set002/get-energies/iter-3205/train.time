@@ -1,0 +1,9 @@
+       0.16 s     Training set initialized.
+       0.71 s     Structures distributed over processes
+       0.72 s     Optimization method (bfgs) initialized.
+      12.78 s     Initial energies evaluated (before training)
+      12.78 s     Training finished.
+       0.00 s     Total time spent for training set.
+       0.00 s     Total time spent for testing set.
+      25.19 s     Stored energies of all structures.
+      25.20 s     Timing finished.
