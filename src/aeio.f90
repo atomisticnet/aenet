@@ -165,10 +165,10 @@ contains
 
     write(*,*) 'Copyright (C) ', trim(adjustl(year)), ' ', trim(adjustl(authors))
     write(*,*)
-    write(*,*) "This program is distributed in the hope that it will be useful,"
-    write(*,*) "but WITHOUT ANY WARRANTY; without even the implied warranty of"
+    write(*,*) "This program is distributed in the hope that it will be useful, but"
+    write(*,*) "WITHOUT ANY WARRANTY; without even the implied warranty of"
     write(*,*) "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the"
-    write(*,*) "GNU General Public License in file `LICENSE' for more details."
+    write(*,*) "Mozilla Public License, v. 2.0, for more details."
     write(*,*)
 
   end subroutine aeio_print_copyright
