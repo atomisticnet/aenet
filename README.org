@@ -1,13 +1,14 @@
+#+OPTIONS: ^:{} toc:nil num:nil
 #+TITLE: The Atomic Energy Network (ænet) Package
 #+AUTHOR: Nongnuch Artrith
 
-# Copyright (C) 2012-2017 Nongnuch Artrith
+#+BEGIN_COMMENT
+# Copyright (C) 2012-2018 Nongnuch Artrith
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
 # Free Software Foundation, either version 3 of the License, or (at your
 # option) any later version.
-#
 # This program is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -15,6 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
+#+END_COMMENT
 
 * What is *ænet*?
   <<sec:about>>
@@ -30,7 +32,7 @@
 
 * License
 
-Copyright (C) 2015-2016 Nongnuch Artrith (nartrith@atomistic.net)
+Copyright (C) 2015-2018 Nongnuch Artrith (nartrith@atomistic.net)
 
 *ænet* is free software: you can redistribute it and/or modify it under
 the terms of the [[http://www.gnu.org/licenses/gpl-3.0.en.html][GNU General Public License]] as published by the Free
@@ -44,6 +46,7 @@ General Public License for more details.
 
 You should have received a copy of the GNU General Public License along
 with this program.  If not, see [[http://www.gnu.org/licenses]].
+
 * Installation
   <<sec:installation>>
 
