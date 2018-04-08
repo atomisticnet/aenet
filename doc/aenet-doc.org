@@ -1,5 +1,5 @@
 #+AUTHOR: Nongnuch Artrith
-#+TITLE: *The Atomic Energy Network (ænet) (release 1.0.0)*
+#+TITLE: *The Atomic Energy Network (ænet) (release 2.0.0)*
 
 #+OPTIONS: ^:{}
 #+LATEX_HEADER: \usepackage{microtype}
@@ -20,7 +20,7 @@
   *ænet* provides tools for the construction and application of
   artificial neural network (ANN) potentials.  Users who just want to
   use *ænet* for simulations based on existing ANN potentials can safely
-  skip over section [[construction]] that explains the construction of ANN
+  skip over section [[construction] that explains the construction of ANN
   potentials directly to section [[simulation]].
 
   Potential construction using *ænet* is broken down into two separate
@@ -67,21 +67,25 @@
   in: [[[bibliography][2]]] J. Behler and M. Parrinello, /Phys. Rev. Lett./ *98*
   (2007) 146401.
 
+  If the local structural environment is represented by a /Chebyshev
+  descriptor/, please cite: [[[bibliography][3]]] N. Artrith, A. Urban, and Gerbrand Ceder,
+  Phys. Rev. B 96 (2017) 014112.
+
   If the local structural environment is represented by /symmetry
-  functions/, please cite: [[[bibliography][3]]] J. Behler, /J. Chem. Phys./ *134*
+  functions/, please cite: [[[bibliography][4]]] J. Behler, /J. Chem. Phys./ *134*
   (2011) 074106.
 
   If the generalized spherical harmonics are used for the representation
-  of the local structural environment, please cite: [[[bibliography][4]]] A. P. Bartók,
+  of the local structural environment, please cite: [[[bibliography][5]]] A. P. Bartók,
   M. C. Payne, R. Kondor, and G. Csányi, /Phys. Rev. Lett./ *104*
   (2010) 136403.
 
   The L-BFGS-B method is provided by a third party library.  Whenever
-  the method is used for training, please cite: [[[bibliography][5]]] R. H. Byrd, P. Lu
+  the method is used for training, please cite: [[[bibliography][6]]] R. H. Byrd, P. Lu
   and J. Nocedal, /SIAM J. Sci. Stat. Comp./ *16* (1995) 1190-1208.
 
-  The references for the Levenberg-Marquardt method are: [[[bibliography][6]]]
-  K. Levenberg, /Q. Appl. Math./ *2* (1944) 164–168; [[[bibliography][7]]]
+  The references for the Levenberg-Marquardt method are: [[[bibliography][7]]]
+  K. Levenberg, /Q. Appl. Math./ *2* (1944) 164–168; [[[bibliography][8]]]
   D. W. Marquardt, /SIAM J. Appl. Math./ *11* (1963) 431–441.
 
 * ANN potential construction
@@ -177,9 +181,11 @@ O  0.000  3.230  1.418  0.000 -0.004  0.004
 ** Invariant basis (structural fingerprint)
    <<invariant-basis>>
 
-   Currently, *ænet* implements the invariant /symmetry function/ basis
-   by Behler and Parrinello [[[bibliography][2,3]]] but the code is designed such that
-   implementing further methods is straightforward.
+   Currently, *ænet* implements two descriptors for the local atomic
+   environment: the Artrith-Urban-Ceder descriptor based on a Chebyshev
+   expansion [[[bibliography][3]]] and the invariant /symmetry function/ basis by Behler and
+   Parrinello [[[bibliography][2,4]]].  The code is designed such that implementing
+   further methods is straightforward.
 
 #+INCLUDE: "./input-files/fingerprint-setup.org" :lines "3-"
 
@@ -315,20 +321,23 @@ please contact Dr. Nongnuch Artrith (nartrith@atomistic.net).
   <<bibliography>>
 
   =[1]= N. Artrith and A. Urban,
-  [[http://dx.doi.org/10.1016/j.commatsci.2015.11.047][/Comput. Mater. Sci./ *114* (2016) 135-150]].
+  [[http://dx.doi.org/10.1016/j.commatsci.2015.11.047][ /Comput. Mater. Sci./ *114* (2016) 135-150]].
 
   =[2]= J. Behler and M. Parrinello,
-  [[http://dx.doi.org/10.1103/PhysRevLett.98.146401][/Phys. Rev. Lett./ *98* (2007) 146401]].
+  [[http://dx.doi.org/10.1103/PhysRevLett.98.146401][ /Phys. Rev. Lett./ *98* (2007) 146401]].
 
-  =[3]= J. Behler, [[http://scitation.aip.org/content/aip/journal/jcp/134/7/10.1063/1.3553717][/J. Chem. Phys./ *134* (2011) 074106]].
+  =[3]= N. Artrith, A. Urban, and Gerbrand Ceder,
+  [[http://dx.doi.org/10.1103/PhysRevB.96.014112][ /Phys. Rev. B/ *96* (2017) 014112]].
 
-  =[4]= A. P. Bartók, M. C. Payne, R. Kondor, and G. Csányi,
-  [[http://link.aps.org/doi/10.1103/PhysRevLett.104.136403][/Phys. Rev. Lett./ *104* (2010) 136403]].
+  =[4]= J. Behler, [[http://scitation.aip.org/content/aip/journal/jcp/134/7/10.1063/1.3553717][/J. Chem. Phys./ *134* (2011) 074106]].
 
-  =[5]= R. H. Byrd, P. Lu and J. Nocedal,
-  [[http://epubs.siam.org/doi/abs/10.1137/0916069][/SIAM J. Sci. Stat. Comp./ *16* (1995) 1190-1208]].
+  =[5]= A. P. Bartók, M. C. Payne, R. Kondor, and G. Csányi,
+  [[http://link.aps.org/doi/10.1103/PhysRevLett.104.136403][ /Phys. Rev. Lett./ *104* (2010) 136403]].
 
-  =[6]= K. Levenberg, /Q. Appl. Math./ *2* (1944) 164–168.
+  =[6]= R. H. Byrd, P. Lu and J. Nocedal,
+  [[http://epubs.siam.org/doi/abs/10.1137/0916069][ /SIAM J. Sci. Stat. Comp./ *16* (1995) 1190-1208]].
 
-  =[7]= D. W. Marquardt,
-  [[http://dx.doi.org/10.1137/0111030][/SIAM J. Appl. Math./ *11* (1963) 431–441]].
+  =[7]= K. Levenberg, /Q. Appl. Math./ *2* (1944) 164–168.
+
+  =[8]= D. W. Marquardt,
+  [[http://dx.doi.org/10.1137/0111030][ /SIAM J. Appl. Math./ *11* (1963) 431–441]].

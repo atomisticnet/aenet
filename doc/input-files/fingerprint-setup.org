@@ -18,12 +18,37 @@
   - =rmin= (required) :: The minimal allowed distance between two atoms
        (in the distance unit used in the XSF files).  This value is used
        by the neighbor list.
-  - =functions= (required) :: Type and parameters of the basis functions.
-       The example below is for functions of type 'Behler2011', and the
-       names of the various functions and parameters follows the
-       original publication. No blank lines allowed.
+  * =basis= (required unless =functions= is present) :: Definition of a
+       basis set for the expansion of the local atomic environment.
+       Below, an example for the 'Chebyshev' basis type is given.
+  - =functions= (required unless =basis= is present) :: Type and parameters
+       of individual basis functions.  The example below is for
+       functions of the general type 'Behler2011', and the names of the
+       various functions and parameters follows the original publication
+       by Behler. No blank lines allowed.
 
-* Input file template (atomtype.stp)
+* Input file template using a pre-defined basis set (atomtype.stp)
+
+#+BEGIN_EXAMPLE
+DESCR
+  short desscription and reference
+END DESCR
+
+ATOM <atom type>
+
+ENV  <N>
+<T_1>
+<T_2>
+...
+<T_N>
+
+RMIN <R>
+
+BASIS type=<basis type>
+<basis set parameters>
+#+END_EXAMPLE
+
+* Input file template using explicit basis function definitions (atomtype.stp)
 
 #+BEGIN_EXAMPLE
 DESCR
@@ -48,7 +73,35 @@ FUNCTIONS type=<basis type>
 <parameters of function NF>
 #+END_EXAMPLE
 
-* Input file example (Ti.fingerprint.stp)
+* Input file example using a Chebychev basis set (Ti.fingerprint.stp)
+
+The following example uses a Chebyshev basis set with a cutoff of 8.0 Å
+for the radial expansion (expansion order 16) and a cutoff of 6.5 Å for
+the angular expansion (expansion order 4).
+
+#+BEGIN_EXAMPLE
+DESCR
+  Structural fingerprint setup for Ti in bulk TiO2.
+  TiO2 reference data set:
+    N. Artrith and A. Urban, Comput. Mater. Sci. 114 (2016) 135-150.
+  Chebyshev descriptor:
+    N. Artrith, A. Urban, and G. Ceder, Phys. Rev. B 96 (2017) 014112.
+END DESCR
+
+ATOM Ti
+
+ENV  2
+Ti
+O
+
+RMIN 0.75d0
+
+BASIS type=Chebyshev
+radial_Rc = 8.0  radial_N = 16 angular_Rc = 6.5  angular_N = 4
+#+END_EXAMPLE
+
+
+* Input file example using explicit Behler2011 basis functions (Ti.fingerprint.stp)
 
 #+BEGIN_EXAMPLE
 DESCR

@@ -1,0 +1,126 @@
+		  ___________________________________
+
+		   INPUT FILE FORMAT FOR `PREDICT.X'
+
+			    Nongnuch Artrith
+		  ___________________________________
+
+
+Table of Contents
+_________________
+
+1 Alphabetic list of keywords
+2 Input file template (predict.in)
+3 Input file example (predict.in) for TiO_{2}
+
+
+
+
+
+1 Alphabetic list of keywords
+=============================
+
+  All keywords are case insensitive and independent of the order.  Blank
+  lines and lines starting with `!', `#', or `%' are ignored.
+
+  `debug' (optional): Activate debugging mode; additional output files
+                      will be created.
+  `files' (optional): Specifies a list of paths to input structures.  This
+                      keyword may be used for batch processing of a larger
+                      number of structures.  The line following the
+                      keyword contains the number of input files `<NF>',
+                      and each of the following `<NF>' lines contains a
+                      single file system path.  Alternatively, a single
+                      input structure may be passed to `predict.x' as
+                      command line argument.  The command line takes
+                      precedence over the list specified with the "files"
+                      keyword.
+  `forces' (optional): Activates evaluation of the atomic forces.  Forces
+                       are also calculated, when the "relax" keyword is
+                       present.
+  `networks' (required): Specifies the ANN potential files for each
+                         chemical species.  On each of the `<NT>' lines
+                         following the keyword a chemical species `<T_i>'
+                         and the path to its corresponding ANN file is
+                         given.
+  `relax' (optional): Activate structural relaxation; this will
+                      automatically also activate the calculation of the
+                      atomic forces.  On the line following the `relax'
+                      keyword, several options can be specified.  See the
+                      example below.
+  `timing' (optional): Activate timing; additional output files will be
+                       created.
+  `types' (required): Specifies the number of different atomic species
+                      that may occur in structures and their chemical
+                      symbols.  The first line following the keyword
+                      specifies the number `<NT>' of different atom types;
+                      the following lines each contain one chemical symbol
+                      `<T_i>'.
+
+
+2 Input file template (predict.in)
+==================================
+
+  ,----
+  | TYPES
+  | <NT>
+  | <T_1>
+  | <T_2>
+  | ...
+  | <T_NT>
+  | 
+  | NETWORKS
+  | <T_1>  <path/to/NN-1>
+  | <T_2>  <path/to/NN-2>
+  | ...
+  | <T_NT> <path/to/NN-NT>
+  | 
+  | FORCES
+  | 
+  | # or optimize coordinates:
+  | #
+  | # RELAX
+  | # method=bfgs  F_conv=1.0d-2  E_conv=1.0d-6  steps=99
+  | #
+  | #    method: optimization method (currently only BFGS)
+  | #    F_conv: convergence thershold for the forces
+  | #    E_conv: convergence threshold for the energy
+  | #    steps:  max. number of iterations
+  | 
+  | FILES
+  | <NF>
+  | <path/to/structure-1.xsf>
+  | <path/to/structure-2.xsf>
+  | ...
+  | <path/to/structure-NF.xsf>
+  `----
+
+
+3 Input file example (predict.in) for TiO_{2}
+=============================================
+
+  ,----
+  | TYPES
+  | 2
+  | Ti
+  | O
+  | 
+  | NETWORKS
+  |   Ti Ti.10tw-10tw.ann
+  |   O  O.10tw-10tw.ann
+  | 
+  | FORCES
+  | 
+  | FILES
+  | 10
+  | structure0001.xsf
+  | structure0002.xsf
+  | structure0003.xsf
+  | structure0004.xsf
+  | structure0005.xsf
+  | structure0006.xsf
+  | structure0007.xsf
+  | structure0008.xsf
+  | structure0009.xsf
+  | structure0010.xsf
+  `----

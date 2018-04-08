@@ -1,0 +1,104 @@
+		  ____________________________________
+
+		   INPUT FILE FORMAT FOR `GENERATE.X'
+
+			    Nongnuch Artrith
+		  ____________________________________
+
+
+Table of Contents
+_________________
+
+1 Alphabetic list of keywords
+2 Input file template (generate.in)
+3 Input file example (generate.in) for TiO_{2}
+
+
+
+
+
+1 Alphabetic list of keywords
+=============================
+
+  All keywords are case insensitive and independent of the order.  Blank
+  lines and lines starting with `!', `#', or `%' are ignored.
+
+  `debug' (optional): Activate debugging mode; additional output will be
+                      generated.
+  `files' (required): Specifies number of and path to reference structures
+                      in the *ænet* XSF format.  The first line following
+                      the keyword contains the number `<NF>' of structure
+                      files.  Each of the `<NF>' following lines contains
+                      a file system path.
+  `output' (optional): Defines the path to the training set file that is
+                       going to be generated.  The default name is
+                       "refdata.train".  Note that the training set file
+                       is in a binary format and cannot be viewed by a
+                       text editor.  Depending on the number of reference
+                       structures, the file can become very large (e.g., 1
+                       GB).
+  `setups' (required): Specifies paths to structural fingerprint basis
+                       function setup files.  Each of the `<NT>' lines
+                       following the keyword contains the chemical symbol
+                       `<T_i>' and the path to the setup file for one
+                       species.
+  `timing' (optional): Activate timing; additional output files will be
+                       created.
+  `types' (required): Defines the number of atomic species, their names,
+                      and atomic energies.  The first line after the
+                      keyword contains the number of different species
+                      `<NT>'; the following `<NT>' lines each contain the
+                      chemical symbol `<T_i>' and atomic energy
+                      `<E_atom-i>' of one species.
+
+
+2 Input file template (generate.in)
+===================================
+
+  ,----
+  | OUTPUT  <path/to/output/file>
+  | 
+  | TYPES
+  | <NT>
+  | <T_1>   <E_atom-1>
+  | <T_2>   <E_atom-2>
+  | ...
+  | <T_NT>  <E_atom-NT>
+  | 
+  | SETUPS
+  | <T_1>   <path/to/setup-1>
+  | <T_2>   <path/to/setup-2>
+  | ...
+  | <T_NT>  <path/to/setup-NT>
+  | 
+  | FILES
+  | <NF>
+  | <path/to/file-1.xsf>
+  | <path/to/file-2.xsf>
+  | ...
+  | <path/to/file-NF.xsf>
+  `----
+
+
+3 Input file example (generate.in) for TiO_{2}
+==============================================
+
+  ,----
+  | OUTPUT  TiO2.train
+  | 
+  | TYPES
+  | 2
+  | O   -432.503149303  ! eV
+  | Ti -1604.604515075  ! eV
+  | 
+  | SETUPS
+  | O   O.fingerprint.stp
+  | Ti Ti.fingerprint.stp
+  | 
+  | FILES
+  | 7815
+  | ./structures/0001.xsf
+  | ./structures/0002.xsf
+  | ...
+  | ./structures/7815.xsf
+  `----
