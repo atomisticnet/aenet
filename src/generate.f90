@@ -397,7 +397,7 @@ contains !=============================================================!
     call aeio_header("generate.x - training set generation", char='=')
     write(*,*)
 
-    call aeio_print_copyright('2015-2016', 'Nongnuch Artrith and Alexander Urban')
+    call aeio_print_copyright('2015-2018', 'Nongnuch Artrith and Alexander Urban')
 
     nargs = command_argument_count()
     if (nargs < 1) then

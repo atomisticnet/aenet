@@ -382,7 +382,7 @@ contains
        call aeio_header("Atomic Energy Network Interpolation", char='=')
        call aeio_header(aeio_timestamp(), char=' ')
        write(*,*)
-       call aeio_print_copyright('2015-2016', 'Nongnuch Artrith and Alexander Urban')
+       call aeio_print_copyright('2015-2018', 'Nongnuch Artrith and Alexander Urban')
     end if
 
   end subroutine initialize
