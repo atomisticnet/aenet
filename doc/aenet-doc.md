@@ -233,22 +233,22 @@ Every scientific publication containing results that were produced with
 The reference for the **ænet** package itself is: \[[1](#bibliography)\]
 N. Artrith and A. Urban, *Comput. Mater. Sci.* **114** (2016) 135-150.
 
-The interpolation of *atomic* energies with ANNs was first published in:
-\[[2](#bibliography)\] J. Behler and M. Parrinello, *Phys. Rev. Lett.*
-**98** (2007) 146401.
-
 If the local structural environment is represented by a *Chebyshev
-descriptor*, please cite: \[[3](#bibliography)\] N. Artrith, A. Urban,
-and Gerbrand Ceder, Phys. Rev. B 96 (2017) 014112.
+descriptor*, please cite: \[[2](#bibliography)\] N. Artrith, A. Urban,
+and G. Ceder, Phys. Rev. B 96 (2017) 014112.
+
+The interpolation of *atomic* energies with ANNs was first published in:
+\[[3](#bibliography)\] J. Behler and M. Parrinello, *Phys. Rev. Lett.*
+**98** (2007) 146401.
 
 If the local structural environment is represented by *symmetry
 functions*, please cite: \[[4](#bibliography)\] J. Behler, *J. Chem.
 Phys.* **134** (2011) 074106.
 
-If the generalized spherical harmonics are used for the representation
-of the local structural environment, please cite: \[[5](#bibliography)\]
-A. P. Bartók, M. C. Payne, R. Kondor, and G. Csányi, *Phys. Rev. Lett.*
-**104** (2010) 136403.
+If the SOAP (*smooth overlap of atomic positions*) descriptor is used
+for the representation of the local structural environment, please cite:
+\[[5](#bibliography)\] A. P. Bartók, M. C. Payne, R. Kondor, and G.
+Csányi, *Phys. Rev. Lett.* **104** (2010) 136403.
 
 The L-BFGS-B method is provided by a third party library. Whenever the
 method is used for training, please cite: \[[6](#bibliography)\] R. H.
@@ -361,8 +361,8 @@ O  0.000  3.230  1.418  0.000 -0.004  0.004
 
 Currently, **ænet** implements two descriptors for the local atomic
 environment: the Artrith-Urban-Ceder descriptor based on a Chebyshev
-expansion \[[3](#bibliography)\] and the invariant *symmetry function*
-basis by Behler and Parrinello \[[2,4](#bibliography)\]. The code is
+expansion \[[2](#bibliography)\] and the invariant *symmetry function*
+basis by Behler and Parrinello \[[3,4](#bibliography)\]. The code is
 designed such that implementing further methods is straightforward.
 
 ### List of keywords
@@ -440,7 +440,7 @@ FUNCTIONS type=<basis type>
 <parameters of function NF>
 ```
 
-### Input file example using a Chebychev basis set (Ti.fingerprint.stp)
+### Input file example using a Chebyshev basis set (Ti.fingerprint.stp)
 
 The following example uses a Chebyshev basis set with a cutoff of 8.0 Å
 for the radial expansion (expansion order 16) and a cutoff of 6.5 Å for
@@ -486,12 +486,76 @@ RMIN 0.75d0
 
 FUNCTIONS type=Behler2011
 70
-G=2 type2=O  eta=0.003214 Rs=0.0000 Rc=6.5
-G=2 type2=Ti eta=0.003214 Rs=0.0000 Rc=6.5
-...
-G=4 type2=O type3=O  eta=0.000357 lambda=-1.0 zeta=1.0 Rc=6.5
-G=4 type2=O type3=Ti eta=0.000357 lambda=-1.0 zeta=1.0 Rc=6.5
-...
+G=2 type2=O   eta=0.003214  Rs=0.0000  Rc=6.5000
+G=2 type2=Ti  eta=0.003214  Rs=0.0000  Rc=6.5000
+G=2 type2=O   eta=0.035711  Rs=0.0000  Rc=6.5000
+G=2 type2=Ti  eta=0.035711  Rs=0.0000  Rc=6.5000
+G=2 type2=O   eta=0.071421  Rs=0.0000  Rc=6.5000
+G=2 type2=Ti  eta=0.071421  Rs=0.0000  Rc=6.5000
+G=2 type2=O   eta=0.124987  Rs=0.0000  Rc=6.5000
+G=2 type2=Ti  eta=0.124987  Rs=0.0000  Rc=6.5000
+G=2 type2=O   eta=0.214264  Rs=0.0000  Rc=6.5000
+G=2 type2=Ti  eta=0.214264  Rs=0.0000  Rc=6.5000
+G=2 type2=O   eta=0.357106  Rs=0.0000  Rc=6.5000
+G=2 type2=Ti  eta=0.357106  Rs=0.0000  Rc=6.5000
+G=2 type2=O   eta=0.714213  Rs=0.0000  Rc=6.5000
+G=2 type2=Ti  eta=0.714213  Rs=0.0000  Rc=6.5000
+G=2 type2=O   eta=1.428426  Rs=0.0000  Rc=6.5000
+G=2 type2=Ti  eta=1.428426  Rs=0.0000  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.000357 lambda= -1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.000357 lambda= -1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.000357 lambda= -1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.028569 lambda= -1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.028569 lambda= -1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.028569 lambda= -1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.089277 lambda= -1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.089277 lambda= -1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.089277 lambda= -1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.000357 lambda= 1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.000357 lambda= 1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.000357 lambda= 1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.028569 lambda= 1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.028569 lambda= 1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.028569 lambda= 1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.089277 lambda= 1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.089277 lambda= 1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.089277 lambda= 1.0  zeta= 1.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.000357 lambda= -1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.000357 lambda= -1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.000357 lambda= -1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.028569 lambda= -1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.028569 lambda= -1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.028569 lambda= -1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.089277 lambda= -1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.089277 lambda= -1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.089277 lambda= -1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.000357 lambda= 1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.000357 lambda= 1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.000357 lambda= 1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.028569 lambda= 1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.028569 lambda= 1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.028569 lambda= 1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.089277 lambda= 1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.089277 lambda= 1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.089277 lambda= 1.0  zeta= 2.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.000357 lambda= -1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.000357 lambda= -1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.000357 lambda= -1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.028569 lambda= -1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.028569 lambda= -1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.028569 lambda= -1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.089277 lambda= -1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.089277 lambda= -1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.089277 lambda= -1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.000357 lambda= 1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.000357 lambda= 1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.000357 lambda= 1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.028569 lambda= 1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.028569 lambda= 1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.028569 lambda= 1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=O  type3=O    eta=0.089277 lambda= 1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=O  type3=Ti   eta=0.089277 lambda= 1.0  zeta= 4.0  Rc=6.5000
+G=4 type2=Ti type3=Ti   eta=0.089277 lambda= 1.0  zeta= 4.0  Rc=6.5000
 ```
 
 ## Training set generation with `generate.x`
@@ -570,6 +634,17 @@ FILES
 
 ### Input file example (generate.in) for TiO<sub>2</sub>
 
+The atomic energies defined in the `TYPES` section is subtracted from
+the total energy before the potential training to reduce the
+fluctuations in the fitted energy (the target energy). Two different
+approaches towards selecting the atomic energies are shown below: In [
+*Comput. Mater. Sci.* **114** (2016)
+135-150](http://dx.doi.org/10.1016/j.commatsci.2015.11.047) the atomic
+energies are chosen to be the energies of isolated atoms. With this
+choice, the trained energy (total energy minus atomic energies)
+corresponds to the *cohesive energy*, which is reported by ænet’s
+`predict.x` tool.
+
 ``` example
 OUTPUT  TiO2.train
 
@@ -577,6 +652,33 @@ TYPES
 2
 O   -432.503149303  ! eV
 Ti -1604.604515075  ! eV
+
+SETUPS
+O   O.fingerprint.stp
+Ti Ti.fingerprint.stp
+
+FILES
+7815
+./structures/0001.xsf
+./structures/0002.xsf
+...
+./structures/7815.xsf
+```
+
+Alternatively, the atomic energies can be set to the average atomic
+energy of all structures in the reference data set to minimize the range
+of the target energy (e.g., [*Phys. Rev. B* **96**, 2017,
+014112](http://dx.doi.org/10.1103/PhysRevB.96.014112)). The downside of
+this approach is that the energy difference is no longer interpretable,
+i.e., it does not correspond to the cohesive energy.
+
+``` example
+OUTPUT TiO.train
+
+TYPES
+2
+O   -433.23448532  | eV
+Ti -1626.66972707  | eV
 
 SETUPS
 O   O.fingerprint.stp
@@ -1033,11 +1135,11 @@ question, please contact Dr. Nongnuch Artrith (nartrith@atomistic.net).
 `[1]` N. Artrith and A. Urban, [ *Comput. Mater. Sci.* **114** (2016)
 135-150](http://dx.doi.org/10.1016/j.commatsci.2015.11.047).
 
-`[2]` J. Behler and M. Parrinello, [ *Phys. Rev. Lett.* **98** (2007)
-146401](http://dx.doi.org/10.1103/PhysRevLett.98.146401).
-
-`[3]` N. Artrith, A. Urban, and Gerbrand Ceder, [ *Phys. Rev. B* **96**
+`[2]` N. Artrith, A. Urban, and Gerbrand Ceder, [ *Phys. Rev. B* **96**
 (2017) 014112](http://dx.doi.org/10.1103/PhysRevB.96.014112).
+
+`[3]` J. Behler and M. Parrinello, [ *Phys. Rev. Lett.* **98** (2007)
+146401](http://dx.doi.org/10.1103/PhysRevLett.98.146401).
 
 `[4]` J. Behler, [*J. Chem. Phys.* **134** (2011)
 074106](http://scitation.aip.org/content/aip/journal/jcp/134/7/10.1063/1.3553717).

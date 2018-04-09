@@ -13,7 +13,7 @@ _________________
 1 List of keywords
 2 Input file template using a pre-defined basis set (atomtype.stp)
 3 Input file template using explicit basis function definitions (atomtype.stp)
-4 Input file example using a Chebychev basis set (Ti.fingerprint.stp)
+4 Input file example using a Chebyshev basis set (Ti.fingerprint.stp)
 5 Input file example using explicit Behler2011 basis functions (Ti.fingerprint.stp)
 
 
@@ -110,7 +110,7 @@ _________________
   `----
 
 
-4 Input file example using a Chebychev basis set (Ti.fingerprint.stp)
+4 Input file example using a Chebyshev basis set (Ti.fingerprint.stp)
 =====================================================================
 
   The following example uses a Chebyshev basis set with a cutoff of 8.0
@@ -159,10 +159,74 @@ _________________
   | 
   | FUNCTIONS type=Behler2011
   | 70
-  | G=2 type2=O  eta=0.003214 Rs=0.0000 Rc=6.5
-  | G=2 type2=Ti eta=0.003214 Rs=0.0000 Rc=6.5
-  | ...
-  | G=4 type2=O type3=O  eta=0.000357 lambda=-1.0 zeta=1.0 Rc=6.5
-  | G=4 type2=O type3=Ti eta=0.000357 lambda=-1.0 zeta=1.0 Rc=6.5
-  | ...
+  | G=2 type2=O   eta=0.003214  Rs=0.0000  Rc=6.5000
+  | G=2 type2=Ti  eta=0.003214  Rs=0.0000  Rc=6.5000
+  | G=2 type2=O   eta=0.035711  Rs=0.0000  Rc=6.5000
+  | G=2 type2=Ti  eta=0.035711  Rs=0.0000  Rc=6.5000
+  | G=2 type2=O   eta=0.071421  Rs=0.0000  Rc=6.5000
+  | G=2 type2=Ti  eta=0.071421  Rs=0.0000  Rc=6.5000
+  | G=2 type2=O   eta=0.124987  Rs=0.0000  Rc=6.5000
+  | G=2 type2=Ti  eta=0.124987  Rs=0.0000  Rc=6.5000
+  | G=2 type2=O   eta=0.214264  Rs=0.0000  Rc=6.5000
+  | G=2 type2=Ti  eta=0.214264  Rs=0.0000  Rc=6.5000
+  | G=2 type2=O   eta=0.357106  Rs=0.0000  Rc=6.5000
+  | G=2 type2=Ti  eta=0.357106  Rs=0.0000  Rc=6.5000
+  | G=2 type2=O   eta=0.714213  Rs=0.0000  Rc=6.5000
+  | G=2 type2=Ti  eta=0.714213  Rs=0.0000  Rc=6.5000
+  | G=2 type2=O   eta=1.428426  Rs=0.0000  Rc=6.5000
+  | G=2 type2=Ti  eta=1.428426  Rs=0.0000  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.000357 lambda= -1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.000357 lambda= -1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.000357 lambda= -1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.028569 lambda= -1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.028569 lambda= -1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.028569 lambda= -1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.089277 lambda= -1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.089277 lambda= -1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.089277 lambda= -1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.000357 lambda= 1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.000357 lambda= 1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.000357 lambda= 1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.028569 lambda= 1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.028569 lambda= 1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.028569 lambda= 1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.089277 lambda= 1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.089277 lambda= 1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.089277 lambda= 1.0  zeta= 1.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.000357 lambda= -1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.000357 lambda= -1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.000357 lambda= -1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.028569 lambda= -1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.028569 lambda= -1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.028569 lambda= -1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.089277 lambda= -1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.089277 lambda= -1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.089277 lambda= -1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.000357 lambda= 1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.000357 lambda= 1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.000357 lambda= 1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.028569 lambda= 1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.028569 lambda= 1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.028569 lambda= 1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.089277 lambda= 1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.089277 lambda= 1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.089277 lambda= 1.0  zeta= 2.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.000357 lambda= -1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.000357 lambda= -1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.000357 lambda= -1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.028569 lambda= -1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.028569 lambda= -1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.028569 lambda= -1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.089277 lambda= -1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.089277 lambda= -1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.089277 lambda= -1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.000357 lambda= 1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.000357 lambda= 1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.000357 lambda= 1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.028569 lambda= 1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.028569 lambda= 1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.028569 lambda= 1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=O  type3=O    eta=0.089277 lambda= 1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=O  type3=Ti   eta=0.089277 lambda= 1.0  zeta= 4.0  Rc=6.5000
+  | G=4 type2=Ti type3=Ti   eta=0.089277 lambda= 1.0  zeta= 4.0  Rc=6.5000
   `----

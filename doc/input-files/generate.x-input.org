@@ -58,6 +58,15 @@ FILES
 
 * Input file example (generate.in) for TiO_{2}
 
+The atomic energies defined in the =TYPES= section is subtracted from the
+total energy before the potential training to reduce the fluctuations in
+the fitted energy (the target energy).  Two different approaches towards
+selecting the atomic energies are shown below: In [[http://dx.doi.org/10.1016/j.commatsci.2015.11.047][ /Comput. Mater. Sci./
+*114* (2016) 135-150]] the atomic energies are chosen to be the energies of
+isolated atoms.  With this choice, the trained energy (total energy
+minus atomic energies) corresponds to the /cohesive energy/, which is
+reported by ænet's =predict.x= tool.
+
 #+BEGIN_EXAMPLE
 OUTPUT  TiO2.train
 
@@ -65,6 +74,32 @@ TYPES
 2
 O   -432.503149303  ! eV
 Ti -1604.604515075  ! eV
+
+SETUPS
+O   O.fingerprint.stp
+Ti Ti.fingerprint.stp
+
+FILES
+7815
+./structures/0001.xsf
+./structures/0002.xsf
+...
+./structures/7815.xsf
+#+END_EXAMPLE
+
+Alternatively, the atomic energies can be set to the average atomic
+energy of all structures in the reference data set to minimize the range
+of the target energy (e.g., [[http://dx.doi.org/10.1103/PhysRevB.96.014112][/Phys. Rev. B/ *96*, 2017, 014112]]).  The
+downside of this approach is that the energy difference is no longer
+interpretable, i.e., it does not correspond to the cohesive energy.
+
+#+BEGIN_EXAMPLE
+OUTPUT TiO.train
+
+TYPES
+2
+O   -433.23448532  | eV
+Ti -1626.66972707  | eV
 
 SETUPS
 O   O.fingerprint.stp
