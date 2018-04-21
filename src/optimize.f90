@@ -439,7 +439,7 @@ contains
     ! will be overwritten later
     allocate(opt_schedule(opt_samplesize), opt_idx(ntrain))
     do i = 1, opt_samplesize
-       opt_schedule = i
+       opt_schedule(i) = i
     end do
 
     ! RNG should have been initialized in train.f90
