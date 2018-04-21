@@ -402,7 +402,7 @@ contains
 
     opt_sampling_type = trim(sampling_type)
 
-    localbatch = nint(dble(ntrain)/dble(ppSize))
+    localbatch = ntrain
     batchsize = ppSize*localbatch
     opt_nbatchiters = 1
     opt_batchiter = 0
@@ -876,7 +876,7 @@ contains
 
   !====================================================================!
   !                                                                    !
-  !          online steepest descent (error backpropagation)           !
+  !              Adaptive Moment Estimation (ADAM) Method              !
   !                                                                    !
   !====================================================================!
 
@@ -959,7 +959,7 @@ contains
     write(*,*) "Gradient decay rate (b1)    : " // trim(io_adjustl(adam_b1, 4))
     write(*,*) "Sq. gradient decay rate (b1): " // trim(io_adjustl(adam_b2, 4))
     write(*,'(1x,"Epsilon                     : ",ES9.3)') adam_eps
-    write(*,*) "Sample size                 : " // trim(io_adjustl(adam_samplesize))
+    write(*,*) "Sample size per process     : " // trim(io_adjustl(adam_samplesize))
     write(*,*) "Mini-batch size             : " // trim(io_adjustl(adam_batchsize))
     write(*,*)
 
