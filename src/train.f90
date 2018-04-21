@@ -61,7 +61,9 @@ program train
                          opt_print_info,         &
                          opt_schedule_epoch,     &
                          opt_schedule,           &
-                         opt_samplesize
+                         opt_samplesize_local,   &
+                         opt_batchsize_local,    &
+                         opt_nbatch
 
   use parallel,    only: pp_init,                &
                          pp_final,               &
@@ -158,9 +160,8 @@ program train
   !*iepoch          current epoch/training iteration                   !
   !*conv            .true., if training has converged                  !
   !*batchsize       size of the sliding window batch, if any           !
-  !*localbatch      process-local batch size                           !
   !*nextbatch       .true., if the window shall be updated             !
-  ! ibatch, nbatch  process local batch counters                       !
+  ! ibatch          process local batch counter                        !
   ! batchiter       iterations for the same batch so far               !
   !                                                                    !
   !------------------- structural fingerprint basis -------------------!
@@ -196,9 +197,8 @@ program train
   integer                                          :: iepoch
   logical                                          :: conv
   integer                                          :: batchsize
-  integer                                          :: localbatch
   logical                                          :: do_nextbatch
-  integer                                          :: ibatch, nbatch
+  integer                                          :: ibatch
   double precision, dimension(:),      allocatable :: trnEnergies
   double precision, dimension(:),      allocatable :: trnErrors
 
@@ -331,10 +331,9 @@ program train
   !------------------ training method initialization ------------------!
 
   call opt_init_training(inp%trn_method, inp%trn_param, inp%trn_sampling, &
-                         nw_tot, nw_max, ts_trn%nStrucs, ts%nTypes, &
-                         batchsize, localbatch)
+                         nw_tot, nw_max, nTrain, ts_trn%nStrucs, &
+                         ts_trn%nTypes)
 
-  nbatch = nint(dble(opt_samplesize)/dble(batchsize))
   allocate(Dw(nw_max,ts%nTypes))
 
   if (inp%do_timing .and. ppMaster) then
@@ -381,7 +380,7 @@ program train
      do_nextbatch = .true.
      do_deriv     = .true.
 
-     batches : do while (ibatch <= nbatch)
+     batches : do while (ibatch <= opt_nbatch)
 
         call opt_before_batch()
 
@@ -389,12 +388,12 @@ program train
         ! training set !
         !--------------!
 
-        irec = (ibatch - 1)*batchsize
-        training : do itrn = 1, localbatch
+        irec = (ibatch - 1)*opt_batchsize_local
+        training : do itrn = 1, opt_batchsize_local
 
            ! go to next record in training set file
            ! after the last record, start from beginning
-           irec = mod(irec, opt_samplesize) + 1
+           irec = mod(irec, opt_samplesize_local) + 1
            isample = opt_schedule(irec)
 
            if (isample /= (ts_trn%iStruc + 1)) then

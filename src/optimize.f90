@@ -97,7 +97,8 @@ module optimize
   ! memsize      estimate number of allocated words for optimizer      !
   ! ftol, gtol   convergence criteria for function and radient         !
   ! batchsize    size of training batch (# of samples per iteration)   !
-  ! localbatch   size of the process local batch                       !
+  ! batchsize_local size of the process local batch                    !
+  ! nbatch       number of batches per epoch                           !
   ! batchiter    current bach iteration                                !
   ! nbatchiters  total number iterations per batch                     !
   ! nw_tot       total number of weights in weight optimization        !
@@ -106,6 +107,7 @@ module optimize
   ! SSE          Sum of Squared Errors                                 !
   ! sampling_type 'random', 'sequential', or 'weighted'                !
   ! samplesize   Number of samples for each epoch                      !
+  ! samplesize_local Process local number of samples for each epoch    !
   ! schedule     Indices of the samples for one epoch                  !
   ! idx          temporary sort index                                  !
   !--------------------------------------------------------------------!
@@ -115,7 +117,8 @@ module optimize
   double precision,  public :: opt_ftol
   double precision,  public :: opt_gtol
   integer,           public :: opt_batchsize
-  integer,           public :: opt_localbatch
+  integer,           public :: opt_batchsize_local
+  integer,           public :: opt_nbatch
   integer,           public :: opt_batchiter
   integer,           public :: opt_nbatchiters
   integer,           public :: opt_nw_tot
@@ -124,6 +127,7 @@ module optimize
   double precision,  public :: opt_SSE
   character(len=10), public :: opt_sampling_type
   integer,           public :: opt_samplesize
+  integer,           public :: opt_samplesize_local
 
   integer, dimension(:), allocatable, public  :: opt_schedule
 
@@ -323,7 +327,7 @@ contains
     opt_ftol = 0.0d0
     opt_gtol = 1.0d-6
     opt_batchsize = 0
-    opt_localbatch = 0
+    opt_batchsize_local = 0
     opt_nw_tot = 0
     opt_nw_max = 0
     opt_sampling_type = 'sequential'
@@ -366,8 +370,8 @@ contains
   !--------------------------------------------------------------------!
 
   subroutine opt_init_training(method, methodparam, sampling_type, &
-                               nw_tot, nw_max, ntrain, ntypes, &
-                               batchsize, localbatch, ftol, gtol)
+                               nw_tot, nw_max, ntrain, ntrain_local, ntypes, &
+                               ftol, gtol)
 
     implicit none
 
@@ -377,12 +381,12 @@ contains
     integer,                        intent(in)  :: nw_tot
     integer,                        intent(in)  :: nw_max
     integer,                        intent(in)  :: ntrain
+    integer,                        intent(in)  :: ntrain_local
     integer,                        intent(in)  :: nTypes
-    integer,                        intent(out) :: batchsize
-    integer,                        intent(out) :: localbatch
     double precision, optional,     intent(in)  :: ftol
     double precision, optional,     intent(in)  :: gtol
 
+    integer :: localbatch, batchsize
     integer :: i
 
     if (isInit) then
@@ -402,12 +406,13 @@ contains
 
     opt_sampling_type = trim(sampling_type)
 
-    localbatch = ntrain
-    batchsize = ppSize*localbatch
+    localbatch = ntrain_local
+    batchsize = ntrain
     opt_nbatchiters = 1
     opt_batchiter = 0
 
     opt_samplesize = ntrain
+    opt_samplesize_local = ntrain_local
 
     select case(trim(opt_method))
     case('bfgs')
@@ -416,6 +421,10 @@ contains
        end if
        allocate(bfgs_Dw_sum(nw_max,ntypes))
        opt_memsize = opt_memsize + nw_max*nTypes*2
+       if (trim(opt_sampling_type) /= "sequential") then
+          write(0,*) "Warning: Sampling type set to 'sequential' for BFGS."
+          opt_sampling_type = 'sequential'
+       end if
     case('ekf')
        call opt_init_ekf(nw_tot, methodparam, opt_memsize)
     case('lm')
@@ -424,21 +433,30 @@ contains
     case('online_sd')
        call opt_init_sd(nw_max, ntypes, methodparam, opt_memsize)
     case('adam')
-       call opt_init_adam(nw_max, ntypes, ntrain, methodparam, batchsize, &
-                          localbatch, opt_nbatchiters, opt_memsize)
+       call opt_init_adam(nw_max, ntypes, ntrain_local, methodparam, &
+                          opt_memsize)
+       opt_samplesize_local = adam_samplesize
        opt_samplesize = adam_samplesize
+       batchsize = adam_batchsize
+       localbatch = adam_batchsize
+       if (ppSize>1) then
+          call pp_sum(opt_samplesize)
+          call pp_sum(batchsize)
+       end if
     case default
        write(0,*) "Error: unknown optimization method: " &
                  // trim(opt_method)
     end select
 
     opt_batchsize  = batchsize
-    opt_localbatch = localbatch
+    opt_batchsize_local = localbatch
+
+    opt_nbatch = nint(dble(opt_samplesize)/dble(opt_batchsize))
 
     ! initialize sequential schedule; for other sampling types this
     ! will be overwritten later
-    allocate(opt_schedule(opt_samplesize), opt_idx(ntrain))
-    do i = 1, opt_samplesize
+    allocate(opt_schedule(opt_samplesize_local), opt_idx(opt_samplesize_local))
+    do i = 1, opt_samplesize_local
        opt_schedule(i) = i
     end do
 
@@ -527,14 +545,14 @@ contains
        return
     case('random')
        ! draw samples randomly
-       do i = 1, opt_samplesize
+       do i = 1, opt_samplesize_local
           call random_number(r)
           opt_schedule(i) = max(ceiling(r*dble(ntrain)), 1)
        end do
     case('weighted')
        ! samples with large errors are learned more frequently
        call argsort(abs(errors), opt_idx)
-       do i = 1, opt_samplesize
+       do i = 1, opt_samplesize_local
           call random_number(r)
           r = r**a
           opt_schedule(i) = opt_idx(&
@@ -543,7 +561,7 @@ contains
     case('energy')
        ! samples with low energies are learned more frequently
        call argsort(energies, opt_idx)
-       do i = 1, opt_samplesize
+       do i = 1, opt_samplesize_local
           call random_number(r)
           r = r**a
           opt_schedule(i) = opt_idx(max(ceiling(r*dble(ntrain)), 1))
@@ -552,6 +570,12 @@ contains
        write(0,*) 'Error: Unknown sampling type: ' // trim(opt_sampling_type)
        stop
     end select
+
+    ! Sanity check
+    if (any(opt_schedule > opt_samplesize_local)) then
+       write(0,*) "Error: invalid schedule: ", opt_schedule(i)
+       stop
+    end if
 
   end subroutine opt_schedule_epoch
 
@@ -880,18 +904,15 @@ contains
   !                                                                    !
   !====================================================================!
 
-  subroutine opt_init_adam(nw_max, ntypes, ntrain, methodparam, &
-                           batchsize, localbatch, nbatchiters, memsize)
+  subroutine opt_init_adam(nw_max, ntypes, ntrain_local, methodparam, &
+                           memsize)
 
     implicit none
 
     integer,                        intent(in)  :: nw_max
     integer,                        intent(in)  :: ntypes
-    integer,                        intent(in)  :: ntrain
+    integer,                        intent(in)  :: ntrain_local
     double precision, dimension(:), intent(in)  :: methodparam
-    integer,                        intent(out) :: batchsize
-    integer,                        intent(out) :: localbatch
-    integer,                        intent(out) :: nbatchiters
     integer,                        intent(out) :: memsize
 
     if (size(methodparam) /= 6) then
@@ -905,20 +926,17 @@ contains
     adam_b2         = methodparam(3)
     adam_eps        = methodparam(4)
 
-    ! guarantee that batch size is a multiple of the number of processes
-    ! and less than the total number of samples
-    adam_batchsize = max(floor(methodparam(6)/dble(ppSize)), 1) * ppSize
-    adam_batchsize = min(adam_batchsize, ntrain)
+    ! Process local batch size
+    adam_batchsize = max(floor(methodparam(6)/dble(ppSize)), 1)
+    adam_batchsize = min(adam_batchsize, ntrain_local)
 
+    ! Process local sample size
     ! make sure that the sample size is a multiple of the batch size
-    ! and less than the total number of samples
-    adam_samplesize = max(floor(methodparam(5)/dble(adam_batchsize)), 1) &
-                    * adam_batchsize
-    adam_samplesize = min(adam_samplesize, ntrain)
-
-    batchsize   = adam_batchsize
-    localbatch  = adam_batchsize/ppSize
-    nbatchiters = 1
+    ! and less than the total number of samples available to the process
+    adam_samplesize = max(floor(methodparam(5)/dble(ppSize)), 1)
+    adam_samplesize = max(floor(dble(adam_samplesize) &
+                        / dble(adam_batchsize)), 1) * adam_batchsize
+    adam_samplesize = min(adam_samplesize, ntrain_local)
 
     allocate(adam_Dw_sum(nw_max, ntypes), adam_Dw_up(nw_max, ntypes), &
              adam_m(nw_max, ntypes), adam_v(nw_max, ntypes), &
@@ -959,9 +977,12 @@ contains
     write(*,*) "Gradient decay rate (b1)    : " // trim(io_adjustl(adam_b1, 4))
     write(*,*) "Sq. gradient decay rate (b1): " // trim(io_adjustl(adam_b2, 4))
     write(*,'(1x,"Epsilon                     : ",ES9.3)') adam_eps
-    write(*,*) "Sample size per process     : " // trim(io_adjustl(adam_samplesize))
-    write(*,*) "Mini-batch size             : " // trim(io_adjustl(adam_batchsize))
-    write(*,*)
+    write(*,*) "Sample size                 : " &
+         // trim(io_adjustl(opt_samplesize)) // " (" &
+         // trim(io_adjustl(opt_samplesize_local)) // ")"
+    write(*,*) "Mini-batch size             : " &
+         // trim(io_adjustl(opt_batchsize)) // " (" &
+         // trim(io_adjustl(opt_batchsize_local)) // ")"
 
   end subroutine opt_print_info_adam
 
@@ -1364,7 +1385,7 @@ contains
 
     lm_Jw(:,:) = 0.0d0
     lm_dEv(:) = 0.0d0
-    lm_iJw = ppRank*opt_localbatch + 1
+    lm_iJw = ppRank*opt_batchsize_local + 1
 
   end subroutine opt_before_batch_lm
 
