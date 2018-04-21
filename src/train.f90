@@ -380,6 +380,7 @@ program train
      ibatch       = 1
      do_nextbatch = .true.
      do_deriv     = .true.
+
      batches : do while (ibatch <= nbatch)
 
         call opt_before_batch()
@@ -1210,6 +1211,7 @@ contains !=============================================================!
 
     call opt_print_info()
 
+    write(*,*)
     write(*,'(8x,A30,2x,A30)') &
          '|------------TRAIN-----------|', &
          '|------------TEST------------|'
