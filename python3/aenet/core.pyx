@@ -57,7 +57,7 @@ cdef class ANNPotentials:
             str filename
             str typename
 
-        self.atom_types = potential_files.keys()
+        self.atom_types = list(potential_files.keys())
         self.potential_files = potential_files
         self.ntypes = len(self.atom_types)
         self.Rc_min = 0.0
@@ -77,7 +77,7 @@ cdef class ANNPotentials:
                 bytes_files.append(potential_files[self.atom_types[i]
                                                ].encode('UTF-8'))
             cstring_array[i] = bytes_types[i]
-        self.atom_types = bytes_types
+        self.atom_types = [x.decode('utf-8') for x in bytes_types]
 
         # initialize aenetLib
         core.aenet_init(self.ntypes, cstring_array, &stat)
@@ -86,7 +86,7 @@ cdef class ANNPotentials:
         # load potentials
         for i in range(self.ntypes):
             typename = self.atom_types[i]
-            filename = bytes_files[i]
+            filename = bytes_files[i].decode('utf-8')
             self._load_potential(typename, filename)
         assert(core.aenet_all_loaded() == True)
 

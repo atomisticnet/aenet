@@ -40,7 +40,7 @@ class ANNCalculator(Calculator):
     def __del__(self):
         try:
             del self.ann
-        except NameError:
+        except (AttributeError, NameError):
             pass
 
     def release(self):
