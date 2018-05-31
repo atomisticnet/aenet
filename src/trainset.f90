@@ -182,7 +182,7 @@ contains
 
   !--------------------------------------------------------------------!
 
-  function open_TrnSet(file, maxenergy, readfooter) result(ts)
+  function open_TrnSet(file, maxenergy, readfooter, raw) result(ts)
 
     implicit none
 
@@ -191,16 +191,24 @@ contains
     ! maxenergy    maximum atomic energy (do not consider structures   !
     !              with higher energy)                                 !
     ! readfooter   skip over all structures to read footer first       !
+    ! raw          if true, do not normalize the trainset              !
     !------------------------------------------------------------------!
 
     character(len=*),           intent(in) :: file
     double precision, optional, intent(in) :: maxenergy
     logical,          optional, intent(in) :: readfooter
+    logical,          optional, intent(in) :: raw
     type(TrnSet)                           :: ts
 
-    logical :: do_footer
+    logical :: do_footer, do_raw
 
-    call ts_read_header(ts, file)
+    if (present(raw)) then
+       do_raw = raw
+    else
+       do_raw = .false.
+    end if    
+    
+    call ts_read_header(ts, file, do_raw)
 
     ! To read the footer we have to skip over all structures.
     ! The flag `readfooter=.false.' can thus save some time, if
@@ -215,11 +223,13 @@ contains
     ts%mode   = 'read'
     ts%init   = .true.
 
-    if (.not. ts%normalized) then
-       if (present(maxenergy)) then
-          call ts_normalize(ts, maxenergy)
-       else
-          call ts_normalize(ts, huge(1.0d0))
+    if (.not. do_raw) then
+       if (.not. ts%normalized) then
+          if (present(maxenergy)) then
+             call ts_normalize(ts, maxenergy)
+          else
+             call ts_normalize(ts, huge(1.0d0))
+          end if
        end if
     end if
 
@@ -528,7 +538,7 @@ contains
     integer :: i
     integer :: u
 
-    character(len=*), parameter :: dfrmt = '(4(1x,ES24.17))'
+    character(len=*), parameter :: dfrmt = '(1000(1x,ES24.17))'
 
     call ts_assert_init(ts)
     call ts_assert_readmode(ts)
@@ -567,8 +577,9 @@ contains
              allocate(sfval(nsf_max))
           end if
           call ts_read_sf_values(ts, nsf, sfval(1:nsf))
-          write(u,dfrmt) (sfval(i), i=1,nsf)
-       end do
+          write(u,dfrmt,advance='no') (sfval(i), i=1,nsf)
+          write(u,*)
+       end do       
     end do
 
     deallocate(sfval)
@@ -606,7 +617,7 @@ contains
     integer :: u
     logical :: fexists
 
-    character(len=*), parameter :: dfrmt = '(4(1x,ES24.17))'
+    character(len=*), parameter :: dfrmt = '(1000(1x,ES24.17))'
 
     inquire(file=trim(trnset_file), exist=fexists)
     if (fexists) then
@@ -739,13 +750,14 @@ contains
 
   !--------------------------------------------------------------------!
 
-  subroutine ts_read_header(ts, file)
+  subroutine ts_read_header(ts, file, raw)
 
     implicit none
 
     type(TrnSet),     intent(inout) :: ts
     character(len=*), intent(in)    :: file
-
+    logical,          intent(in)    :: raw
+    
     character(len=1024) :: file2
     logical             :: fexists
 
@@ -754,7 +766,7 @@ contains
     ! check, if normalized training set file exists:
     file2 = trim(adjustl(file)) // '.scaled'
     inquire(file=trim(file2), exist=fexists)
-    if (fexists) then
+    if ((.not. raw) .and. fexists) then
        write(*,*) 'Loading scaled training set file: ' // trim(file2)
        write(*,*)
     else
