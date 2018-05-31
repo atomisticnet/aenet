@@ -6,6 +6,9 @@
 #+LATEX_HEADER_extra: \hypersetup{colorlinks, linkcolor=blue, urlcolor=blue}
 #+LATEX_HEADER_extra: \setlength{\parindent}{0pt}\setlength{\parskip}{0.5em}
 
+#+HUGO_BASE_DIR: ./hugo
+#+HUGO_SECTION: documentation
+
 # This document is written in Emacs's org-mode format, which can be
 # exported to many other common formats (e.g., HTML, plain text, LaTeX).
 # If you are not an Emacs user, one of the alternative formats are
@@ -323,7 +326,7 @@ please contact Dr. Nongnuch Artrith (nartrith@atomistic.net).
   =[1]= N. Artrith and A. Urban,
   [[http://dx.doi.org/10.1016/j.commatsci.2015.11.047][ /Comput. Mater. Sci./ *114* (2016) 135-150]].
 
-  =[2]= N. Artrith, A. Urban, and Gerbrand Ceder,
+  =[2]= N. Artrith, A. Urban, and G. Ceder,
   [[http://dx.doi.org/10.1103/PhysRevB.96.014112][ /Phys. Rev. B/ *96* (2017) 014112]].
 
   =[3]= J. Behler and M. Parrinello,
