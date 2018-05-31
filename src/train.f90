@@ -1319,7 +1319,7 @@ contains !=============================================================!
 
     ! file header with column description
     header = "  Ref(eV)        ANN(eV)      #atoms  Ref(eV/atom)" &
-             // "   ANN(eV/atom) Ref-ANN(eV/atom)    ANN-error"
+             // "   ANN(eV/atom) Ref-ANN(eV/atom)    Cost-Func"
     frmt = '(2x,"#",A' // trim(io_adjustl(TYPELEN)) // ')'
     write(str, frmt) ts_trn%typeName(1)
     header = trim(header) // " " // trim(str)
