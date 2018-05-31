@@ -28,9 +28,10 @@ program trnset2ASCII
 
   character(len=1024) :: infile, outfile
   logical             :: to_bin
+  logical             :: raw
   type(TrnSet)        :: ts
 
-  call initialize(infile, outfile, to_bin)
+  call initialize(infile, outfile, to_bin, raw)
 
   if (to_bin) then
      write(*,*) 'Converting ASCII format to binary format.'
@@ -39,20 +40,20 @@ program trnset2ASCII
      write(*,*) 'Done.'
   else
      write(*,*) 'Converting binary format to ASCII text format.'
-     ts = open_TrnSet(infile)
+     ts = open_TrnSet(infile, raw=raw)
      call save_TrnSet_ASCII(ts, file=outfile)
      write(*,*) 'Done.'
   end if
 
 contains
 
-  subroutine initialize(infile, outfile, to_bin)
+  subroutine initialize(infile, outfile, to_bin, raw)
 
     implicit none
 
     character(len=*), intent(out) :: infile, outfile
     logical,          intent(out) :: to_bin
-
+    logical,          intent(out) :: raw
     integer :: iarg, nargs
     character(len=100) :: arg
 
@@ -67,13 +68,16 @@ contains
     infile = ' '
     outfile = ' '
     to_bin = .false.
-
+    raw = .false.
+    
     iarg = 1
     do while(iarg <= nargs)
        call get_command_argument(iarg, value=arg)
        select case(trim(arg))
        case('--to-binary')
           to_bin = .true.
+       case('--raw')
+          raw = .true.
        case default
           if (len_trim(infile) == 0) then
              infile = trim(arg)
