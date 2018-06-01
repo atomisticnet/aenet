@@ -1,0 +1,13 @@
+{
+    "potentials" : {
+        "Ti" : "Ti.10t-10t.nn",
+        "O"  : "O.10t-10t.nn",
+        "H"  : "H.10t-10t.nn"
+    },
+    "structure_file" : "input.vasp",
+    "trajectory_file" : "md.traj",
+    "temperature" : 300.0,
+    "md_steps"    : 100,
+    "print_steps" : 1,
+    "time_step"   : 1.0
+}
