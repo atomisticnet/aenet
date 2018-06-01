@@ -49,7 +49,7 @@ def get_training_details(outfile='train.out'):
     return epochs, train_mae, train_rmse, test_mae, test_rmse
 
 
-def parse_ascii_train_file(ascii_train='train.ascii'):
+def read_ascii_train_file(ascii_train='train.ascii'):
     """Parse the ascii train file into a dictionary.
 
     This contains information about the dataset, and each configuration in the
