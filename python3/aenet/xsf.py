@@ -80,7 +80,8 @@ def write_xsf(xsfile, atoms):
 
     output = '\n'.join(xsf)
 
-    base, fname = os.path.split(xsf)
+    base, fname = os.path.split(xsfile)
+
     if not os.path.isdir(base):
         os.makedirs(base)
 
