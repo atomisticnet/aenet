@@ -9,8 +9,9 @@ comment in the file.
 
 """
 
-import ase.io
+import os
 import re
+import ase.io
 
 
 def read_xsf(xsfile):
@@ -47,12 +48,12 @@ def write_xsf(xsfile, atoms):
 
     Parameters
     ----------
-    xsfile: string
+    xsfile : string
         Filename to write xsf file to
-    atoms: ase.Atoms
+
+    atoms : ase.Atoms
         an ase atoms object with an attached calculator to get energy and
         forces.
-
 
     Returns
     -------
@@ -78,6 +79,11 @@ def write_xsf(xsfile, atoms):
     xsf += [S.format(atom=atom, f=forces[i]) for i, atom in enumerate(atoms)]
 
     output = '\n'.join(xsf)
+
+    base, fname = os.path.split(xsf)
+    if not os.path.isdir(base):
+        os.makedirs(base)
+
     with open(xsfile, 'w') as f:
         f.write(output)
 
