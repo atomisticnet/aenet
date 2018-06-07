@@ -6,6 +6,7 @@
 import re
 import numpy as np
 from io import StringIO
+import hashlib
 
 
 def get_training_details(outfile='train.out'):
@@ -172,3 +173,48 @@ def read_predict_out(predictfile='predict.out'):
                     break
 
     return zip(files, natoms, energies)
+
+
+def aenet_hash(atoms):
+    """Get an sha1 hash for the atoms.
+
+    This is a string that is practically unique for each atoms. It is a hash of
+    a string containing the atomic numbers, positions, cell and periodic
+    boundary conditions.
+
+    Parameters
+    ----------
+
+    atoms : ase.Atoms
+
+    Returns
+    -------
+    The hash
+
+    """
+
+    s = f'{atoms.numbers}{atoms.positions}{atoms.cell}{atoms.pbc}'
+    return hashlib.sha1(s.encode('utf-8')).hexdigest()
+
+
+def aenet_write_db(db, atoms, **kwargs):
+    """Write atoms to a database if it has not been written before.
+    The hash is automatically added for you.
+
+    Parameters
+    ----------
+
+    atoms : ase.Atoms
+
+    **kwargs : extra keywords to pass to db.write.
+
+    Returns
+    -------
+
+    """
+    hsh = aenet_hash(atoms)
+    try:
+        row = db.get(hash=hsh)
+        return row
+    except KeyError:
+        return db.write(atoms, hash=hsh, **kwargs)
