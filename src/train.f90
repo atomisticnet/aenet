@@ -1021,6 +1021,7 @@ contains !=============================================================!
        shift = ts%shift
     end if
     call pp_bcast(scale)
+    call pp_bcast(shift)
 
     ! file names for process local data set files
     procTrnFile = 'TRAIN.'//trim(io_adjustl(ppRank))
