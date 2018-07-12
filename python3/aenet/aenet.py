@@ -3,14 +3,14 @@
 This module helps automate creation of the input files.
 '''
 
-
+import glob
 import json
 import os
 from subprocess import Popen, PIPE
 from aenet.ase_calculator import ANNCalculator
 import numpy as np
 from io import StringIO
-
+from itertools import combinations_with_replacement
 
 GENERATEX = 'generate.x'
 TRAINX = 'train.x'
@@ -92,7 +92,38 @@ def aenet(label='aenet', elements=(), xsfiles=()):
     return p
 
 
-def chebyshev_basis(aenet, radial_rc=4.0, radial_n=6, angular_rc=4.0, angular_n=2):
+def symmfunc_centered(aenet, Rc=6.5, g2_etas=(),
+                      g4_etas=(), g4_lambdas=(), g4_zetas=()):
+    elements = [sym for sym, _ae in aenet['elements']]
+
+    radial_fingerprints = [[('G', 2), ('type2', sym),
+                            ('eta', eta), ('Rs',  0.0000), ('Rc', Rc)]
+                           for eta in g2_etas for sym in elements]
+
+    # angular fingerprints
+    angular_fingerprints = []
+
+    for zeta in g4_zetas:
+        for _lambda in g4_lambdas:
+            for eta in g4_etas:
+                for (t2, t3) in set(combinations_with_replacement(elements, 2)):
+                    fp = [('G', 4), ('type2', t2), ('type3', t3),
+                          ('eta',  eta), ('lambda', _lambda),
+                          ('zeta', zeta), ('Rc', Rc)]
+            angular_fingerprints += [fp]
+
+    fingerprints = radial_fingerprints + angular_fingerprints
+    s = '\n'.join(['  '.join(['{}={}'.format(key, val) for key, val in fp])
+                   for fp in fingerprints])
+
+    sf = f'''SYMMFUNC type=Behler2011
+{len(fingerprints)}
+{s}\n'''
+    return sf
+
+
+def chebyshev_basis(aenet, radial_rc=4.0, radial_n=6,
+                    angular_rc=4.0, angular_n=2):
     """Returns the Chebshev basis section of a fingerprint file.
 
     Parameters
@@ -437,7 +468,8 @@ def train_in(aenet,
 
 def train_x(aenet,
             inputfile=None,
-            txtfile=None):
+            txtfile=None,
+            save=False):
     """Run train.x"""
 
     if inputfile is None:
@@ -449,7 +481,7 @@ def train_x(aenet,
     aenet['train']['outputfile'] = txtfile
     aenet_save(aenet)
 
-    cmd = [TRAINX, inputfile, '>', txtfile]
+    cmd = [TRAINX, inputfile, '|', 'tee', txtfile]
 
     print('Starting the training process.')
     for f in ['TRAIN.0', 'TEST.0']:
@@ -461,6 +493,11 @@ def train_x(aenet,
 
     with open(txtfile, 'wb') as f:
         f.write(output)
+
+    if not save:
+        for nn in glob.glob('*.nn-*'):
+            os.unlink(nn)
+
     print('Done with training.')
 
 
