@@ -6,7 +6,7 @@ See also: https://wiki.fysik.dtu.dk/ase
 from __future__ import print_function, division
 
 __author__ = "Alexander Urban, Nongnuch Artrith"
-__email__ = "alexurba@mit.edu, nartrith@mit.edu"
+__email__ = "aurban@atomistic.net, nartrith@atomistic.net"
 __date__   = "2014-09-19"
 __version__ = "0.1"
 
@@ -15,7 +15,7 @@ import numpy as np
 try:
     from ase.calculators.calculator import all_changes
     from ase.calculators.calculator import Calculator
-    from ase.calculators.neighborlist import NeighborList
+    from ase.neighborlist import NeighborList
 except ImportError:
     sys.stderr.write("Error: could not import ASE "
                      "(https://wiki.fysik.dtu.dk/ase).")
@@ -47,9 +47,8 @@ class ANNCalculator(Calculator):
         del self.ann
 
     def update(self, atoms):
-
-        if (self.neighbors is None) or (
-                len(self.neighbors.cutoffs) != len(atoms)):
+        if ((self.neighbors is None) or 
+            (len(self.neighbors.nl.cutoffs) != len(atoms))):
             cutoffs = self.cutoff*np.ones(len(atoms))
             self.neighbors = NeighborList(cutoffs,
                                           self_interaction=False,
