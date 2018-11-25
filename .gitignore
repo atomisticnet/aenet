@@ -1,9 +1,9 @@
+*~
+*.so
+*.egg-info
 TAGS
 run
 debug
-*~
-/python3/aenet/core.c
 __pycache__
-*.egg-info
-*.so
+core.c
 build
