@@ -1021,6 +1021,7 @@ contains !=============================================================!
        shift = ts%shift
     end if
     call pp_bcast(scale)
+    call pp_bcast(shift)
 
     ! file names for process local data set files
     procTrnFile = 'TRAIN.'//trim(io_adjustl(ppRank))
@@ -1347,9 +1348,9 @@ contains !=============================================================!
 
     if (ppMaster) then
        MAE_trn  = 1000.0d0*MAE_trn/ts_trn%scale
-       RMSE_trn = 1000.0d0*sqrt(SSE_trn/dble(nTrain))/ts_trn%scale
+       RMSE_trn = 1000.0d0*sqrt(2.0d0*SSE_trn/dble(nTrain))/ts_trn%scale
        MAE_tst  = 1000.0d0*MAE_tst/ts_tst%scale
-       RMSE_tst = 1000.0d0*sqrt(SSE_tst/dble(nTest))/ts_tst%scale
+       RMSE_tst = 1000.0d0*sqrt(2.0d0*SSE_tst/dble(nTest))/ts_tst%scale
 
        write(*,'(1x,"Final MAE of training set  = ",F8.1," meV/atom")') MAE_trn
        write(*,'(1x,"Final MAE of testing set   = ",F8.1," meV/atom")') MAE_tst

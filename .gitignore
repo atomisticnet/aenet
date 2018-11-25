@@ -1,9 +1,9 @@
+*~
+*.so
+*.egg-info
 TAGS
 run
 debug
-*~
 __pycache__
-*.so
-*.egg-info
 core.c
 build
