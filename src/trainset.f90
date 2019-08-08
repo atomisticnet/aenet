@@ -635,7 +635,7 @@ contains
        stop
     end if
 
-    ts1 = load_TrnSet_info(unit=u)
+    ts1 = load_TrnSet_info_ASCII(unit=u)
     ts = new_TrnSet(ts1%nTypes, ts1%typeName, ts1%E_atom, ts1%nStrucs, &
                     trnset_file, ts1%scale, ts1%shift)
     call close_TrnSet(ts1)
