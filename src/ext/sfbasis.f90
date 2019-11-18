@@ -814,14 +814,15 @@ contains
     fc_j = sfb_fc(d_ij, sfb%a_Rc)
     fc_k = sfb_fc(d_ik, sfb%a_Rc)
     w_ijk = fc_j*fc_k
-    f = chebyshev_polynomial(cos_ijk, 0.0d0, PI, sfb%a_order)
+
+    f = chebyshev_polynomial(cos_ijk, -1.0d0, 1.0d0, sfb%a_order)
 
     values(1:sfb%a_N) = w_ijk*f
 
     if (present(deriv_i) .and. present(deriv_j) .and. present(deriv_k)) then
        dfc_j = sfb_fc_d1(d_ij, sfb%a_Rc)
        dfc_k = sfb_fc_d1(d_ik, sfb%a_Rc)
-       df = chebyshev_polynomial_d1(cos_ijk, 0.0d0, PI, sfb%a_order)
+       df = chebyshev_polynomial_d1(cos_ijk, -1.0d0, 1.0d0, sfb%a_order)
        id_ij2 = 1.0d0/(d_ij*d_ij)
        id_ik2 = 1.0d0/(d_ik*d_ik)
        id_ij_ik = 1.0d0/(d_ij*d_ik)
