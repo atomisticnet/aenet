@@ -4,7 +4,7 @@
 #-----------------------------------------------------------------------
 #+ This file is part of the AENET package.
 #+
-#+ Copyright (C) 2012-2018 Nongnuch Artrith and Alexander Urban
+#+ Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban
 #+
 #+ This Source Code Form is subject to the terms of the Mozilla Public
 #+ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,8 @@ TLSBIN   = ../tools/
 TOOL1    = $(TLSBIN)trnset2ASCII.x
 TOOL2    = $(TLSBIN)neighbors.x
 TOOL3    = $(TLSBIN)fingerprint.x
-TOOLS    = $(TOOL1) $(TOOL2) $(TOOL3)
+TOOL4    = $(TLSBIN)trnset_info.x
+TOOLS    = $(TOOL1) $(TOOL2) $(TOOL3) $(TOOL4)
 
 #------------------------------- rules --------------------------------#
 
