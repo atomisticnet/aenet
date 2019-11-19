@@ -13,7 +13,7 @@ dynamics or Monte-Carlo simulations.
 
 # License
 
-Copyright (C) 2012-2018 Nongnuch Artrith (nartrith@atomistic.net)
+Copyright (C) 2012-2019 Nongnuch Artrith (nartrith@atomistic.net)
 
 The **aenet** source code is subject to the terms of the Mozilla Public
 License, v. 2.0. If a copy of the MPL was not distributed with this
