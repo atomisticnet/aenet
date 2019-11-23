@@ -11,6 +11,10 @@
  GNU Fortran Compiler
  --------------------
 
+ Most GFortran Makefiles are compatible with Linux and MacOS.  For those
+ that link with the Intel MKL, separate MacOS-only Makefiles are needed
+ ("_MacOS" appended to file name).
+
  Makefile.gfortran_serial          - Serial version using system BLAS
                                      and LAPACK libraries
  Makefile.gfortran_openblas_serial - Serial version using the OpenBLAS
