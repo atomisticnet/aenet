@@ -396,6 +396,7 @@ contains
     integer                                           :: iat, iT
     double precision                                  :: Rc, Rc2, dist2
     double precision, dimension(3)                    :: coo2, cart
+    integer                                           :: itype_
 
     if (.not. isInit) then
        write(0,*) "Error: module not initialized in `nbdist'."
@@ -412,6 +413,8 @@ contains
        stop
     end if
 
+    itype_ = 99999 ! absurd value to avoid GNU segfaults when itype is not present
+    if (present(itype)) itype_ = itype
     if (present(stat)) stat = 0
     if (present(r_cut)) then
        Rc = r_cut
@@ -429,7 +432,7 @@ contains
     ! (2) check distance do the periodic images of the central atom:
 
     nnb_tot = 0
-    if ( (.not. present(itype)) .or. (atomType(iatom) == itype)) then
+    if ( (.not. present(itype)) .or. (atomType(iatom) == itype_)) then
        do iT = 1, nTvecs
           cart(1:3) = matmul(latticeVec, dble(Tvec(1:3,iT)))
           dist2 = sum(cart*cart)
@@ -456,7 +459,7 @@ contains
 
     do inb = 1, nnb2
        iat = nblist_loc(inb)
-       if ( present(itype) .and. (atomType(iat) /= itype)) cycle
+       if ( present(itype) .and. (atomType(iat) /= itype_)) cycle
        ! in home unit cell:
        cart(1:3) = cooLatt(1:3,iat) - cooLatt(1:3,iatom)
        cart(1:3) = matmul(latticeVec, cart(1:3))
@@ -533,6 +536,7 @@ contains
     double precision                         :: Rc, Rc2, dist2
     double precision, dimension(3)           :: coo1, coo2, cart
     integer                                  :: nblist_stat
+    integer                                  :: itype_
 
     if (.not. isInit) then
        write(0,*) "Error: module not initialized in `nbdist'."
@@ -549,6 +553,8 @@ contains
        stop
     end if
 
+    itype_ = 99999 ! absurd value to avoid GNU segfaults when itype is not present
+    if (present(itype)) itype_ = itype
     if (present(stat)) stat = 0
     if (present(r_cut)) then
        Rc = r_cut
@@ -575,7 +581,7 @@ contains
     ! (2) check distance do the periodic images of the central atom:
 
     nnb_tot = 0
-    if ( (.not. present(itype)) .or. (atomType(iatom) == itype)) then
+    if ( (.not. present(itype)) .or. (atomType(iatom) == itype_)) then
        do iT = 1, nTvecs
           cart(1:3) = matmul(latticeVec, dble(Tvec(1:3,iT)))
           dist2 = sum(cart*cart)
@@ -608,7 +614,7 @@ contains
 
     do inb = 1, nnb2
        iat = nblist_loc(inb)
-       if ( present(itype) .and. (atomType(iat) /= itype)) cycle
+       if ( present(itype) .and. (atomType(iat) /= itype_)) cycle
        ! in home unit cell:
        coo2(1:3) = matmul(latticeVec, cooLatt(1:3,iat))
        cart(1:3) = coo2(1:3) - coo1(1:3)
