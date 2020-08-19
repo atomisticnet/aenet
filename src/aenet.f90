@@ -390,7 +390,6 @@ contains
        stat = AENET_ERR_MALLOC
        return
     end if
-    sfval(:) = 0.0d0
 
     nsf = aenet_pot(type_i)%stp%nsf
     call stp_eval(type_i, coo_i, n_j, coo_j, type_j, &
