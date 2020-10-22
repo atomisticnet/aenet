@@ -246,7 +246,7 @@ contains
     call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G0, dGi0, dGj0(1:3,1:nG,1:nx))
 
     ! numerical derivatives wrt. central atom
-    d = 0.01d0
+    d = 0.0001d0
     dd(1,:) = [d, 0.0d0, 0.0d0]
     dd(2,:) = [0.0d0, d, 0.0d0]
     dd(3,:) = [0.0d0, 0.0d0, d]
