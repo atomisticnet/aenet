@@ -1,0 +1,51 @@
+#-*- mode: makefile -*-
+#-----------------------------------------------------------------------
+#          GNU Fortran Compiler + Intel MKL + MPI on MacOS
+#-----------------------------------------------------------------------
+#+ This file is part of the AENET package.
+#+
+#+ Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban
+#+
+#+ This Source Code Form is subject to the terms of the Mozilla Public
+#+ License, v. 2.0. If a copy of the MPL was not distributed with this
+#+ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#+
+#+ This program is distributed in the hope that it will be useful, but
+#+ WITHOUT ANY WARRANTY; without even the implied warranty of
+#+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#+ Mozilla Public License, v. 2.0, for more details.
+#+ ---------------------------------------------------------------------
+#+ If you make use of AENET for your publication, please cite:
+#+ [1] N. Artrith and A. Urban, Comput. Mater. Sci. 114 (2016) 135-150.
+#+ [2] J. Behler and M. Parrinello, Phys. Rev. Lett. 98 (2007) 146401.
+#+
+#+ If you used the Chebyshev descriptor, please cite:
+#+ [3] N. Artrith, A. Urban, and G. Ceder, PRB 96 (2017) 014112.
+#-----------------------------------------------------------------------
+# 2019-10-21 Alexander Urban (AU) and Nongnuch Artrith (NA)
+#-----------------------------------------------------------------------
+
+SUFFIX   = gfortran_mkl_serial_macos
+
+FC       = gfortran -c
+LD       = gfortran
+DEBUG    =
+FCFLAGS  = -O2 -pedantic -fexternal-blas  \
+           -m64 -I${MKLROOT}/include $(DEBUG)
+LDFLAGS  = -static-libgfortran $(DEBUG)
+NUMLIB   =  ${MKLROOT}/lib/libmkl_intel_ilp64.a \
+            ${MKLROOT}/lib/libmkl_sequential.a \
+            ${MKLROOT}/lib/libmkl_core.a -lpthread -lm -ldl
+
+CC       = gcc -c
+CCFLAGS  =
+
+# linker for C-interoperable library (gcc & gfortran)
+LIBLD    = gcc
+LIBFLAGS = -shared -Wl,-no_compact_unwind
+LIBLIB   = $(LIB) $(NUMLIB) -lgfortran
+
+AR       = ar
+ARFLAGS  = -crusv
+
+include ./Makefile.inc

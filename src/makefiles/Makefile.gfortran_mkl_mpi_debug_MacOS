@@ -1,0 +1,46 @@
+#-*- mode: makefile -*-
+#-----------------------------------------------------------------------
+#                    GNU Fortran Compiler + MPI
+#-----------------------------------------------------------------------
+#+ This file is part of the AENET package.
+#+
+#+ Copyright (C) 2012-2018 Nongnuch Artrith and Alexander Urban
+#+
+#+ This Source Code Form is subject to the terms of the Mozilla Public
+#+ License, v. 2.0. If a copy of the MPL was not distributed with this
+#+ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#+
+#+ This program is distributed in the hope that it will be useful, but
+#+ WITHOUT ANY WARRANTY; without even the implied warranty of
+#+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#+ Mozilla Public License, v. 2.0, for more details.
+#-----------------------------------------------------------------------
+# 2019-10-21 Alexander Urban (AU) and Nongnuch Artrith (NA)
+#-----------------------------------------------------------------------
+
+SUFFIX   = gfortran_mkl_mpi_debug
+
+OMPI_FC := gfortran
+FC       = mpif90 -c
+LD       = mpif90
+DEBUG    = -DDEBUG -Wall -fbounds-check \
+           -ffpe-trap=invalid,zero,overflow,underflow,denormal
+FCFLAGS  = -DPARALLEL -O2 -pedantic -fexternal-blas  \
+           -m64 -I${MKLROOT}/include $(DEBUG)
+LDFLAGS  = -static-libgfortran $(DEBUG)
+NUMLIB   =  ${MKLROOT}/lib/libmkl_intel_ilp64.a \
+            ${MKLROOT}/lib/libmkl_sequential.a \
+            ${MKLROOT}/lib/libmkl_core.a -lpthread -lm -ldl
+
+CC       = gcc -c
+CCFLAGS  =
+
+# linker for C-interoperable library (gcc & gfortran)
+LIBLD    = gcc
+LIBFLAGS = -shared
+LIBLIB   = -lgfortran
+
+AR       = ar
+ARFLAGS  = -crusv
+
+include ./Makefile.inc
