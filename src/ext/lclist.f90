@@ -379,7 +379,7 @@ contains
   !      retrieve real PBC coordinates of the neighbouring atoms       !
   !--------------------------------------------------------------------!
 
-  subroutine lcl_nbdist(iatom, nnb, nbcoo, nbdist, r_cut, itype, stat)
+  subroutine lcl_nbdist(iatom, nnb, nbcoo, nbdist, r_cut, itype_opt, stat)
 
     implicit none
 
@@ -388,12 +388,13 @@ contains
     double precision, dimension(3,nnb), intent(out)   :: nbcoo
     double precision, dimension(nnb),   intent(out)   :: nbdist
     double precision, optional,         intent(in)    :: r_cut
-    integer,          optional,         intent(in)    :: itype
+    integer,          optional,         intent(in)    :: itype_opt
     integer,          optional,         intent(out)   :: stat
 
     integer,          dimension(nmax_nblist)          :: nblist_loc
     integer                                           :: nnb_tot, inb, nnb2
     integer                                           :: iat, iT
+    integer                                           :: itype
     double precision                                  :: Rc, Rc2, dist2
     double precision, dimension(3)                    :: coo2, cart
 
@@ -410,6 +411,12 @@ contains
     if ((nnb < nmax_nbdist) .and. (.not. present(stat))) then
        write(0,*) "Error: array nbcoo too small in `nbdist'. (1)"
        stop
+    end if
+
+    if (present(itype_opt)) then
+       itype = itype_opt
+    else
+       itype = -1
     end if
 
     if (present(stat)) stat = 0
@@ -429,7 +436,7 @@ contains
     ! (2) check distance do the periodic images of the central atom:
 
     nnb_tot = 0
-    if ( (.not. present(itype)) .or. (atomType(iatom) == itype)) then
+    if ( (.not. present(itype_opt)) .or. (atomType(iatom) == itype)) then
        do iT = 1, nTvecs
           cart(1:3) = matmul(latticeVec, dble(Tvec(1:3,iT)))
           dist2 = sum(cart*cart)
@@ -456,7 +463,7 @@ contains
 
     do inb = 1, nnb2
        iat = nblist_loc(inb)
-       if ( present(itype) .and. (atomType(iat) /= itype)) cycle
+       if (present(itype_opt) .and. (atomType(iat) /= itype)) cycle
        ! in home unit cell:
        cart(1:3) = cooLatt(1:3,iat) - cooLatt(1:3,iatom)
        cart(1:3) = matmul(latticeVec, cart(1:3))
@@ -510,7 +517,7 @@ contains
   !    same as `lcl_nbdist', but cartesian coordinates are returned    !
   !--------------------------------------------------------------------!
 
-  subroutine lcl_nbdist_cart(iatom, nnb, nbcoo, nbdist, r_cut, itype, &
+  subroutine lcl_nbdist_cart(iatom, nnb, nbcoo, nbdist, r_cut, itype_opt, &
                              nblist, nbtype, stat)
 
     implicit none
@@ -520,7 +527,7 @@ contains
     double precision, dimension(3,nnb),         intent(out)   :: nbcoo
     double precision, dimension(nnb),           intent(out)   :: nbdist
     double precision,                 optional, intent(in)    :: r_cut
-    integer,                          optional, intent(in)    :: itype
+    integer,                          optional, intent(in)    :: itype_opt
     integer,          dimension(nnb), optional, intent(out)   :: nblist
     integer,          dimension(nnb), optional, intent(out)   :: nbtype
     integer,                          optional, intent(out)   :: stat
@@ -530,6 +537,7 @@ contains
     integer,          dimension(nmax_nblist) :: nblist_loc
     integer                                  :: nnb_tot, inb, nnb2
     integer                                  :: iat, iT
+    integer                                  :: itype
     double precision                         :: Rc, Rc2, dist2
     double precision, dimension(3)           :: coo1, coo2, cart
     integer                                  :: nblist_stat
@@ -547,6 +555,12 @@ contains
     if ((nnb < nmax_nbdist) .and. (.not. present(stat))) then
        write(0,*) "Error: array nbcoo too small in `nbdist_cart'. (1)"
        stop
+    end if
+
+    if (present(itype_opt)) then
+       itype = itype_opt
+    else
+       itype = -1
     end if
 
     if (present(stat)) stat = 0
@@ -575,7 +589,7 @@ contains
     ! (2) check distance do the periodic images of the central atom:
 
     nnb_tot = 0
-    if ( (.not. present(itype)) .or. (atomType(iatom) == itype)) then
+    if ( (.not. present(itype_opt)) .or. (atomType(iatom) == itype)) then
        do iT = 1, nTvecs
           cart(1:3) = matmul(latticeVec, dble(Tvec(1:3,iT)))
           dist2 = sum(cart*cart)
@@ -608,7 +622,7 @@ contains
 
     do inb = 1, nnb2
        iat = nblist_loc(inb)
-       if ( present(itype) .and. (atomType(iat) /= itype)) cycle
+       if (present(itype_opt) .and. (atomType(iat) /= itype)) cycle
        ! in home unit cell:
        coo2(1:3) = matmul(latticeVec, cooLatt(1:3,iat))
        cart(1:3) = coo2(1:3) - coo1(1:3)
