@@ -2,7 +2,7 @@
 
 <span id="sec:about"></span>
 
-The Atomic Energy NETwork (**ænet**) package is a collection of tools
+The Atomic Energy NETwork (**ænet**) package (http://ann.atomistic.net) is a collection of tools
 for the construction and application of atomic interaction potentials
 based on artificial neural networks (ANN). The **ænet** code allows the
 accurate interpolation of structural energies, e.g., from electronic
@@ -13,7 +13,7 @@ dynamics or Monte-Carlo simulations.
 
 # License
 
-Copyright (C) 2012-2019 Nongnuch Artrith (nartrith@atomistic.net)
+Copyright (C) 2012-2022 Nongnuch Artrith (nartrith@atomistic.net)
 
 The **aenet** source code is subject to the terms of the Mozilla Public
 License, v. 2.0. If a copy of the MPL was not distributed with this
