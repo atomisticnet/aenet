@@ -21,7 +21,7 @@
 !+ If you used the Chebyshev descriptor, please cite:
 !+ [3] N. Artrith, A. Urban, and G. Ceder, PRB 96 (2017) 014112.
 !-----------------------------------------------------------------------
-! 2023-02-16 John Lopez-Zorrilla
+! 2023-02-16 Jon López-Zorrilla
 !-----------------------------------------------------------------------
 module pytorchoutput
 
