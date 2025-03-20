@@ -33,13 +33,15 @@ LIB = ../lib/liblbfgsb.a
 
 OBJECTS  = aenet.o aeio.o chebyshev.o constants.o feedforward.o geometry.o \
            input.o io.o lclist.o optimize.o parallel.o potential.o random.o \
-           sfbasis.o sfsetup.o sortlib.o symmfunc.o timing.o trainset.o xsflib.o
+           sfbasis.o sfsetup.o sortlib.o symmfunc.o timing.o trainset.o \
+		   xsflib.o pytorchoutput.o
 
 PICOBJECTS  = aenet_pic.o aeio_pic.o chebyshev_pic.o constants_pic.o \
               feedforward_pic.o geometry_pic.o input_pic.o io_pic.o \
               lclist_pic.o optimize_pic.o parallel_pic.o potential_pic.o \
               random_pic.o sfbasis_pic.o sfsetup_pic.o sortlib_pic.o \
-              symmfunc_pic.o timing_pic.o trainset_pic.o xsflib_pic.o
+              symmfunc_pic.o timing_pic.o trainset_pic.o xsflib_pic.o \
+			  pytorchoutput_pic.o
 
 #------------------------------ targets -------------------------------#
 
