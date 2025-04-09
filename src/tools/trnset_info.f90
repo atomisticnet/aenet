@@ -36,7 +36,7 @@ program trnset_info
   type(TrnSet)        :: ts
 
   call initialize(infile)
-  ts = open_TrnSet(infile, raw=raw)
+  ts = open_TrnSet(infile, raw=.true.)
   call ts_print_info(ts)
   call close_TrnSet(ts)
 
@@ -80,7 +80,7 @@ contains
        iarg = iarg + 1
     end do
 
-    if ((len(infile) == 0) .or. (len(outfile) == 0))then
+    if (len(infile) == 0) then
        write(0,*) 'Error: No input file specified.'
        call finalize()
        stop
