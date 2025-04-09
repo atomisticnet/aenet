@@ -100,6 +100,7 @@ veryclean: clean
 	for f in $(TARGETS); do rm -f $$f-*; done
 	if [ -e libaenet.a ]; then rm -f libaenet.a; fi
 	if [ -e libaenet.so ]; then rm -f libaenet.so; fi
+	if [ -e libaenet.dylib ]; then rm -f libaenet.dylib; fi
 	if [ -e TAGS ]; then rm -f TAGS; fi
 	for f in $(TESTS); do rm -f $$f-*; done
 
