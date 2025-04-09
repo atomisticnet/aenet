@@ -123,6 +123,10 @@ module input
      ! mc_ntypes_group(i) number of atom types in group i              !
      ! mc_group_type(i,j) j-th type in i-th group                      !
      !                                                                 !
+     !---------------------- PyTorch Interface ------------------------!
+     ! pyo_forces       .true. if force-training should be performed   !
+     ! pyo_forces_percent  fraction (not percentage) of force data to  !
+     !                  be used for training                           !
      !-----------------------------------------------------------------!
      ! do_debug         activate debugging options                     !
      !-----------------------------------------------------------------!
@@ -181,8 +185,11 @@ module input
      integer,                dimension(:),   allocatable :: mc_ntypes_group
      integer,                dimension(:,:), allocatable :: mc_group_type
 
+     logical                                             :: pyo_forces
+     double precision                                    :: pyo_forces_percent
+
      logical                                             :: do_debug
-  end type InputData
+   end type InputData
 
   !--------------------------------------------------------------------!
 
@@ -244,6 +251,9 @@ contains
     inp%mc_relax_final = .false.
     inp%mc_ngroups     = 0
 
+    inp%pyo_forces = .false.
+    inp%pyo_forces_percent = 1.0d0
+
     inp%do_debug     = .false.
 
   end subroutine inp_defaults
@@ -287,6 +297,10 @@ contains
                   trim(file), "'"
        return
     end if
+
+    call inp_read_value(u, 'forces',        inp%pyo_forces)
+    call inp_read_value(u, 'forcespercent', inp%pyo_forces_percent)
+    inp%pyo_forces_percent = inp%pyo_forces_percent/100
 
     call inp_read_value(u, 'output', inp%outFileName)
     call inp_read_value(u, 'timing', inp%do_timing)

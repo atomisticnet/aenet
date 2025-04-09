@@ -93,6 +93,13 @@ program generate
                       ts_write_atom_info,     &
                       ts_write_structure_info
 
+  use pytorchoutput, only: pyo_write_init,          &
+                      pyo_write_final,              &
+                      pyo_write_header_info,        &
+                      pyo_write_structure_info,     &
+                      pyo_write_atom_sf_info,       &
+                      pyo_select_force_structures
+
   implicit none
 
   !--------------------------------------------------------------------!
@@ -104,6 +111,7 @@ program generate
   ! nbcoo(i,j)     i-th component of the coordinates of the j-th       !
   !                neighboring atom                                    !
   ! nbdist(i)      distance of the i-th neighbor                       !
+  ! nblist(i)      index of the i-th potential neighbor                !
   !                                                                    !
   ! sfval(i)         value of the i-th basis function                  !
   ! sfderiv_i(i,j)   i-th component of the derivative of the j-th SF   !
@@ -135,6 +143,7 @@ program generate
   integer                                        :: nnb_max, nnb
   double precision,  dimension(:,:), allocatable :: nbcoo
   double precision,  dimension(:),   allocatable :: nbdist
+  integer,           dimension(:),   allocatable :: nblist
   integer,           dimension(:),   allocatable :: nbtype
 
   double precision, dimension(:),     allocatable :: sfval
@@ -159,6 +168,11 @@ program generate
   logical                                        :: do_debug = .false.
   integer                                        :: u_dbg, idbg
 
+  integer                                        :: u_pyo
+  integer                                        :: max_nnb_trainset
+  integer                                        :: pyo_forces_struc
+  integer,           dimension(:),   allocatable :: struc_write_force
+
   integer :: i
 
   ! timing registers
@@ -171,8 +185,6 @@ program generate
   inp = read_InpGenerate(inFile)
   allocate(stp(inp%nTypes))
   call load_symmfunc_setups(inp, stp)
-
-  ! call parse_input(inFile)
 
   if (inp%do_timing) then
      u_tng = io_unit()
@@ -188,7 +200,7 @@ program generate
   ! get interaction range and max. number of atoms within range
   call stp_get_range(inp%nTypes, stp, r_min, r_max)
   nnb_max = lcl_nmax_nbdist(r_min, r_max)
-  allocate(nbcoo(3,nnb_max), nbdist(nnb_max), nbtype(nnb_max))
+  allocate(nbcoo(3,nnb_max), nbdist(nnb_max), nblist(nnb_max), nbtype(nnb_max))
 
   ! initialize workspace for structural fingerprint basis:
   call stp_init(inp%nTypes, stp, nnb_max)
@@ -228,6 +240,17 @@ program generate
                   inp%nStrucs, trim(inp%outFileName))
 
   if (inp%do_timing) call tng_timing('Training set file started.')
+
+  !--------------- write pytorch force training header ----------------!
+  
+  if (inp%pyo_forces) then
+     u_pyo = io_unit()
+     call pyo_write_init(u_pyo, trim(inp%outFileName)//".forces")
+     call pyo_write_header_info(u_pyo, inp%nStrucs)
+     call pyo_select_force_structures( &
+                 inp%nStrucs, inp%pyo_forces_percent, struc_write_force)
+     max_nnb_trainset = 0
+  endif
 
   !------------------ iterate over coordinates files ------------------!
 
@@ -300,6 +323,13 @@ program generate
 
      ! write structure info (atoms, types, energy) to training set file:
      call ts_write_structure_info(ts, cooFile, nAtoms, nTypes, E_coh)
+     
+     ! write structure info (atoms, types) to pytorch forces file:
+     if (inp%pyo_forces) then
+      pyo_forces_struc = struc_write_force(ifile)
+      call pyo_write_structure_info(u_pyo, cooFile, nAtoms, nTypes, &
+                                    pyo_forces_struc)
+    end if
 
      atoms : do iatom = 1, nAtoms
 
@@ -322,7 +352,9 @@ program generate
 
         ! get all atoms within cut-off:
         nnb = nnb_max
-        call lcl_nbdist_cart(iatom, nnb, nbcoo, nbdist, r_cut=r_max, nbtype=nbtype)
+        call lcl_nbdist_cart(iatom, nnb, nbcoo, nbdist, r_cut=r_max, &
+                             nblist=nblist, nbtype=nbtype)
+
         if (inp%do_timing) call tng_timing3(register=R_NBL)
         write(*,'(1x,I6,2x,A2,2x,I6)') &
              iatom, trim(atomTypeName(atomType(iatom))), nnb
@@ -340,7 +372,8 @@ program generate
 
         ! evaluate the structural fingerprint basis function set-up:
         call stp_eval(itype1, cooCart(iatom), nnb, nbcoo, nbtype, &
-                      stp(itype1), sfval=sfval)
+                      stp(itype1), sfval=sfval, sfderiv_i=sfderiv_i, &
+                      sfderiv_j=sfderiv_j)
 
         if (do_debug) then
            do idbg = 1, stp(itype1)%nsf
@@ -354,6 +387,15 @@ program generate
         ! write basis function values and derivatives
         ! to the training set file:
         call ts_write_sf_info(ts, stp(itype1)%nsf, sfval(1:stp(itype1)%nsf))
+
+        ! write basis function derivatives and neighbor list to pytorch output
+        if (inp%pyo_forces .and. pyo_forces_struc==1) then
+            max_nnb_trainset = max(max_nnb_trainset, nnb)
+            call pyo_write_atom_sf_info( &
+               u_pyo, itype1, nnb, stp(itype1)%nsf, nblist(:nnb), &
+               sfderiv_i(1:3,1:stp(itype1)%nsf), &
+               sfderiv_j(1:3,1:stp(itype1)%nsf,1:nnb))
+        end if
 
      end do atoms
 
@@ -382,8 +424,12 @@ program generate
 
   !----------------------------- finalize -----------------------------!
 
-  deallocate(nbcoo, nbdist, nbtype)
+  deallocate(nbcoo, nbdist, nblist, nbtype)
   close(u_in)
+  
+  if (inp%pyo_forces) then
+   call pyo_write_final(u_pyo, max_nnb_trainset)
+  end if
 
   call close_TrnSet(ts, stp=stp(1:inp%nTypes))
   call finalize()
