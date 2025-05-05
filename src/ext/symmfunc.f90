@@ -645,11 +645,11 @@ contains !-------------------------------------------------------------!
 
     Fijk  = arg**zeta
 
-    dFijk_dRj = prefactor*( -cost*( vecRij/Rij ) &
-                            + vecRik/Rij )
+    dFijk_dRj = prefactor*( -cost*( vecRij/Rij/Rij ) &
+                            + vecRik/Rij/Rik )
 
-    dFijk_dRk = prefactor*( -cost*( vecRik/Rik ) &
-                            + vecRij/Rik )
+    dFijk_dRk = prefactor*( -cost*( vecRik/Rik/Rik ) &
+                            + vecRij/Rik/Rij )
 
   end subroutine sf_F1_ijk
 
