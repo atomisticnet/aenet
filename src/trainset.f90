@@ -298,8 +298,12 @@ contains
     call ts_assert_init(ts)
     call ts_assert_readmode(ts)
 
-    if (present(rec) .and. (rec > 0)) then
-       irec = rec - 1
+    if (present(rec)) then
+       if (rec > 0) then
+          irec = rec - 1
+       else
+          irec = 0
+       endif
     else
        irec = 0
     end if
