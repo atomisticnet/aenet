@@ -276,7 +276,8 @@ set_property(TARGET generate.x train.x predict.x
              PROPERTY EXCLUDE_FROM_ALL TRUE)
 
 # add a "test" that builds all test binaries
-add_test(test_build_test_binaries
+add_test(NAME build_test_binaries
+  COMMAND
   "${CMAKE_COMMAND}"
   --build "${CMAKE_BINARY_DIR}"
   --config "$<CONFIG>"
@@ -284,7 +285,7 @@ add_test(test_build_test_binaries
 
 # Make building the test binaries a required fixture for all tests.
 # This ensures all test binaries are build when 'make test' is run.
-set_tests_properties(test_build_test_binaries PROPERTIES FIXTURES_SETUP test_fixture)
+set_tests_properties(build_test_binaries PROPERTIES FIXTURES_SETUP test_fixture)
 set_tests_properties(feedforward:IO feedforward:eval feedforward:activation
                      geometry:isolated geometry:periodic
                      lclist:fcc_primitive lclist:fcc_conventional lclist:fcc_isolated

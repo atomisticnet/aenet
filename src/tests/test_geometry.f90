@@ -44,7 +44,7 @@ program geotest
 
   n_args = command_argument_count()
 
-  if (n_args == 1) then
+  if (n_args == 0) then
      ! Run all tests if no argument is given
      call test_isolated()
      call test_periodic()
