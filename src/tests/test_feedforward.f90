@@ -42,13 +42,41 @@ program test_feedforward
                          ff_change_activation
 
   use io,          only: io_unlink
-  use unittest,    only: tst_new, tst_check_passed, tst_equal
+  use unittest,    only: tst_new, tst_check_passed, tst_equal, &
+                         tst_exit_nonzero_if_failed
 
   implicit none
 
-  call test_IO()
-  call test_eval()
-  call test_activation()
+  character(len=128) :: arg
+  integer            :: n_args
+
+  n_args = command_argument_count()
+
+  if (n_args == 0) then
+     ! Run all tests if no argument is given
+     call test_IO()
+     call test_eval()
+     call test_activation()
+  else
+     call get_command_argument(1, arg)
+     select case (trim(arg))
+     case ("list")
+        write(*, *) "test_IO"
+        write(*, *) "test_eval"
+        write(*, *) "test_activation"
+     case ("test_IO")
+        call test_IO()
+     case ("test_eval")
+        call test_eval()
+     case ("test_activation")
+        call test_activation()
+     case default
+        write(*, *) "Unknown test: '", trim(arg), "'"
+        stop 1
+     end select
+  end if
+
+  call tst_exit_nonzero_if_failed()
 
 contains
 

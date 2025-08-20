@@ -26,7 +26,8 @@
 program test_sfsetup
 
   use io,       only: io_unlink
-  use unittest, only: tst_new, tst_check_passed, tst_equal
+  use unittest, only: tst_new, tst_check_passed, tst_equal, &
+                      tst_exit_nonzero_if_failed
   use sfsetup,  only: Setup,                 &
                      read_Setup_parameters, &
                      save_Setup,            &
@@ -37,11 +38,36 @@ program test_sfsetup
 
   implicit none
 
-  call test_IO()
+  character(len=128) :: arg
+  integer            :: n_args
+
+  n_args = command_argument_count()
+
+  if (n_args == 0) then
+     ! Run all tests if no argument is given
+     call test_IO_chebyshev()
+     call test_IO_behler2011()
+  else
+     call get_command_argument(1, arg)
+     select case (trim(arg))
+     case ("list")
+        write(*, *) "test_IO_chebyshev"
+        write(*, *) "test_IO_behler2011"
+     case ("test_IO_chebyshev")
+        call test_IO_chebyshev()
+     case ("test_IO_behler2011")
+        call test_IO_behler2011()
+     case default
+        write(*, *) "Unknown test: '", trim(arg), "'"
+        stop 1
+     end select
+  end if
+
+  call tst_exit_nonzero_if_failed()
 
 contains
 
-  subroutine test_IO()
+  subroutine test_IO_chebyshev()
 
     implicit none
 
@@ -106,6 +132,18 @@ contains
        call io_unlink('TEST_SETUP_ASCII_01')
     end if
 
+  end subroutine test_IO_chebyshev
+
+  subroutine test_IO_behler2011()
+
+    implicit none
+
+    character(len=2), dimension(2), parameter :: global_types = ['H ', 'O ']
+
+    type(Setup) :: stp1, stp2
+
+    logical :: has_passed
+
     !--------------------------- behler2011 ---------------------------!
 
     call tst_new("Structural Fingerprint Test 2: save and restore (Behler2011)")
@@ -161,7 +199,7 @@ contains
        call io_unlink('TEST_SETUP_ASCII_02')
     end if
 
-  end subroutine test_IO
+  end subroutine test_IO_behler2011
 
   !--------------------------------------------------------------------!
 

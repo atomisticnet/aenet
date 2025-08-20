@@ -36,13 +36,40 @@ program test_lclist
                     lcl_nbdist,        &
                     lcl_nbdist_cart
 
-  use unittest, only: tst_new, tst_check_passed
+  use unittest, only: tst_new, tst_check_passed, tst_exit_nonzero_if_failed
 
   implicit none
 
-  call test_fcc_primitive()
-  call test_fcc_conventional()
-  call test_fcc_isolated()
+  character(len=128) :: arg
+  integer            :: n_args
+
+  n_args = command_argument_count()
+
+  if (n_args == 0) then
+     ! Run all tests if no argument is given
+     call test_fcc_primitive()
+     call test_fcc_conventional()
+     call test_fcc_isolated()
+  else
+     call get_command_argument(1, arg)
+     select case (trim(arg))
+     case ("list")
+        write(*, *) "test_fcc_primitive"
+        write(*, *) "test_fcc_conventional"
+        write(*, *) "test_fcc_isolated"
+     case ("test_fcc_primitive")
+        call test_fcc_primitive()
+     case ("test_fcc_conventional")
+        call test_fcc_conventional()
+     case ("test_fcc_isolated")
+        call test_fcc_isolated()
+     case default
+        write(*, *) "Unknown test: '", trim(arg), "'"
+        stop 1
+     end select
+  end if
+
+  call tst_exit_nonzero_if_failed()
 
 contains
 

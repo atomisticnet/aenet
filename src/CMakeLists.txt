@@ -217,13 +217,24 @@ set_target_properties(
   RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/unittests
 )
 
-add_test(NAME test_feedforward COMMAND test_feedforward)
-add_test(NAME test_geometry COMMAND test_geometry)
-add_test(NAME test_lclist COMMAND test_lclist)
-add_test(NAME test_sfbasis COMMAND test_sfbasis)
-add_test(NAME test_sfsetup COMMAND test_sfsetup)
-add_test(NAME test_symmfunc COMMAND test_symmfunc)
-add_test(NAME test_xsflib COMMAND test_xsflib)
+add_test(NAME feedforward:IO COMMAND test_feedforward test_IO)
+add_test(NAME feedforward:eval COMMAND test_feedforward test_eval)
+add_test(NAME feedforward:activation COMMAND test_feedforward test_activation)
+add_test(NAME geometry:isolated COMMAND test_geometry test_isolated)
+add_test(NAME geometry:periodic COMMAND test_geometry test_periodic)
+add_test(NAME lclist:fcc_primitive COMMAND test_lclist test_fcc_primitive)
+add_test(NAME lclist:fcc_conventional COMMAND test_lclist test_fcc_conventional)
+add_test(NAME lclist:fcc_isolated COMMAND test_lclist test_fcc_isolated)
+add_test(NAME sfbasis:setup COMMAND test_sfbasis test_setup)
+add_test(NAME sfbasis:fcc_rotation COMMAND test_sfbasis test_fcc_rotation)
+add_test(NAME sfbasis:derivatives COMMAND test_sfbasis test_derivatives)
+add_test(NAME sfsetup:IO_chebyshev COMMAND test_sfsetup test_IO_chebyshev)
+add_test(NAME sfsetup:IO_behler2011 COMMAND test_sfsetup test_IO_behler2011)
+add_test(NAME symmfunc:setup COMMAND test_symmfunc test_setup)
+add_test(NAME symmfunc:fcc_rotation COMMAND test_symmfunc test_fcc_rotation)
+add_test(NAME symmfunc:derivatives COMMAND test_symmfunc test_derivatives)
+add_test(NAME xsflib:isolated COMMAND test_xsflib test_isolated)
+add_test(NAME xsflib:periodic COMMAND test_xsflib test_periodic)
 
 # ==============================================================================
 # Custom Targets (for convenience)
@@ -274,8 +285,13 @@ add_test(test_build_test_binaries
 # Make building the test binaries a required fixture for all tests.
 # This ensures all test binaries are build when 'make test' is run.
 set_tests_properties(test_build_test_binaries PROPERTIES FIXTURES_SETUP test_fixture)
-set_tests_properties(test_feedforward test_geometry test_lclist test_sfbasis
-                     test_sfsetup test_symmfunc test_xsflib
+set_tests_properties(feedforward:IO feedforward:eval feedforward:activation
+                     geometry:isolated geometry:periodic
+                     lclist:fcc_primitive lclist:fcc_conventional lclist:fcc_isolated
+                     sfbasis:setup sfbasis:fcc_rotation sfbasis:derivatives
+                     sfsetup:IO_chebyshev sfsetup:IO_behler2011
+                     symmfunc:setup symmfunc:fcc_rotation symmfunc:derivatives
+                     xsflib:isolated xsflib:periodic
   PROPERTIES FIXTURES_REQUIRED test_fixture)
 
 # ==============================================================================
