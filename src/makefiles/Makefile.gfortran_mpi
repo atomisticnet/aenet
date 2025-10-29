@@ -46,4 +46,11 @@ LIBLIB   = -lgfortran
 AR       = ar
 ARFLAGS  = -crusv
 
+#-----------------------------------------------------------------------
+# Special handling ONLY for parallel.F90 (keeps rest of build intact)
+#-----------------------------------------------------------------------
+parallel.o: parallel.F90
+	$(FC) -DPARALLEL -O2 -fexternal-blas -fallow-argument-mismatch $(DEBUG) -fallow-argument-mismatch $< -o $@
+
 include ./Makefile.inc
+.DEFAULT_GOAL := all
