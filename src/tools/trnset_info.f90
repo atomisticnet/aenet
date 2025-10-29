@@ -34,6 +34,8 @@ program trnset_info
 
   character(len=1024) :: infile
   type(TrnSet)        :: ts
+  logical             :: raw
+  character(len=1024) :: outfile
 
   call initialize(infile)
   ts = open_TrnSet(infile, raw=raw)
