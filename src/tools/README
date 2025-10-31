@@ -15,6 +15,10 @@
    trnset2ASCII.f90    Conversion of binary training set files to an
                        ASCII format.
 
+   trnset_info.f90     Print basic information about training set file
+                       (number of structures, elements, and, if
+                       normalized, energy stats)
+
  ----------------------------------------------------------------------
          2016-06-02 Alexander Urban and Nongnuch Artrith
  ----------------------------------------------------------------------

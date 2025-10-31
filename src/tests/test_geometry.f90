@@ -26,7 +26,7 @@
 program geotest
 
   use io,       only: io_unit, io_unlink
-  use unittest,  only: tst_new, tst_check_passed
+  use unittest, only: tst_new, tst_check_passed, tst_exit_nonzero_if_failed
 
   use geometry, only: geo_init,       &
                       geo_final,      &
@@ -39,8 +39,32 @@ program geotest
 
   implicit none
 
-  call test_isolated()
-  call test_periodic()
+  character(len=128) :: arg
+  integer            :: n_args
+
+  n_args = command_argument_count()
+
+  if (n_args == 0) then
+     ! Run all tests if no argument is given
+     call test_isolated()
+     call test_periodic()
+  else
+     call get_command_argument(1, arg)
+     select case (trim(arg))
+     case ("list")
+        write(*, *) "test_isolated"
+        write(*, *) "test_periodic"
+     case ("test_isolated")
+        call test_isolated()
+     case ("test_periodic")
+        call test_periodic()
+     case default
+        write(*, *) "Unknown test: '", trim(arg), "'"
+        stop 1
+     end select
+  end if
+
+  call tst_exit_nonzero_if_failed()
 
 contains
 
