@@ -48,6 +48,7 @@ module aenet
 
   use potential,   only: NNPot,               &
                          load_NNPot,          &
+                         load_NNPot_ASCII,    &
                          del_NNPot,           &
                          pot_init,            &
                          pot_final,           &
@@ -247,15 +248,16 @@ contains
   !                        Load ANN potentials                         !
   !--------------------------------------------------------------------!
 
-  subroutine aenet_load_potential(type_id, filename, stat)
+  subroutine aenet_load_potential(type_id, filename, stat, is_ascii)
 
     implicit none
 
-    integer,          intent(in)  :: type_id
-    character(len=*), intent(in)  :: filename
-    integer,          intent(out) :: stat
+    integer,           intent(in)  :: type_id
+    character(len=*),  intent(in)  :: filename
+    integer,           intent(out) :: stat
+    logical, optional, intent(in)  :: is_ascii
 
-    logical :: fexists
+    logical :: fexists, read_ascii
 
     stat = AENET_OK
     if (.not. aenet_is_init) then
@@ -274,7 +276,18 @@ contains
        return
     end if
 
-    aenet_pot(type_id) = load_NNPot(aenet_atom_types, filename)
+    if (present(is_ascii)) then
+       read_ascii = is_ascii
+    else
+       read_ascii = .false.
+    end if
+
+    if (read_ascii) then
+       aenet_pot(type_id) = load_NNPot_ASCII(aenet_atom_types, filename)
+    else
+       aenet_pot(type_id) = load_NNPot(aenet_atom_types, filename)
+    end if
+
     aenet_nvalues_max = max(aenet_nvalues_max, aenet_pot(type_id)%net%nvalues)
     aenet_nweights_max = max(aenet_nweights_max, aenet_pot(type_id)%net%Wsize)
 

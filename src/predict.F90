@@ -376,7 +376,8 @@ contains
 
     ! load ANN potentials
     do itype = 1, inp%nTypes
-       call aenet_load_potential(itype, inp%netFile(itype), stat)
+       call aenet_load_potential(itype, inp%netFile(itype), stat, &
+            is_ascii=inp%pot_is_ascii)
        if (stat /= 0) then
        write(0,*) 'Error: could not load ANN potentials'
           call finalize()
