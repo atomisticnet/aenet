@@ -183,7 +183,7 @@ contains
     if (iarg < 0) then
        i = nargs - iarg + 1
     else
-       i = iargs
+       i = iarg
     end if
 
     if (i <= nargs) then

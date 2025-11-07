@@ -1,23 +1,14 @@
 # What is **ænet**?
 
-<span id="sec:about"></span>
-
-The Atomic Energy NETwork (**ænet**) package (http://ann.atomistic.net) is a collection of tools
-for the construction and application of atomic interaction potentials
-based on artificial neural networks (ANN). The **ænet** code allows the
-accurate interpolation of structural energies, e.g., from electronic
-structure calculations, using ANNs. ANN potentials generated with
-**ænet** can then be used in larger scale atomistic simulations and in
-situations where extensive sampling is required, e.g., in molecular
-dynamics or Monte-Carlo simulations.
+The Atomic Energy NETwork (**ænet**) package (http://ann.atomistic.net) is a collection of tools for the construction and application of atomic interaction potentials based on artificial neural networks (ANN). The **ænet** code allows the accurate interpolation of structural energies, e.g., from electronic structure calculations, using ANNs. ANN potentials generated with **ænet** can then be used in larger scale atomistic simulations and in situations where extensive sampling is required, e.g., in molecular dynamics or Monte-Carlo simulations.
 
 # License
 
-Copyright (C) 2012-2022 Nongnuch Artrith (nartrith@atomistic.net)
+Copyright (C) 2012-2025 Nongnuch Artrith (nartrith@atomistic.net)
 
-The **aenet** source code is subject to the terms of the Mozilla Public
+The **ænet** source code is subject to the terms of the Mozilla Public
 License, v. 2.0. If a copy of the MPL was not distributed with this
-file, You can obtain one at <http://mozilla.org/MPL/2.0/>.
+file, you can obtain one at <http://mozilla.org/MPL/2.0/>.
 
 This program is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,162 +17,228 @@ Public License, v. 2.0, for more details.
 
 # Installation
 
-<span id="sec:installation"></span>
+The **ænet** code is built using the [CMake Build System](https://cmake.org/).
 
-## Short installation summary
+Except for a number of Python scripts, **ænet** is developed in Fortran 95/2003 and has been tested with the GNU Fortran and Intel Fortran compilers on Linux and MacOS systems.
 
-1.  Compile the L-BFGS-B library
-    
-      - Enter the directory “./lib”
-        
-        `$ cd ./lib`
-    
-      - Adjust the compiler settings in the “Makefile”
-    
-      - Compile the library with
-        
-        `$ make`
-    
-    The library file `liblbfgsb.a`, required for compiling **ænet**,
-    will be created.
+**ænet** requires the following external libraries:
 
-2.  Compile the **ænet** package
-    
-      - Enter the directory “./src”
-        
-        `$ cd ./src`
-    
-      - Compile the ænet source code with
-        
-        `$ make -f makefiles/Makefile.XXX`
-        
-        where `Makefile.XXX` is an approproiate Makefile.
-        
-        To see a list of available Makefiles just type:
-        
-        `$ make`
-    
-    The following executables will be generated in “./bin”:
-    
-      - `generate.x`: generate training sets from atomic structure files
-      - `train.x`: train new neural network potentials
-      - `predict.x`: use existing ANN potentials for energy/force
-        prediction
+1.  **BLAS** (Basic Linear Algebra Subprograms)
+2.  **LAPACK** (Linear Algebra PACKage)
+3.  **L-BFGS-B** optimization routines by Nocedal et al.
 
-3.  (Optional) Install the Python interface
-    
-      - Enter the directory “./python”
-        
-        `$ cd ./python`
-    
-      - Install the Python module with
-        
-        `$ python setup.py install --user`
-    
-    This will set up the Python **ænet** module for the current user,
-    and it will also install the user scripts `aenet-predict.py` and
-    `aenet-md.py`.
+A BLAS/LAPACK implementation is usually provided by the operating system or compiler. Alternatively, high-performance libraries like [OpenBLAS](https://www.openblas.net/) or [Intel MKL](https://software.intel.com/en-us/mkl) can be used.
 
-## Detailed installation instructions
+The L-BFGS-B sources are included with **ænet** and are compiled automatically during the build process. When using the `bfgs` training method, please cite:
 
-Except for a number of Python scripts, **ænet** is developed in Fortran
-95/2003. Generally, the source code is tested with the free GNU Fortran
-compiler and the commercial Intel Fortran compiler, and the Makefile
-settings for these two compilers are provided. While the **ænet** source
-code should be platform independent, we mainly target Linux and Unix
-clusters and **ænet** has not been tested on other operating systems.
+> R. H. Byrd, P. Lu and J. Nocedal, *SIAM J. Sci. Stat. Comp.* **16** (1995) 1190-1208.
 
-**ænet** requires three external libraries:
+The Python interface also requires [NumPy](http://www.numpy.org) and the [Atomic Simulation Environment (ASE)](https://wiki.fysik.dtu.dk/ase).
 
-1.  BLAS (Basic Linear Algebra Subprograms),
-2.  LAPACK (Linear Algebra PACKage),
-3.  And the L-BFGS-B optimization routines by Nocedal et al.
+## Prerequisites
 
-Usually, some implementation of BLAS and LAPACK comes with the operating
-system or the compiler. If that is not the case, the libraries can be
-obtained from [Netlib.org](http://www.netlib.org/). `libblas.a` and
-`liblapack.a` have to be in the system library path in order to compile
-**ænet**.
+- **CMake** (version 3.15 or higher)
+- **Fortran compiler** (e.g., `gfortran`, `ifort`, `ifx`)
+- **BLAS and LAPACK** libraries
+- **MPI** (optional, for parallel builds)
 
-The L-BFGS-B routines, an implementation of the bounded limited-memory
-Broyden-Fletcher-Goldfarb-Shanno algorithm, is distributed on the
-[homepage of the
-authors](http://www.ece.northwestern.edu/~nocedal/lbfgsb.html) (Nocedal
-et al.). For the user’s convenience we have decided to distribute the
-original L-BFGS-B files along with **ænet** package, so you do not have
-to actually download the library yourself. However, each application of
-**ænet** should also acknowledge the use of the L-BFGS-B library by
-citing:
+## Building with CMake
 
-R. H. Byrd, P. Lu and J. Nocedal, *SIAM J. Sci. Stat. Comp.* **16**
-(1995) 1190-1208.
+All commands should be run from the root directory of the **ænet** project.
 
-**ænet**’s Python interface further relies on
-[NumPy](http://www.numpy.org) and on the [Atomic simulation
-Environment](https://wiki.fysik.dtu.dk/ase), so these dependencies have
-to available when the **ænet** Python module is set up.
+### Build Options
 
-### Compilation of external libraries that are distributed with **ænet**
+Print available build options with
 
-All external libraries needed by the ænet code are in the directory
-“./lib”. Currently, only one external library is distributed with
-**ænet**, the L-BFGS-B library (see above).
+```sh
+cmake .
+```
 
-To compile the external libraries
+This will print
 
-1.  Enter the directory “./lib”
-    
-    `$ cd ./lib`
+```sh
+-- ==============================================================================
+-- Build aenet with CMake
+-- ==============================================================================
+-- To build:  cmake -S . -B build -DBUILD_AENET=ON && cmake --build build --target build_all
+-- Or pick a different target: main | lib | tools | build_tests | test
+--
+-- The following options are available to configure the build:
+--
+--   -DCMAKE_BUILD_TYPE=Release/Debug  (default: Release)
+--      Build type.
+--   -DUSE_MPI=ON/OFF                  (default: OFF)
+--      Enable MPI parallelization.
+--   -DUSE_MKL=ON/OFF                  (default: OFF)
+--      Use Intel MKL for BLAS/LAPACK.
+--   -DUSE_OPENBLAS=ON/OFF             (default: OFF)
+--      Use OpenBLAS for BLAS/LAPACK.
+--   -DCMAKE_Fortran_COMPILER=<path>   (e.g., ifort, gfortran)
+--      Specify the Fortran compiler.
+--
+-- Example: cmake .. -DBUILD_AENET=ON -DUSE_MPI=ON -DCMAKE_BUILD_TYPE=Debug
+--
+-- The following custom targets are available:
+--
+--   make main         (Builds generate.x, train.x, predict.x)
+--   make lib          (Builds aenet static and shared libraries)
+--   make tools        (Builds all tool executables)
+--   make build_all    (Builds all executables, libraries, and tests)
+--   make build_tests  (Builds all unit test executables)
+--   make test         (Runs the unit tests)
+--
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+```
 
-2.  Adjust the compiler settings in the “Makefile”
-    
-    The Makefile contains settings for the GNU Fortran compiler
-    (`gfortran`) and the Intel Fortran compiler (`ifort`). Uncomment the
-    section that is appropriate for your system.
+### Example Build Configurations
 
-3.  Compile the library with
-    
-    `$ make`
+In all examples, a new directory named `build` will be created, containing the CMake configuration.  This directory can be safely removed to reset to the initial state.  All commands should be run from the root directory of the **ænet** project.
 
-The static library “liblbfgsb.a”, required to build **ænet**, will be
-created.
+1. Let CMake decide all parameters:
 
-### Build **ænet**
+```sh
+cmake  -S . -B build -DBUILD_AENET=On
+```
 
-The **ænet** source code is located in “./src”.
+2. Turning on MPI parallelization
 
-1.  Enter “./src”
-    
-    `$ cd ./src`
+```sh
+cmake  -S . -B build -DBUILD_AENET=On -DUSE_MPI=On
+```
 
-2.  To see a short explanation of the Makefiles that come with **ænet**,
-    just run `make` without any options.
-    
-    `$ make`
-    
-    Select the Makefile that is appropriate for your computer.
+3. Selecting Intel's `ifx` compiler with Intel MPI and Math Kernel Library (MKL)
 
-3.  Compile with
-    
-    `$ make -f makefiles/Makefile.XXX`
-    
-    where `Makefile.XXX` is the selected Makefile.
+```sh
+cmake  -S . -B build -DBUILD_AENET=On -DUSE_MPI=On -DUSE_MKL=On -DCMAKE_Fortran_COMPILER=ifx
+```
 
-Three executables will be generated and stored in “./bin”:
+4. GNU Fortran compiler with OpenBLAS library
 
-  - `generate.x`: generate training sets from atomic structure files
-  - `train.x`: train new neural network potentials
-  - `predict.x`: use existing ANN potentials for energy/force prediction
+```sh
+cmake  -S . -B build -DBUILD_AENET=On -DUSE_OPENBLAS=On -DCMAKE_Fortran_COMPILER=gfortran
+```
 
-### Set up the Python interface
+### Build the Code
 
-1.  Enter the directory “./python”
-    
-    `$ cd ./python`
+Build everything, including the main executables, the library, and the tools with
 
-2.  Install the Python module with
-    
-    `$ python setup.py install --user`
+```sh
+cmake --build build --target build_all
+```
 
-This will set up the Python **ænet** module for the current user, and it
-will also install the user scripts `aenet-predict.py` and `aenet-md.py`.
+Build only the executables `generate.x`, `train.x`, and `predict.x` with
+
+```sh
+cmake --build build --target main
+```
+
+or `cmake --build build --target  <target>` where `<target>` is one of the following:
+
+- `build_all`: Builds all executables, libraries, and tools.
+- `main`: Builds the main executables (`generate.x`, `train.x`, `predict.x`).
+- `lib`: Builds the `aenet` static and shared libraries.
+- `tools`: Builds the auxiliary tool executables.
+- `build_tests`: Builds the unit test executables.
+- `test`: Runs the unit tests (after they have been built).
+
+The resulting files will be placed in the `bin`, `lib`, and `tools` directories in the `build` directory:
+
+- `build/bin`: `generate.x`, `train.x`, and `predict.x`
+- `build/lib`: system-dependent, e.g., `libaenet.so` and `libaenet.a`
+- `build/tools`: `fingerprint.x`, `neighbors.x`, `trnset_info.x`, and `trnset2ASCII.x`
+
+### (Optional) Run the Unit Tests
+
+To confirm that the **ænet** command-line tools are working as expected, you can run the test suite with
+
+```sh
+ctest --test-dir build --output-on-failure
+```
+
+### (Optional) Installing the ænet Files
+
+To install the **ænet** files in the corresponding directories of the root directory, run
+
+```sh
+cmake --install build
+```
+
+this will install the files in the `bin`, `lib`, and `tools` directories in
+the **ænet** project root.  The installation location can be changed with
+`--prefix` flag
+
+```sh
+cmake --install build --prefix /custom/installation/path
+```
+
+### (Optional) Creating a Debug Build
+
+To compile with debug flags (e.g., for checking array bounds and backtraces), set `CMAKE_BUILD_TYPE` to `Debug`:
+
+```sh
+cmake .. -DBUILD_AENET=ON -DCMAKE_BUILD_TYPE=Debug ...
+```
+
+The resulting executables will have a `_debug` suffix.
+
+## Makefile-based Installation
+
+### 1. Compile the L-BFGS-B library
+
+Enter the directory “./lib”
+
+    $ cd ./lib
+
+Adjust the compiler settings in the “Makefile”
+
+Compile the library with
+
+    $ make
+
+The library file `liblbfgsb.a`, required for compiling ænet, will be created.
+
+### 2. Compile the ænet package
+
+Enter the directory “./src”
+
+    $ cd ./src
+
+Compile the **ænet** source code with
+
+    $ make -f makefiles/Makefile.XXX
+
+where Makefile.XXX is an approproiate Makefile.
+
+To see a list of available Makefiles just type:
+
+    $ make
+
+The following executables will be generated in “./bin”:
+
+- `generate.x`: generate training sets from atomic structure files
+- `train.x`: train new neural network potentials
+- `predict.x`: use existing ANN potentials for energy/force prediction
+
+### 3. Compile Optional Components
+
+Compile the **ænet** tools with
+
+    $ make tools -f makefiles/Makefile.XXX
+
+Compile the **ænet** libraries (shared and static) with
+
+    $ make lib -f makefiles/Makefile.XXX
+
+## Installing the Python Interface
+
+**Note:** We now recommend using [aenet-python](https://github.com/atomisticnet/aenet-python).
+
+After building the Fortran libraries, you can install a basic Python interface with
+
+```sh
+cd ../python3
+python setup.py install --user
+```
+
+This will install the `aenet` Python module and the scripts `aenet-predict.py` and `aenet-md.py`.

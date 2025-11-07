@@ -31,12 +31,15 @@ module unittest
   implicit none
   private
 
-  public :: tst_new, tst_check_passed, tst_equal, tst_assert
+  public :: tst_new, tst_check_passed, tst_equal, tst_assert, &
+            tst_exit_nonzero_if_failed
 
   integer, public :: tst_msg_len = 61
   logical, public :: has_passed
 
   logical, private :: has_EPS = .false.
+
+  integer, private, save :: n_failed = 0
 
   interface tst_equal
      module procedure tst_equal_d, tst_equal_dn,    &
@@ -79,6 +82,7 @@ contains
        write(*,*) 'passed.'
     else
        write(*,*) 'FAILED!'
+       n_failed = n_failed + 1
     end if
 
   end subroutine tst_check_passed
@@ -95,12 +99,11 @@ contains
     character(len=*), intent(in) :: message
     logical, optional, intent(out) :: status
 
+    has_passed = (has_passed .and. condition)
     if (.not. condition) then
        write(0, *) "FAILED assertion: " // trim(message)
        if (present(status)) then
           status = condition
-       else
-          stop
        end if
     end if
 
@@ -393,5 +396,18 @@ contains
     has_passed = (has_passed .and. is_equal)
 
   end function tst_equal_cn2
+
+  !--------------------------------------------------------------------!
+  !        exit with non-zero status code if any test failed           !
+  !--------------------------------------------------------------------!
+
+  subroutine tst_exit_nonzero_if_failed()
+    implicit none
+    if (n_failed > 0) then
+       stop 1
+    else
+       stop 0
+    end if
+  end subroutine tst_exit_nonzero_if_failed
 
 end module unittest

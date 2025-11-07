@@ -27,7 +27,8 @@ program test_sfbasis
 
   use io,       only: io_unlink
   use random,   only: random_init, random_final, random_integer
-  use unittest, only: tst_new, tst_check_passed, tst_equal
+  use unittest, only: tst_new, tst_check_passed, tst_equal, &
+                      tst_exit_nonzero_if_failed
 
   use symmfunc, only: sf_init,    &
                       sf_final,   &
@@ -43,9 +44,36 @@ program test_sfbasis
 
   implicit none
 
-  call test_setup()
-  call test_fcc_rotation()
-  call test_derivatives()
+  character(len=128) :: arg
+  integer            :: n_args
+
+  n_args = command_argument_count()
+
+  if (n_args == 0) then
+     ! Run all tests if no argument is given
+     call test_setup()
+     call test_fcc_rotation()
+     call test_derivatives()
+  else
+     call get_command_argument(1, arg)
+     select case (trim(arg))
+     case ("list")
+        write(*, *) "test_setup"
+        write(*, *) "test_fcc_rotation"
+        write(*, *) "test_derivatives"
+     case ("test_setup")
+        call test_setup()
+     case ("test_fcc_rotation")
+        call test_fcc_rotation()
+     case ("test_derivatives")
+        call test_derivatives()
+     case default
+        write(*, *) "Unknown test: '", trim(arg), "'"
+        stop 1
+     end select
+  end if
+
+  call tst_exit_nonzero_if_failed()
 
 contains
 
