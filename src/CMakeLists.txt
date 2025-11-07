@@ -15,6 +15,10 @@ option(USE_MPI "Enable MPI parallelization" OFF)
 option(USE_OPENBLAS "Use OpenBLAS instead of system BLAS/LAPACK" OFF)
 option(USE_MKL "Use Intel MKL instead of system BLAS/LAPACK" OFF)
 set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type (Release/Debug)")
+set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
+
+# Prefer static BLAS/LAPACK
+set(BLA_STATIC ON CACHE BOOL "" FORCE)
 
 # ==============================================================================
 # Construct Suffix for Executables
@@ -57,11 +61,14 @@ set(CMAKE_Fortran_STANDARD 2008)
 
 # Set compiler flags based on build type
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
-    set(CMAKE_Fortran_FLAGS_DEBUG "${CMAKE_Fortran_FLAGS_DEBUG} -O0 -fcheck=all -fbacktrace -ffpe-trap=invalid,zero,overflow -fexternal-blas -pedantic")
-    set(CMAKE_Fortran_FLAGS_RELEASE "${CMAKE_Fortran_FLAGS_RELEASE} -O3 -fexternal-blas")
-elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
-    set(CMAKE_Fortran_FLAGS_DEBUG "${CMAKE_Fortran_FLAGS_DEBUG} -O0 -check all -traceback -fpe0")
-    set(CMAKE_Fortran_FLAGS_RELEASE "${CMAKE_Fortran_FLAGS_RELEASE} -O3")
+    string(APPEND CMAKE_Fortran_FLAGS_DEBUG
+        " -O0 -fcheck=all -fbacktrace -ffpe-trap=invalid,zero,overflow"
+        " -fexternal-blas -pedantic -finit-real=snan -finit-integer=2147483647")
+    string(APPEND CMAKE_Fortran_FLAGS_RELEASE " -O3 -fexternal-blas")
+elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel" OR
+       CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
+    string(APPEND CMAKE_Fortran_FLAGS_DEBUG " -O0 -check all -traceback -fpe0")
+    string(APPEND CMAKE_Fortran_FLAGS_RELEASE " -O3")
 endif()
 
 # ==============================================================================
@@ -72,21 +79,58 @@ endif()
 # (mkls: Intel10_64lp = threaded, Intel10_64lp_seq = sequential)
 set(BLA_VENDOR "" CACHE STRING "Preferred BLAS/LAPACK vendor (e.g., OpenBLAS, Intel10_64lp_seq)")
 
-if(USE_MKL)
-  set(BLA_VENDOR "Intel10_64lp_seq" CACHE STRING "" FORCE)
-elseif(USE_OPENBLAS)
-  set(BLA_VENDOR "OpenBLAS" CACHE STRING "" FORCE)
-endif()
+# Always provide a single abstraction to link against:
+#   BLASLAPACK::BLASLAPACK
+add_library(BLASLAPACK::BLASLAPACK INTERFACE IMPORTED)
 
 # If vendor hint changes, clear cached results so CMake re-finds libs
 unset(BLAS_LIBRARIES CACHE)
 unset(LAPACK_LIBRARIES CACHE)
 
-# Prefer static linkage
-set(BLA_STATIC ON)
-
-find_package(BLAS REQUIRED)
-find_package(LAPACK REQUIRED)
+if(USE_MKL)
+  set(MKL_THREADING sequential)
+  # set(MKL_LINK static)
+  # set(MKL_ARCH intel64)
+  set(MKL_INTERFACE lp64)
+  find_package(MKL CONFIG REQUIRED PATHS $ENV{MKLROOT})
+  if (MKL_FOUND)
+    target_link_libraries(BLASLAPACK::BLASLAPACK  INTERFACE MKL::MKL)
+  else()
+    if (CMAKE_Fortran_COMPILER_ID MATCHES "Intel|IntelLLVM")
+      # Pick correct MKL switch depending on ifort (-mkl) vs ifx (-qmkl)
+      if(CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
+        set(_MKL_SWITCH "-qmkl=")
+      else()
+        set(_MKL_SWITCH "-mkl=")
+      endif()
+      target_compile_options(BLASLAPACK::BLASLAPACK INTERFACE
+        $<$<BOOL:${MKL_PARALLEL}>:${_MKL_SWITCH}parallel>
+        $<$<NOT:$<BOOL:${MKL_PARALLEL}>>:${_MKL_SWITCH}sequential>)
+      target_link_options(BLASLAPACK::BLASLAPACK INTERFACE
+        $<$<BOOL:${MKL_PARALLEL}>:${_MKL_SWITCH}parallel>
+        $<$<NOT:$<BOOL:${MKL_PARALLEL}>>:${_MKL_SWITCH}sequential>)
+      set(BLAS_FOUND ON)
+      set(LAPACK_FOUND ON)
+    else()
+      set(BLA_VENDOR "Intel10_64lp_seq" CACHE STRING "" FORCE)
+      find_package(BLAS REQUIRED)
+      find_package(LAPACK REQUIRED)
+      target_link_libraries(BLASLAPACK::BLASLAPACK INTERFACE
+        ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+    endif()
+  endif()
+elseif(USE_OPENBLAS)
+  set(BLA_VENDOR "OpenBLAS" CACHE STRING "" FORCE)
+  find_package(BLAS REQUIRED)
+  find_package(LAPACK REQUIRED)
+  target_link_libraries(BLASLAPACK::BLASLAPACK INTERFACE
+    ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+else()
+  find_package(BLAS REQUIRED)
+  find_package(LAPACK REQUIRED)
+  target_link_libraries(BLASLAPACK::BLASLAPACK INTERFACE
+    ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+endif()
 
 # Find MPI if requested
 if(USE_MPI)
@@ -153,9 +197,14 @@ add_library(aenet_shared SHARED ${SRC_FILES} ${EXT_FILES})
 set_target_properties(aenet_static PROPERTIES OUTPUT_NAME "aenet")
 set_target_properties(aenet_shared PROPERTIES OUTPUT_NAME "aenet")
 
+# Per-target module directory (avoid global collisions)
+set_target_properties(aenet_static PROPERTIES Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/modules)
+set_target_properties(aenet_shared PROPERTIES Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/modules)
+set_target_properties(lbfgsb_static PROPERTIES Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/modules)
+
 # Link libraries
-target_link_libraries(aenet_static PRIVATE lbfgsb_static ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
-target_link_libraries(aenet_shared PRIVATE lbfgsb_static ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+target_link_libraries(aenet_static PRIVATE lbfgsb_static BLASLAPACK::BLASLAPACK)
+target_link_libraries(aenet_shared PRIVATE lbfgsb_static BLASLAPACK::BLASLAPACK)
 if(USE_MPI)
     target_link_libraries(aenet_static PRIVATE MPI::MPI_Fortran)
     target_link_libraries(aenet_shared PRIVATE MPI::MPI_Fortran)
@@ -299,15 +348,23 @@ set_tests_properties(feedforward:IO feedforward:eval feedforward:activation
 # Installation Rules
 # ==============================================================================
 
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}" CACHE PATH "Default install path" FORCE)
+endif()
+
+message(STATUS "Install prefix set to: ${CMAKE_INSTALL_PREFIX} for backwards compatibility")
+message(STATUS "Override with `cmake -DCMAKE_INSTALL_PREFIX=...`")
+
 # Install main executables with suffix
 install(TARGETS generate.x train.x predict.x
-        RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/bin)
+        RUNTIME DESTINATION bin)
 
 # Install libraries
 install(TARGETS aenet_static aenet_shared
-        ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/lib
-        LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/lib)
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib)
 
 # Install tool executables without suffix
 install(TARGETS fingerprint.x neighbors.x trnset_info.x trnset2ASCII.x
-        RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/tools)
+        RUNTIME DESTINATION
+        tools)

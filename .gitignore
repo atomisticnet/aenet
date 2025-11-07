@@ -38,3 +38,16 @@ example*
 *.env
 .env.*
 *.virtualenv
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+CTestTestfile.cmake
+install_manifest.txt
+*.cmake
+build/
+
+temp/
+tmp/
