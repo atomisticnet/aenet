@@ -554,7 +554,7 @@ contains
        ! draw samples randomly
        do i = 1, opt_samplesize_local
           call random_number(r)
-          opt_schedule(i) = max(ceiling(r*dble(ntrain)), 1)
+          opt_schedule(i) = floor(r*dble(ntrain)) + 1
        end do
     case('weighted')
        ! samples with large errors are learned more frequently
@@ -562,8 +562,7 @@ contains
        do i = 1, opt_samplesize_local
           call random_number(r)
           r = r**a
-          opt_schedule(i) = opt_idx(&
-               ntrain - max(ceiling(r*dble(ntrain)), 1) + 1)
+          opt_schedule(i) = opt_idx(ntrain - floor(r*dble(ntrain)))
        end do
     case('energy')
        ! samples with low energies are learned more frequently
@@ -571,7 +570,7 @@ contains
        do i = 1, opt_samplesize_local
           call random_number(r)
           r = r**a
-          opt_schedule(i) = opt_idx(max(ceiling(r*dble(ntrain)), 1))
+          opt_schedule(i) = opt_idx(floor(r*dble(ntrain)) + 1)
        end do
     case default
        write(0,*) 'Error: Unknown sampling type: ' // trim(opt_sampling_type)
@@ -579,8 +578,8 @@ contains
     end select
 
     ! Sanity check
-    if (any(opt_schedule > opt_samplesize_local)) then
-       write(0,*) "Error: invalid schedule: ", opt_schedule(i)
+    if (any(opt_schedule > ntrain) .or. any(opt_schedule < 1)) then
+       write(0,*) "Error: invalid schedule indices detected"
        stop
     end if
 
@@ -1021,6 +1020,9 @@ contains
        ! gather Jacobian from all processes:
        call pp_sum2d(adam_Dw_sum, opt_nw_max, ts%nTypes)
     end if
+
+    ! normalize accumulated gradients by batch size
+    adam_Dw_sum(:,:) = adam_Dw_sum(:,:) / dble(opt_batchsize)
 
     ! exponentially decaying averages of the gradient and the squared gradient
     adam_m = adam_b1*adam_m + (1.0d0 - adam_b1)*adam_Dw_sum(:,:)

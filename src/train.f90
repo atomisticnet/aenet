@@ -521,7 +521,7 @@ contains !=============================================================!
        call aeio_header(aeio_timestamp(), char=' ')
        write(*,*)
 
-       call aeio_print_copyright('2015-2018', 'Nongnuch Artrith and Alexander Urban')
+       call aeio_print_copyright('2015-2025', 'Nongnuch Artrith and Alexander Urban')
 
        nargs = command_argument_count()
        if (nargs < 1) then
@@ -910,7 +910,6 @@ contains !=============================================================!
     call ff_eval(net, nsf, sfval(1:nsf), 1, ann_values, ann_derivs, Ebuff)
     call ff_deriv(net, nsf, 1, ann_derivs, ann_jacobian, F(1:nsf))
     call ff_wderiv(net, nw, 1, ann_values, ann_derivs, ann_jacobian, Dw)
-
     E = Ebuff(1)
 
   end subroutine eval_net
@@ -933,7 +932,6 @@ contains !=============================================================!
     ann_derivs(:) = 0.0d0
     call ff_eval(net, nsf, sfval(1:nsf), 1, ann_values, ann_derivs, Ebuff)
     call ff_deriv(net, nsf, 1, ann_derivs, ann_jacobian, F(1:nsf))
-
     E = Ebuff(1)
 
   end subroutine eval_net2

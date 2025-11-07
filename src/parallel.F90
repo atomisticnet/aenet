@@ -55,12 +55,16 @@ module parallel
   use trainset,    only: TrnSet,      &
                          new_TrnSet_info
 
+#ifdef PARALLEL
+  use mpi_f08
+#endif
+
   implicit none
   save
 
-#ifdef PARALLEL
-  include 'mpif.h'
-#endif
+! #ifdef PARALLEL
+!   include 'mpif.h'
+! #endif
 
   public::  pp_init,              &
             pp_final,             &

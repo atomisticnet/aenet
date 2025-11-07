@@ -47,7 +47,8 @@ program trnset2ASCII
      write(*,*) 'Done.'
   else
      write(*,*) 'Converting binary format to ASCII text format.'
-     ts = open_TrnSet(infile, raw=raw)
+     ts = open_TrnSet(infile, raw=raw, verbose=.true.)
+
      call save_TrnSet_ASCII(ts, file=outfile)
      write(*,*) 'Done.'
   end if
@@ -76,7 +77,7 @@ contains
     outfile = ' '
     to_bin = .false.
     raw = .false.
-    
+
     iarg = 1
     do while(iarg <= nargs)
        call get_command_argument(iarg, value=arg)

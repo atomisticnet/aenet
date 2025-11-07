@@ -136,17 +136,17 @@ contains
 
     ! set up half start of vectors pointing to cells within range of r_max:
     nCvecs = 0
-    call translation_vectors(r_max, gridVec, nCvecs, Cvec, nc=nCells, pbc=pbc)
+    call translation_vectors(r_max, gridVec, nCvecs, nc=nCells, pbc=pbc)
     allocate(Cvec(3,nCvecs))
-    call translation_vectors(r_max, gridVec, nCVecs, cVec, nc=nCells, pbc=pbc)
+    call translation_vectors(r_max, gridVec, nCVecs, T=Cvec, nc=nCells, pbc=pbc)
 
     ! set up half start of translation vectors pointing to periodic
     ! images of the unit cell within range of r_max:
     nTvecs = 0
     if (pbc) then
-       call translation_vectors(r_max, latticeVec, nTvecs, Tvec)
+       call translation_vectors(r_max, latticeVec, nTvecs)
        allocate(Tvec(3,nTvecs))
-       call translation_vectors(r_max, latticeVec, nTvecs, Tvec)
+       call translation_vectors(r_max, latticeVec, nTvecs, T=Tvec)
     end if
 
     isInit = .true.
@@ -1054,7 +1054,7 @@ contains
 
     implicit none
 
-    double precision, dimension(3), intent(in) :: a, b
+    double precision, dimension(:), intent(in) :: a, b
     double precision, dimension(3)             :: c
 
     c(1) = a(2)*b(3) - a(3)*b(2)
@@ -1193,6 +1193,11 @@ contains
 
     integer :: d, n, i
 
+    if (size(list) == 0) then
+       in = .false.
+       return
+    end if
+
     d = size(vec)
     if (d /= size(list(:,1))) then
        write(0,*) "Error: Incompatible vector/list dimensions."
@@ -1255,13 +1260,13 @@ contains
     !              cell.
     !------------------------------------------------------------------!
 
-    double precision,                          intent(in)    :: Rc
-    double precision, dimension(3,3),          intent(in)    :: avec
-    integer,                                   intent(inout) :: nT
-    integer,          dimension(3,nT),         intent(out)   :: T
-    double precision, dimension(nT), optional, intent(out)   :: Tnorm
-    integer,          dimension(3),  optional, intent(in)    :: nc
-    logical,                         optional, intent(in)    :: pbc
+    double precision,                            intent(in)    :: Rc
+    double precision, dimension(3,3),            intent(in)    :: avec
+    integer,                                     intent(inout) :: nT
+    integer,          dimension(3,nT), optional, intent(out)   :: T
+    double precision, dimension(nT),   optional, intent(out)   :: Tnorm
+    integer,          dimension(3),    optional, intent(in)    :: nc
+    logical,                           optional, intent(in)    :: pbc
 
     double precision,      parameter :: EPS = 1.0d-3
 
@@ -1374,7 +1379,7 @@ contains
     end do loop2
     end do loop3
 
-    if (iT <= nT) then
+    if ((iT <= nT) .and. present(T)) then
        T(:,1:iT) = T1(:,1:iT)
        if (present(Tnorm)) Tnorm(1:iT) = Tnorm1(1:iT)
     end if

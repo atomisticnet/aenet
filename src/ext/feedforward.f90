@@ -448,17 +448,19 @@ contains !-------------------------------------------------------------!
     write(*,'(1x,"Total number of weights (incl. bias) : ",I8)') net%Wsize
     write(*,*)
 
-    verbose1 : if (present(verbose) .and. verbose) then
-       write(*,'(1x,"Weight matrices:")')
-       write(*,*)
-
-       iw1 = 1
-       do ilayer = 1, net%nlayers-1
-          iw2 = net%iw(ilayer+1)
-          call print_mat(reshape(net%W(iw1:iw2), &
-               (/net%nnodes(ilayer+1),net%nnodes(ilayer)+1/) ))
+    verbose1 : if (present(verbose)) then
+       if (verbose) then
+          write(*,'(1x,"Weight matrices:")')
           write(*,*)
-       end do
+
+          iw1 = 1
+          do ilayer = 1, net%nlayers-1
+             iw2 = net%iw(ilayer+1)
+             call print_mat(reshape(net%W(iw1:iw2), &
+                  (/net%nnodes(ilayer+1),net%nnodes(ilayer)+1/) ))
+             write(*,*)
+          end do
+       end if
     end if verbose1
 
   end subroutine ff_print_info
@@ -673,9 +675,24 @@ contains !-------------------------------------------------------------!
     integer               :: ilayer, i
     integer               :: iv1, iv2, iw1, iw2
 
-    double precision, dimension(net%nnodes_max+1,net%nnodes_max+1)      :: work2
-    double precision, dimension(net%nnodes_max+1,net%nnodes_max+1)      :: work3
-    double precision, dimension(net%nnodes_max+1,(net%nnodes_max+1)**2) :: work4
+    ! Fixed-size work arrays for accumulation across layers
+    double precision, allocatable :: work2(:,:), work4(:,:)
+
+    ! Temporary arrays for each matmul operation. Allocated with exact
+    ! dimensions to avoid array slicing issues
+    double precision, allocatable :: temp_diag(:,:)
+    double precision, allocatable :: temp_weight(:,:)
+    double precision, allocatable :: temp_jacobian(:,:)
+    double precision, allocatable :: temp_mult_in(:,:)
+    double precision, allocatable :: temp_mult_out(:,:)
+
+    ! Allocate fixed work arrays
+    allocate(work2(net%nnodes_max+1, net%nnodes_max+1))
+    allocate(work4(net%nnodes_max+1, (net%nnodes_max+1)**2))
+
+    ! Initialize arrays
+    work2(:,:) = 0.0d0
+    work4(:,:) = 0.0d0
 
     if (.not. net%init) then
        write(0,*) "Error: network not initialized in `deriv'."
@@ -697,7 +714,6 @@ contains !-------------------------------------------------------------!
     jacobian(:) = 0.0d0
 
     ! start with the unity matrix:
-    work4(:,:) = 0.0d0
     do i = 1, net%nnodes_max+1
        work4(i,i) = 1.0d0
     end do
@@ -712,6 +728,13 @@ contains !-------------------------------------------------------------!
        iv2 = net%iv(ilayer+1)
        nnodes2 = net%nnodes(ilayer+1)
 
+       ! Allocate temporary arrays with exact dimensions for this layer
+       allocate(temp_diag(nnodes2, nnodes2))
+       allocate(temp_weight(nnodes2, nnodes1))
+       allocate(temp_jacobian(nnodes2, nnodes1))
+       allocate(temp_mult_in(nnodes1, nnodes0))
+       allocate(temp_mult_out(nnodes2, nnodes0))
+
        ! construct diagonal matrix from stored derivatives:
        !
        !       / f'_i1    0      ...   0    \
@@ -719,13 +742,14 @@ contains !-------------------------------------------------------------!
        ! F' = |  ...     ...          ...    |
        !       \  0      ...          f'_iN /
        !
-       work2(1:nnodes2,1:nnodes2) = 0.0d0
+       temp_diag(:,:) = 0.0d0
        do i = 1, nnodes2
-          work2(i,i) = derivs(iv2+i)
+          temp_diag(i,i) = derivs(iv2+i)
        end do
 
-       ! smaller matrices --> we don't need the bias weights here:
+       ! Extract weight matrix (without bias weights) into properly sized array
        Wshape(1:2) = (/ nnodes2, nnodes1 /)
+       temp_weight(:,:) = reshape(net%W(iw1:iw2-nnodes2), Wshape)
 
        ! matrix of derivatives:
        !
@@ -733,18 +757,20 @@ contains !-------------------------------------------------------------!
        ! jacobian = F'*W = |      ...                      ...          |
        !                    \ d n_iN/d n_(i-1)1  ... d n_iN/d n_(i-1)M /
        !
-       work3(1:nnodes2,1:nnodes1) = matmul(      &
-            work2(1:nnodes2,1:nnodes2),          &
-            reshape(net%W(iw1:iw2-nnodes2), Wshape)  )
+       ! Perform matmul on full arrays without slicing
+       temp_jacobian(:,:) = matmul(temp_diag, temp_weight)
+       jacobian(iw1:iw2-nnodes2) = reshape(temp_jacobian, (/nnodes2*nnodes1/))
 
-       ! store the result:
-       jacobian(iw1:iw2-nnodes2) = reshape(work3(1:nnodes2,1:nnodes1), &
-                                           (/nnodes2*nnodes1/)             )
+       ! Combine with the matrix of the previous layer.
+       ! Copy input data from work4 to properly sized array
+       temp_mult_in(:,:) = work4(1:nnodes1, 1:nnodes0)
+       temp_mult_out(:,:) = matmul(temp_jacobian, temp_mult_in)
 
-       ! combine with the matrix of the previous layer:
-       work4(1:nnodes2,1:nnodes0) = matmul( &
-            work3(1:nnodes2,1:nnodes1),     &
-            work4(1:nnodes1,1:nnodes0)      )
+       ! Copy result back to work4
+       work4(1:nnodes2, 1:nnodes0) = temp_mult_out(:,:)
+
+       ! Deallocate temporary arrays for this layer
+       deallocate(temp_diag, temp_weight, temp_jacobian, temp_mult_in, temp_mult_out)
 
        iv1 = iv2 + 1
        iw1 = iw2 + 1
@@ -753,6 +779,8 @@ contains !-------------------------------------------------------------!
     end do layers
 
     dy(1:ny,1:nx) = work4(1:nnodes2,1:nnodes0)
+
+    deallocate(work2, work4)
 
   end subroutine ff_deriv
 

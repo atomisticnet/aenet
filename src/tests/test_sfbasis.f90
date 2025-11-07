@@ -110,7 +110,6 @@ contains
     double precision :: ax
     double precision, dimension(3,3) :: R
 
-
     logical :: has_passed
 
     call tst_new("FingerprintBasis Test 2: FCC rotation")
@@ -162,11 +161,11 @@ contains
     has_passed = (has_passed .and. tst_equal(G1, G2, prec=1.0d-6))
     ! derivatives: only x direction has to be equal, since that is the
     !              axis we rotated about
+    ! write(*,*) (G1(i), G2(i), abs(G1(i)-G2(i)), i=1, nG)
     has_passed = (has_passed .and. tst_equal(&
                   dGi1(1,1:nG), dGi2(1,1:nG), prec=1.0d-6))
     has_passed = (has_passed .and. tst_equal(&
                   dGj1(1,1:nG,1:nx), dGj2(1,1:nG,1:nx), prec=1.0d-6))
-
 
     call del_SFBasis(sfb)
     call tst_check_passed(has_passed)

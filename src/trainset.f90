@@ -189,7 +189,8 @@ contains
 
   !--------------------------------------------------------------------!
 
-  function open_TrnSet(file, maxenergy, readfooter, raw) result(ts)
+  recursive function open_TrnSet(file, maxenergy, readfooter, raw, &
+                                 verbose) result(ts)
 
     implicit none
 
@@ -198,33 +199,32 @@ contains
     ! maxenergy    maximum atomic energy (do not consider structures   !
     !              with higher energy)                                 !
     ! readfooter   skip over all structures to read footer first       !
+    !              To read the footer we have to skip over all         !
+    !              structures. Skipping the footer can thus save some  !
+    !              time, if the stats from the footer are not needed.  !
     ! raw          if true, do not normalize the trainset              !
+    ! verbose      print additional information to stdout              !
     !------------------------------------------------------------------!
 
     character(len=*),           intent(in) :: file
     double precision, optional, intent(in) :: maxenergy
     logical,          optional, intent(in) :: readfooter
     logical,          optional, intent(in) :: raw
+    logical,          optional, intent(in) :: verbose
     type(TrnSet)                           :: ts
 
-    logical :: do_footer, do_raw
+    logical :: do_footer, do_raw, be_verbose
 
-    if (present(raw)) then
-       do_raw = raw
-    else
-       do_raw = .false.
-    end if    
-    
+    do_raw = .false.
+    be_verbose = .false.
+    do_footer = .true.
+    if (present(raw)) do_raw = raw
+    if (present(verbose)) be_verbose = verbose
+    if (present(readfooter)) do_footer = readfooter
+
+    if (be_verbose) write(*, '(A)', advance='no') ' Reading header... '
     call ts_read_header(ts, file, do_raw)
-
-    ! To read the footer we have to skip over all structures.
-    ! The flag `readfooter=.false.' can thus save some time, if
-    ! the stats from the footer are not needed.
-    if (present(readfooter)) then
-       do_footer = readfooter
-    else
-       do_footer = .true.
-    end if
+    if (be_verbose) write(*, '(A)') 'done.'
 
     ts%iStruc = 0
     ts%mode   = 'read'
@@ -232,17 +232,25 @@ contains
 
     if (.not. do_raw) then
        if (.not. ts%normalized) then
+          if (be_verbose) &
+               write(*, '(A)', advance='no') ' Data standardization... '
           if (present(maxenergy)) then
              call ts_normalize(ts, maxenergy)
           else
              call ts_normalize(ts, huge(1.0d0))
           end if
+          if (be_verbose) write(*, '(A)') 'done.'
        end if
     end if
 
     if (do_footer) then
+       if (be_verbose) write(*, '(A)', advance='no') ' Reading footer...'
        call ts_read_footer(ts)
+       if (be_verbose) write(*, '(A)') 'done.'
+       if (be_verbose) write(*, '(A)', advance='no') &
+            ' Rewinding training set file...'
        call rewind_TrnSet(ts)
+       if (be_verbose) write(*, '(A)') 'done.'
     else if (ts%normalized) then
        ts%E_av  =  0.0d0
        ts%E_min = -1.0d0
@@ -298,6 +306,7 @@ contains
     call ts_assert_init(ts)
     call ts_assert_readmode(ts)
 
+<<<<<<< Updated upstream
     if (present(rec)) then
        if (rec > 0) then
           irec = rec - 1
@@ -306,6 +315,11 @@ contains
        endif
     else
        irec = 0
+=======
+    irec = 0
+    if (present(rec)) then
+       if (rec > 0) irec = rec - 1
+>>>>>>> Stashed changes
     end if
 
     if (ts%iStruc > irec) then
@@ -590,7 +604,7 @@ contains
           call ts_read_sf_values(ts, nsf, sfval(1:nsf))
           write(u,dfrmt,advance='no') (sfval(i), i=1,nsf)
           write(u,*)
-       end do       
+       end do
     end do
 
     deallocate(sfval)
@@ -768,7 +782,7 @@ contains
     type(TrnSet),     intent(inout) :: ts
     character(len=*), intent(in)    :: file
     logical,          intent(in)    :: raw
-    
+
     character(len=1024) :: file2
     logical             :: fexists
 
@@ -902,7 +916,8 @@ contains
           stp(itype) = load_Setup(ts%typeName, unit=ts%unit)
        end do
     else if (present(stp) .and. (.not. has_setups)) then
-       write(0,*) "Error: no structural fingerprint basis setups in training set file!"
+       write(0,*) "Error: no structural fingerprint basis setups " &
+            // "in training set file!"
        stop
     end if
 
