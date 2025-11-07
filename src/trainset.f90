@@ -306,20 +306,9 @@ contains
     call ts_assert_init(ts)
     call ts_assert_readmode(ts)
 
-<<<<<<< Updated upstream
-    if (present(rec)) then
-       if (rec > 0) then
-          irec = rec - 1
-       else
-          irec = 0
-       endif
-    else
-       irec = 0
-=======
     irec = 0
     if (present(rec)) then
        if (rec > 0) irec = rec - 1
->>>>>>> Stashed changes
     end if
 
     if (ts%iStruc > irec) then

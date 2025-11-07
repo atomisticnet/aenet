@@ -92,16 +92,19 @@ if(USE_MKL)
   # set(MKL_LINK static)
   # set(MKL_ARCH intel64)
   set(MKL_INTERFACE lp64)
-  find_package(MKL CONFIG REQUIRED PATHS $ENV{MKLROOT})
+  find_package(MKL CONFIG PATHS $ENV{MKLROOT})
   if (MKL_FOUND)
     target_link_libraries(BLASLAPACK::BLASLAPACK  INTERFACE MKL::MKL)
   else()
+    message(STATUS "No MKL CMake configuration found. Trying fallback.")
     if (CMAKE_Fortran_COMPILER_ID MATCHES "Intel|IntelLLVM")
       # Pick correct MKL switch depending on ifort (-mkl) vs ifx (-qmkl)
       if(CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
         set(_MKL_SWITCH "-qmkl=")
+        message(STATUS "Activating '-qmkl' compiler flag.")
       else()
         set(_MKL_SWITCH "-mkl=")
+        message(STATUS "Activating '-mkl' compiler flag.")
       endif()
       target_compile_options(BLASLAPACK::BLASLAPACK INTERFACE
         $<$<BOOL:${MKL_PARALLEL}>:${_MKL_SWITCH}parallel>
@@ -203,11 +206,14 @@ set_target_properties(aenet_shared PROPERTIES Fortran_MODULE_DIRECTORY ${PROJECT
 set_target_properties(lbfgsb_static PROPERTIES Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/modules)
 
 # Link libraries
-target_link_libraries(aenet_static PRIVATE lbfgsb_static BLASLAPACK::BLASLAPACK)
-target_link_libraries(aenet_shared PRIVATE lbfgsb_static BLASLAPACK::BLASLAPACK)
+target_link_libraries(aenet_static PUBLIC BLASLAPACK::BLASLAPACK)
+target_link_libraries(aenet_shared PUBLIC BLASLAPACK::BLASLAPACK)
+target_link_libraries(aenet_static PRIVATE lbfgsb_static)
+target_link_libraries(aenet_shared PRIVATE lbfgsb_static)
+
 if(USE_MPI)
-    target_link_libraries(aenet_static PRIVATE MPI::MPI_Fortran)
-    target_link_libraries(aenet_shared PRIVATE MPI::MPI_Fortran)
+    target_link_libraries(aenet_static PUBLIC MPI::MPI_Fortran)
+    target_link_libraries(aenet_shared PUBLIC MPI::MPI_Fortran)
 endif()
 
 # ==============================================================================
