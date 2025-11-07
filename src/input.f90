@@ -80,6 +80,7 @@ module input
      !                                                                 !
      ! do_forces        .true. if forces shall be calculated           !
      ! do_timing        .true. if timings shall be saved               !
+     ! pot_is_ascii     .true. if ANN potentials are in ASCII format   !
      ! print_atomic_energies  if .true., atomic energies will be saved !
      !                                                                 !
      ! nStrucs          number of structures to run calculations for   !
@@ -148,6 +149,7 @@ module input
 
      logical                                             :: do_forces
      logical                                             :: do_timing
+     logical                                             :: pot_is_ascii
      logical                                             :: print_atomic_energies
 
      logical                                             :: do_relax
@@ -227,6 +229,7 @@ contains
 
     inp%do_forces    = .false.
     inp%do_timing    = .false.
+    inp%pot_is_ascii = .false.
     inp%print_atomic_energies = .false.
 
     inp%do_relax     = .false.
@@ -811,6 +814,7 @@ contains
     integer                :: nnets, ipos
     integer                :: u, i, il
     logical                :: do_arch
+    character              :: frmt
 
     if (present(stat)) stat = S_OK
 
@@ -831,7 +835,10 @@ contains
        do_arch = .false.
     end if
 
-    call inp_find_keyword(u, 'networks', il)
+    call inp_find_keyword(u, 'networks', il, line)
+    frmt = 'b'  ! binary format is default. 'a' or 'A' activates ascii
+    call io_readval(line, 'format', frmt)
+    if ((frmt == 'a') .or. (frmt == 'A')) inp%pot_is_ascii = .true.
     if (present(iline)) iline = il
     if (il == 0) then
        if (present(stat)) stat = S_NOT

@@ -53,12 +53,13 @@ module potential
   implicit none
   save
 
-  public :: load_NNPot,     &
-            del_NNPot,      &
-            pot_init,       &
-            pot_final,      &
-            pot_get_range,  &
-            pot_print_info, &
+  public :: load_NNPot,       &
+            load_NNPot_ASCII, &
+            del_NNPot,        &
+            pot_init,         &
+            pot_final,        &
+            pot_get_range,    &
+            pot_print_info,   &
             pot_assert_init
 
   !--------------------------------------------------------------------!
@@ -173,6 +174,193 @@ contains
     pot%init = .false.
 
   end subroutine del_NNPot
+
+  !--------------------------------------------------------------------!
+  !             load ANN potential from ASCII format                   !
+  !                                                                    !
+  ! This subroutine uses the ASCII format introduced by                !
+  ! Jon Lopez-Zorilla's aenet-PyTorch training implementation.  The    !
+  ! code is partially based on aenet-PyTorch's `nnASCII2bin.f90' tool, !
+  ! which is released under the terms of the MIT license with          !
+  ! copyright held by 2023 J. Lopez-Zorrilla (jon.lopezz@ehu.eus) and  !
+  ! N. Artrith (n.artrith@uu.nl).  The aenet-PyTorch code can be       !
+  ! obtained from https://github.com/atomisticnet/aenet-pytorch        !
+  ! When using the ASCII format, please cite:                          !
+  ! J. Lopez-Zorrilla et al., J. Chem. Phys. 158, 164105 (2023).       !
+  ! DOI: https://doi.org/10.1063/5.0146803                             !
+  !--------------------------------------------------------------------!
+
+  function load_NNPot_ASCII(global_types, file, unit, output_file) result(pot)
+
+    implicit none
+
+    character(len=*), dimension(:), intent(in) :: global_types
+    character(len=*), optional,     intent(in) :: file
+    integer,          optional,     intent(in) :: unit
+    character(len=*), optional,     intent(in) :: output_file
+    type(NNPot)                                :: pot
+
+    character(len=PATHLEN) :: outfile
+
+    integer :: itype
+    integer :: u_in, u_out
+
+    integer              :: nlayers, nnodesmax, Wsize, nvalues
+    integer, allocatable :: nnodes(:), fun(:), iw(:), iv(:)
+    double precision, allocatable  :: W(:)
+
+    character(len=1024)           :: description
+    character(len=100)            :: sftype
+    character(len=2)              :: atomtype
+    character(len=2), allocatable :: envtypes(:)
+    double precision              :: rc_min, rc_max
+    integer                       :: nsf, nsfparam, neval, nenv
+    integer, allocatable          :: sf(:), sfenv(:,:)
+    double precision, allocatable :: sfparam(:,:), sfval_min(:)
+    double precision, allocatable :: sfval_max(:), sfval_avg(:), sfval_cov(:)
+    character(len=PATHLEN)        :: filename
+    logical                       :: normalized
+    double precision              :: scale, shift, E_min, E_max, E_avg
+    integer                       :: ntypes, natomtot, nstrucs
+    character(len=2), allocatable :: type_names(:)
+    double precision, allocatable :: E_atom(:)
+
+    if (.not. (present(file) .or. present(unit))) then
+       write(0,*) "Error: neither file nor file unit " &
+            // "specified in `load_NNPot_ascii()'."
+       stop
+    end if
+
+    if (present(unit)) then
+       u_in = unit
+    else
+       call aeio_assert_file_exists(file)
+       u_in = io_unit()
+       open(u_in, action="read", status="old", file=file)
+    end if
+
+    ! Network information
+    read(u_in,*) nlayers
+    read(u_in,*) nnodesmax
+    read(u_in,*) Wsize
+    read(u_in,*) nvalues
+
+    allocate(nnodes(nlayers), fun(nlayers-1), &
+         iw(nlayers), iv(nlayers), W(Wsize))
+
+    read(u_in,*) nnodes(:)
+    read(u_in,*) fun(:)
+    read(u_in,*) iw(:)
+    read(u_in,*) iv(:)
+    read(u_in,*) W(:)
+
+    ! Structural Fingerprint setup information
+    read(u_in,*) description
+    read(u_in,*) atomtype
+    read(u_in,*) nenv
+
+    allocate(envtypes(nenv))
+
+    read(u_in,*) envtypes(:)
+    read(u_in,*) rc_min
+    read(u_in,*) rc_max
+    read(u_in,*) sftype
+    read(u_in,*) nsf
+    read(u_in,*) nsfparam
+
+    allocate(sf(nsf), sfparam(nsfparam,nsf), sfenv(2,nsf), sfval_min(nsf), &
+             sfval_max(nsf), sfval_avg(nsf), sfval_cov(nsf))
+
+    read(u_in,*) sf(:)
+    read(u_in,*) sfparam(:,:)
+    read(u_in,*) sfenv(:,:)
+    read(u_in,*) neval
+    read(u_in,*) sfval_min
+    read(u_in,*) sfval_max
+    read(u_in,*) sfval_avg
+    read(u_in,*) sfval_cov
+
+    ! Trainset information
+    read(u_in,*) filename
+    read(u_in,*) normalized
+    read(u_in,*) scale
+    read(u_in,*) shift
+    read(u_in,*) ntypes
+
+    allocate(type_names(ntypes), E_atom(ntypes))
+
+    read(u_in,*) type_names(:)
+    read(u_in,*) E_atom(:)
+    read(u_in,*) natomtot
+    read(u_in,*) nstrucs
+    read(u_in,*) E_min, E_max, E_avg
+
+    if (.not. present(unit)) close(u_in)
+
+    if (present(output_file)) then
+       outfile = trim(adjustl(output_file))
+    else
+       outfile = trim(adjustl(atomtype)) // ".nn"
+    end if
+
+    ! open binary/unformatted output file
+    u_out = io_unit()
+    open(u_out, action="write", status="replace", file=outfile, &
+         form="unformatted")
+
+    ! network
+    write(u_out) nlayers
+    write(u_out) nnodesmax
+    write(u_out) Wsize
+    write(u_out) nvalues
+    write(u_out) nnodes(:)
+    write(u_out) fun(:)
+    write(u_out) iw(:)
+    write(u_out) iv(:)
+    write(u_out) W(:)
+
+    ! sf setup
+    write(u_out) description
+    write(u_out) atomtype
+    write(u_out) nenv
+    write(u_out) envtypes(:)
+    write(u_out) rc_min
+    write(u_out) rc_max
+    write(u_out) sftype
+    write(u_out) nsf
+    write(u_out) nsfparam
+    write(u_out) sf(:)
+    write(u_out) sfparam(:,:)
+    write(u_out) sfenv(:,:)
+    write(u_out) neval
+    write(u_out) sfval_min
+    write(u_out) sfval_max
+    write(u_out) sfval_avg
+    write(u_out) sfval_cov
+
+    ! trainset info
+    write(u_out) filename
+    write(u_out) normalized
+    write(u_out) scale
+    write(u_out) shift
+    write(u_out) ntypes
+    write(u_out) type_names(:)
+    write(u_out) E_atom(:)
+    write(u_out) natomtot
+    write(u_out) nstrucs
+    write(u_out) E_min, E_max, E_avg
+
+    close(u_out)
+
+    deallocate(nnodes, fun, iw, iv, W)
+    deallocate(sf, sfparam, sfenv, sfval_min, sfval_max, &
+         sfval_avg, sfval_cov)
+    deallocate(type_names, E_atom)
+
+    pot = load_NNPot(global_types, file=outfile)
+
+  end function load_NNPot_ASCII
+
 
   !--------------------------------------------------------------------!
   !          initialize memory for a collection of potentials          !
