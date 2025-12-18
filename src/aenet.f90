@@ -326,6 +326,30 @@ contains
 
   end subroutine aenet_load_potential_C
 
+  subroutine aenet_load_potential_ascii_C(type_id, filename, stat) &
+       bind(C, name='aenet_load_potential_ascii')
+
+    implicit none
+
+    integer(kind=c_int), value,           intent(in)  :: type_id
+    character(kind=c_char), dimension(*), intent(in)  :: filename
+    integer(kind=c_int),                  intent(out) :: stat
+
+    integer :: slen
+    character(len=1024) :: ffilename
+
+    slen = io_cstring_len(filename)
+    if (slen > 1024) then
+       stat = aenet_ERR_MALLOC
+       return
+    end if
+    ffilename = io_cstring2f(filename, slen)
+
+    call aenet_load_potential(type_id, trim(ffilename), stat=stat, &
+         is_ascii=.true.)
+
+  end subroutine aenet_load_potential_ascii_C
+
   function aenet_all_loaded() result(all_loaded) bind(C)
 
     implicit none
@@ -351,8 +375,8 @@ contains
 
     implicit none
 
-    integer(kind=c_int), intent(in) :: type_id
-    real(kind=c_double)             :: E_atom
+    integer(kind=c_int), value, intent(in) :: type_id
+    real(kind=c_double)                    :: E_atom
 
     E_atom = aenet_pot(type_id)%E_atom
 

@@ -1,11 +1,24 @@
 #ifndef AENET_H_INCLUDED
 #define AENET_H_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Make _Bool portable between C and C++ */
+#ifdef __cplusplus
+#  define AENET_BOOL bool
+#else
+#  include <stdbool.h>
+#  define AENET_BOOL _Bool
+#endif
+
 void aenet_init(int ntypes, char* atom_types[], int* stat);
 void aenet_final(int* stat);
 void aenet_print_info(void);
 void aenet_load_potential(int type_id, char* filename, int* stat);
-_Bool aenet_all_loaded(void);
+void aenet_load_potential_ascii(int type_id, char* filename, int* stat);
+AENET_BOOL aenet_all_loaded(void);
 
 double aenet_free_atom_energy(int type_id);
 
@@ -49,4 +62,8 @@ extern int aenet_nnb_max;
 extern double aenet_Rc_min;
 extern double aenet_Rc_max;
 
+#ifdef __cplusplus
+}  /* extern "C" */
 #endif
+
+#endif  /* AENET_H_INCLUDED */
