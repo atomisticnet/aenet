@@ -107,7 +107,7 @@ module parallel
   logical, private :: isParallel = .false.
 
 #ifdef PARALLEL
-  integer, dimension(MPI_STATUS_SIZE) :: status
+  type(MPI_Status) :: status
 #endif
 
   !--------------------------------------------------------------------!
