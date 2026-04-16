@@ -156,7 +156,6 @@ contains
     avec(1:3,1) = (/ 0.0d0, 0.5d0, 0.5d0 /)*alat
     avec(1:3,2) = (/ 0.5d0, 0.0d0, 0.5d0 /)*alat
     avec(1:3,3) = (/ 0.5d0, 0.5d0, 0.0d0 /)*alat
-
     Xi(1:3) = (/ 0.0d0, 0.0d0, 0.0d0 /)
     nx = NMAX
     call get_coo(Rc, avec, Xi, nx, X)
@@ -164,7 +163,8 @@ contains
     types(nx/2+1:nx) = 2
 
     Xi = Xi + (/ 0.1d0, 0.0d0, 0.0d0 /)
-    call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G1, dGi1, dGj1)
+    call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G1(1:nG), &
+                  dGi1(1:3,1:nG), dGj1(1:3,1:nG,1:nx))
 
     ! (2) FCC rotated by 45 degrees around x axis and translated
 
@@ -182,11 +182,12 @@ contains
 
     ! we can only look at the x-axis:
     Xi = Xi + (/ 0.1d0, 0.0d0, 0.0d0 /)
-    call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G2, dGi2, dGj2)
+    call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G2(1:nG), &
+                  dGi2(1:3,1:nG), dGj2(1:3,1:nG,1:nx))
 
     ! (3) check whether both structures gave the same results
 
-    has_passed = (has_passed .and. tst_equal(G1, G2, prec=1.0d-6))
+    has_passed = (has_passed .and. tst_equal(G1(1:nG), G2(1:nG), prec=1.0d-6))
     ! derivatives: only x direction has to be equal, since that is the
     !              axis we rotated about
     ! write(*,*) (G1(i), G2(i), abs(G1(i)-G2(i)), i=1, nG)
@@ -270,7 +271,8 @@ contains
     types(1:nx/2)    = 1
     types(nx/2+1:nx) = 2
     Xi = Xi + (/ 0.1d0, -0.3d0, 0.2d0 /)
-    call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G0, dGi0, dGj0(1:3,1:nG,1:nx))
+    call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G0(1:nG), &
+                  dGi0(1:3,1:nG), dGj0(1:3,1:nG,1:nx))
 
     ! numerical derivatives wrt. central atom
     d = 0.0001d0
@@ -279,9 +281,9 @@ contains
     dd(3,:) = [0.0d0, 0.0d0, d]
     do i = 1, 3
        Xi = Xi - dd(i,:)
-       call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G1)
+       call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G1(1:nG))
        Xi = Xi + 2.0d0*dd(i,:)
-       call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G2)
+       call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G2(1:nG))
        Xi = Xi - dd(i,:)
        dGi1(i,1:nG) = (G2(1:nG) - G1(1:nG))/(2.0d0*d)
     end do
@@ -302,9 +304,9 @@ contains
        iat = random_integer(nx)
        do i = 1, 3
           X(:,iat) = X(:,iat) - dd(i,:)
-          call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G1)
+          call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G1(1:nG))
           X(:,iat) = X(:,iat) + 2.0d0*dd(i,:)
-          call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G2)
+          call sfb_eval(sfb, 1, Xi, nx, types, X, nG, G2(1:nG))
           X(:,iat) = X(:,iat) - dd(i,:)
           dGj1(i,1:nG,iat) = (G2(1:nG) - G1(1:nG))/(2.0d0*d)
        end do

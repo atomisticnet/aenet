@@ -202,7 +202,7 @@ contains
 
     call sf_final()
 
-    has_passed = (has_passed .and. tst_equal(G1, G2, prec=1.0d-6))
+    has_passed = (has_passed .and. tst_equal(G1(1:nG), G2(1:nG), prec=1.0d-6))
     ! derivatives: only x direction has to be equal, since that is the
     !              axis we rotated about
     has_passed = (has_passed .and. tst_equal(&
