@@ -29,7 +29,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add evidence/
+          git add -f evidence/*.log
           git commit -m 'Record L4 ${{ matrix.os }} experiment evidence' || exit 0
           for attempt in 1 2 3; do
             git pull --rebase origin codex/l4-feasibility-experiment
