@@ -1,18 +1,23 @@
-Darwin sat12-bq150-d039efdb-6f8c-43d4-b7c8-ef170e303be5-5E5261EBA888.local 23.6.0 Darwin Kernel Version 23.6.0: Tue Jul 21 21:56:54 PDT 2026; root:xnu-10063.141.1.713.39~1/RELEASE_ARM64_VMAPPLE arm64
-4c16592ace7d66c3542b787c7c985bb5263ea7e3
+Darwin sjc22-bm212-5484a678-09be-4897-af6c-ed6b92c3b321-EE7E417F0B89.local 23.6.0 Darwin Kernel Version 23.6.0: Tue Jul 21 21:56:54 PDT 2026; root:xnu-10063.141.1.713.39~1/RELEASE_ARM64_VMAPPLE arm64
+e085f993b2c4ba436bb853f80483f56c718ed86a
+[33mWarning:[0m gcc@14 14.4.0 is already installed and up-to-date.
+To reinstall 14.4.0, run:
+  brew reinstall gcc@14
 [32m==>[0m [1mDownloading bottle manifests[0m
-✔︎ Bottle Manifest gcc (16.2.0)
 ✔︎ Bottle Manifest openblas (0.3.34)
 ✔︎ Bottle Manifest libomp (23.1.0)
-[34m==>[0m [1mWould install 3 formulae:[0m
-gcc openblas libomp
+[34m==>[0m [1mWould install 2 formulae:[0m
+openblas libomp
 [34m==>[0m [1mWould install 2 dependencies for openblas:[0m
 gcc
 libomp
-[32m==>[0m [1mFetching downloads for: [32mgcc[39m, [32mopenblas[39m and [32mlibomp[39m[0m
+[32m==>[0m [1mFetching downloads for: [32mopenblas[39m and [32mlibomp[39m[0m
 ✔︎ Bottle libomp (23.1.0)
+✔︎ Bottle Manifest gcc (16.2.0)
 ✔︎ Bottle openblas (0.3.34)
 ✔︎ Bottle gcc (16.2.0)
+[32m==>[0m [1mInstalling dependencies for openblas:[0m [32mgcc[39m and [32mlibomp[39m[0m
+[32m==>[0m [1mInstalling openblas dependency: [32mgcc[39m[0m
 [34m==>[0m [1mPouring gcc--16.2.0.arm64_sonoma.bottle.tar.gz[0m
 🍺  /opt/homebrew/Cellar/gcc/16.2.0: 1,707 files, 500.3MB
 [32m==>[0m [1mInstalling openblas dependency: [32mlibomp[39m[0m
@@ -35,22 +40,22 @@ For pkgconf to find openblas you may need to set:
 
 For cmake to find openblas you may need to set:
   export CMAKE_PREFIX_PATH="/opt/homebrew/opt/openblas"
-GNU Fortran (Homebrew GCC 16.2.0) 16.2.0
-Copyright (C) 2026 Free Software Foundation, Inc.
+GNU Fortran (Homebrew GCC 14.4.0) 14.4.0
+Copyright (C) 2024 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 cmake version 4.4.3
 
 CMake suite maintained and supported by Kitware (kitware.com/cmake).
--- The Fortran compiler identification is GNU 16.2.0
+-- The Fortran compiler identification is GNU 14.4.0
 -- Checking whether Fortran compiler has -isysroot
 -- Checking whether Fortran compiler has -isysroot - no
 -- Checking whether Fortran compiler supports OSX deployment target flag
 -- Checking whether Fortran compiler supports OSX deployment target flag - no
 -- Detecting Fortran compiler ABI info
 -- Detecting Fortran compiler ABI info - done
--- Check for working Fortran compiler: /opt/homebrew/opt/gcc/bin/gfortran - skipped
+-- Check for working Fortran compiler: /opt/homebrew/opt/gcc@14/bin/gfortran-14 - skipped
 -- Looking for Fortran sgemm
 -- Looking for Fortran sgemm - found
 -- Found BLAS: /opt/homebrew/opt/openblas/lib/libopenblas.a
@@ -59,7 +64,7 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
 -- Found LAPACK: /opt/homebrew/opt/openblas/lib/libopenblas.a;/opt/homebrew/opt/openblas/lib/libopenblas.a
 -- Install prefix set to: /Users/runner/work/aenet/aenet for backwards compatibility
 -- Override with `cmake -DCMAKE_INSTALL_PREFIX=...`
--- Configuring done (4.2s)
+-- Configuring done (4.9s)
 -- Generating done (0.6s)
 -- Build files have been written to: /Users/runner/work/aenet/aenet/build-l4
 [  1%] Extracting L-BFGS-B sources from /Users/runner/work/aenet/aenet/lib/Lbfgsb.3.0.tar.gz
@@ -169,47 +174,47 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
 [100%] Built target build_all
 Test project /Users/runner/work/aenet/aenet/build-l4
       Start 19: build_test_binaries
- 1/19 Test #19: build_test_binaries ..............   Passed    0.31 sec
+ 1/19 Test #19: build_test_binaries ..............   Passed    0.36 sec
       Start  1: feedforward:IO
- 2/19 Test  #1: feedforward:IO ...................   Passed    0.01 sec
+ 2/19 Test  #1: feedforward:IO ...................   Passed    0.06 sec
       Start  2: feedforward:eval
  3/19 Test  #2: feedforward:eval .................   Passed    0.01 sec
       Start  3: feedforward:activation
- 4/19 Test  #3: feedforward:activation ...........   Passed    0.00 sec
+ 4/19 Test  #3: feedforward:activation ...........   Passed    0.01 sec
       Start  4: geometry:isolated
- 5/19 Test  #4: geometry:isolated ................   Passed    0.00 sec
+ 5/19 Test  #4: geometry:isolated ................   Passed    0.01 sec
       Start  5: geometry:periodic
- 6/19 Test  #5: geometry:periodic ................   Passed    0.00 sec
+ 6/19 Test  #5: geometry:periodic ................   Passed    0.01 sec
       Start  6: lclist:fcc_primitive
- 7/19 Test  #6: lclist:fcc_primitive .............   Passed    0.00 sec
+ 7/19 Test  #6: lclist:fcc_primitive .............   Passed    0.01 sec
       Start  7: lclist:fcc_conventional
- 8/19 Test  #7: lclist:fcc_conventional ..........   Passed    0.02 sec
+ 8/19 Test  #7: lclist:fcc_conventional ..........   Passed    0.04 sec
       Start  8: lclist:fcc_isolated
- 9/19 Test  #8: lclist:fcc_isolated ..............   Passed    0.00 sec
+ 9/19 Test  #8: lclist:fcc_isolated ..............   Passed    0.01 sec
       Start  9: sfbasis:setup
-10/19 Test  #9: sfbasis:setup ....................   Passed    0.00 sec
+10/19 Test  #9: sfbasis:setup ....................   Passed    0.01 sec
       Start 10: sfbasis:fcc_rotation
-11/19 Test #10: sfbasis:fcc_rotation .............   Passed    0.00 sec
+11/19 Test #10: sfbasis:fcc_rotation .............   Passed    0.01 sec
       Start 11: sfbasis:derivatives
-12/19 Test #11: sfbasis:derivatives ..............   Passed    0.58 sec
+12/19 Test #11: sfbasis:derivatives ..............   Passed    0.44 sec
       Start 12: sfsetup:IO_chebyshev
-13/19 Test #12: sfsetup:IO_chebyshev .............   Passed    0.01 sec
+13/19 Test #12: sfsetup:IO_chebyshev .............   Passed    0.00 sec
       Start 13: sfsetup:IO_behler2011
-14/19 Test #13: sfsetup:IO_behler2011 ............   Passed    0.00 sec
+14/19 Test #13: sfsetup:IO_behler2011 ............   Passed    0.01 sec
       Start 14: symmfunc:setup
 15/19 Test #14: symmfunc:setup ...................   Passed    0.01 sec
       Start 15: symmfunc:fcc_rotation
-16/19 Test #15: symmfunc:fcc_rotation ............   Passed    0.01 sec
+16/19 Test #15: symmfunc:fcc_rotation ............   Passed    0.02 sec
       Start 16: symmfunc:derivatives
-17/19 Test #16: symmfunc:derivatives .............   Passed    0.20 sec
+17/19 Test #16: symmfunc:derivatives .............   Passed    0.27 sec
       Start 17: xsflib:isolated
-18/19 Test #17: xsflib:isolated ..................   Passed    0.00 sec
+18/19 Test #17: xsflib:isolated ..................   Passed    0.01 sec
       Start 18: xsflib:periodic
 19/19 Test #18: xsflib:periodic ..................   Passed    0.01 sec
 
 100% tests passed out of 19
 
-Total Test time (real) =   1.21 sec
+Total Test time (real) =   1.29 sec
 -- Install configuration: "Release"
 -- Installing: /Users/runner/work/_temp/stage/bin/generate.x_openblas
 -- Installing: /Users/runner/work/_temp/stage/bin/train.x_openblas
@@ -220,10 +225,151 @@ Total Test time (real) =   1.21 sec
 -- Installing: /Users/runner/work/_temp/stage/tools/neighbors.x
 -- Installing: /Users/runner/work/_temp/stage/tools/trnset_info.x
 -- Installing: /Users/runner/work/_temp/stage/tools/trnset2ASCII.x
-Undefined symbols for architecture arm64:
-  "_aenet_convert_atom_types", referenced from:
-      _main in harness-5f30e0.o
-  "_aenet_init", referenced from:
-      _main in harness-5f30e0.o
-ld: symbol(s) not found for architecture arm64
-clang: error: linker command failed with exit code 1 (use -v to see invocation)
+0000000000004720 T ___aenet_MOD___copy___iso_c_binding_C_ptr
+000000000038fdb0 S ___aenet_MOD___def_init___iso_c_binding_C_ptr
+0000000000388020 D ___aenet_MOD___vtab___iso_c_binding_C_ptr
+00000000000059ec T ___aenet_MOD_aenet_convert_atom_types
+000000000000734c T ___aenet_MOD_aenet_init
+0000000000006800 T ___aenet_MOD_aenet_load_potential
+0000000000004ba4 T ___aenet_MOD_aenet_sfb_init
+000000000038fdb8 S _aenet_Rc_max
+000000000038fdc0 S _aenet_Rc_min
+00000000000067a0 T _aenet_all_loaded
+0000000000006520 T _aenet_atomic_energy
+0000000000005d44 T _aenet_atomic_energy_and_forces
+00000000000057ec T _aenet_convert_atom_types
+0000000000007000 T _aenet_final
+0000000000006780 T _aenet_free_atom_energy
+00000000000077c0 T _aenet_init
+0000000000006de0 T _aenet_load_potential
+0000000000006ca8 T _aenet_load_potential_ascii
+0000000000004de8 T _aenet_nbl_final
+0000000000004e40 T _aenet_nbl_init
+0000000000004dac T _aenet_nbl_neighbors
+000000000038fdc8 S _aenet_nnb_max
+000000000038fdcc S _aenet_nsf_max
+0000000000006f08 T _aenet_print_info
+00000000000048c4 T _aenet_sfb_eval
+0000000000004960 T _aenet_sfb_final
+00000000000049a0 T _aenet_sfb_init
+0000000000004940 T _aenet_sfb_nvalues
+000000000000472c T _aenet_sfb_reconstruct_radial
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libquadmath.0.dylib
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libquadmath.0.dylib
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libgfortran.5.dylib
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libgfortran.5.dylib
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libgfortran.5.dylib
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libgfortran.5.dylib
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libgcc_s.1.1.dylib (for architecture arm64)
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libgcc_s.1.1.dylib (for architecture arm64)
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libomp.dylib
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libomp.dylib
+/Users/runner/work/_temp/stage/bin/api-smoke: replacing existing signature
+/Users/runner/work/_temp/stage/bin/generate.x_openblas: replacing existing signature
+/Users/runner/work/_temp/stage/bin/predict.x_openblas: replacing existing signature
+/Users/runner/work/_temp/stage/bin/train.x_openblas: replacing existing signature
+/Users/runner/work/_temp/stage/lib/libaenet.dylib: replacing existing signature
+/Users/runner/work/_temp/stage/lib/libgcc_s.1.1.dylib: replacing existing signature
+/Users/runner/work/_temp/stage/lib/libgfortran.5.dylib: replacing existing signature
+/Users/runner/work/_temp/stage/lib/libomp.dylib: replacing existing signature
+/Users/runner/work/_temp/stage/lib/libquadmath.0.dylib: replacing existing signature
+/Users/runner/work/_temp/stage/tools/fingerprint.x: replacing existing signature
+/Users/runner/work/_temp/stage/tools/neighbors.x: replacing existing signature
+/Users/runner/work/_temp/stage/tools/trnset2ASCII.x: replacing existing signature
+/Users/runner/work/_temp/stage/tools/trnset_info.x: replacing existing signature
+bin/api-smoke
+/Users/runner/work/_temp/stage/bin/api-smoke:
+	@rpath/libaenet.dylib (compatibility version 0.0.0, current version 0.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+bin/generate.x_openblas
+/Users/runner/work/_temp/stage/bin/generate.x_openblas:
+	@loader_path/../lib/libomp.dylib (compatibility version 5.0.0, current version 5.0.0)
+	@loader_path/../lib/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	@loader_path/../lib/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+bin/predict.x_openblas
+/Users/runner/work/_temp/stage/bin/predict.x_openblas:
+	@loader_path/../lib/libomp.dylib (compatibility version 5.0.0, current version 5.0.0)
+	@loader_path/../lib/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	@loader_path/../lib/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+bin/train.x_openblas
+/Users/runner/work/_temp/stage/bin/train.x_openblas:
+	@loader_path/../lib/libomp.dylib (compatibility version 5.0.0, current version 5.0.0)
+	@loader_path/../lib/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	@loader_path/../lib/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+lib/libaenet.dylib
+/Users/runner/work/_temp/stage/lib/libaenet.dylib:
+	@rpath/libaenet.dylib (compatibility version 0.0.0, current version 0.0.0)
+	@loader_path/libomp.dylib (compatibility version 5.0.0, current version 5.0.0)
+	@loader_path/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	@loader_path/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+lib/libgcc_s.1.1.dylib
+/Users/runner/work/_temp/stage/lib/libgcc_s.1.1.dylib (architecture arm64):
+	@rpath/libgcc_s.1.1.dylib (compatibility version 1.0.0, current version 1.1.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+lib/libgfortran.5.dylib
+/Users/runner/work/_temp/stage/lib/libgfortran.5.dylib:
+	@rpath/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	@loader_path/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	@loader_path/libgcc_s.1.1.dylib (compatibility version 1.0.0, current version 1.1.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+lib/libomp.dylib
+/Users/runner/work/_temp/stage/lib/libomp.dylib:
+	@rpath/libomp.dylib (compatibility version 5.0.0, current version 5.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+lib/libquadmath.0.dylib
+/Users/runner/work/_temp/stage/lib/libquadmath.0.dylib:
+	@rpath/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+tools/fingerprint.x
+/Users/runner/work/_temp/stage/tools/fingerprint.x:
+	@loader_path/../lib/libomp.dylib (compatibility version 5.0.0, current version 5.0.0)
+	@loader_path/../lib/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	@loader_path/../lib/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+tools/neighbors.x
+/Users/runner/work/_temp/stage/tools/neighbors.x:
+	@loader_path/../lib/libomp.dylib (compatibility version 5.0.0, current version 5.0.0)
+	@loader_path/../lib/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	@loader_path/../lib/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+tools/trnset2ASCII.x
+/Users/runner/work/_temp/stage/tools/trnset2ASCII.x:
+	@loader_path/../lib/libomp.dylib (compatibility version 5.0.0, current version 5.0.0)
+	@loader_path/../lib/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	@loader_path/../lib/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+tools/trnset_info.x
+/Users/runner/work/_temp/stage/tools/trnset_info.x:
+	@loader_path/../lib/libomp.dylib (compatibility version 5.0.0, current version 5.0.0)
+	@loader_path/../lib/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	@loader_path/../lib/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+      cmd LC_BUILD_VERSION
+  cmdsize 32
+ platform 1
+    minos 14.0
+      sdk 14.0
+   ntools 1
+     tool 3
+C API initialization/type mapping/finalization passed
+generate/train/predict passed; repeated energy: -0.80497894
+ Total energy               :           -0.88862786 eV
+
+L4 runtime experiment passed
