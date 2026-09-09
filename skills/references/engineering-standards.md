@@ -36,16 +36,37 @@ judgment; they do not expand the approved task into unrelated cleanup.
   comment overshoot for clarity. Respect language-specific line limits.
 - Give procedures concise help text describing purpose, arguments, outputs,
   units, and consequential side effects or ownership. Explain non-obvious
-  numerical rationale rather than restating syntax.
-- Use the smallest direct design satisfying current requirements. Avoid
-  speculative options, duplicated algorithms, test-only production branches,
-  broad error suppression, and unrelated cleanup.
+  numerical rationale rather than restating syntax. Explain variables whose
+  physical meaning, units, indexing, or role are unclear from their names.
+- Prefer direct implementations that meet current requirements. Introduce
+  abstractions, configuration options, defensive branches, or extension points
+  only for a demonstrated supported use case. Reuse existing routines when
+  their semantics fit. Do not generalize for hypothetical future needs.
+- During review, look for concepts that can be removed without weakening
+  correctness, compatibility, or clarity. Avoid duplicated algorithms,
+  test-only production branches, broad error suppression, and unrelated cleanup.
 - Start new source files with the license text in src/license-header.txt,
   formatted as valid comments for the language. Preserve required shebangs
   and format directives. Do not prepend raw license text to structured data,
-  Markdown, or skill YAML frontmatter; retain any existing license notices.
+  Markdown, or skill YAML frontmatter; retain any existing license
+  notices.
+- Use the internal libraries in `src/ext/` where
+  appropriate. The I/O library (`io.f90`) contains routines for unit
+  handling, string operations, and formatted output.  `arglib.f90`
+  contains routines for CLI argument handling; `sortlib.f90` for list
+  sorting; `unittest.f90` for testing; `timing.f90` for timing.
 
 ## Tests and dependencies
+
+- For bug fixes, first add a regression test reproducing the failure whenever
+  practical. For new behavior, define and exercise an acceptance test before
+  implementation when practical. Before substantial refactoring of poorly
+  tested legacy code, add focused characterization coverage.
+- If test-first development is impractical, explain why and provide meaningful
+  automated validation before completion. Prose-only changes need relevant
+  document/policy checks, not artificial runtime tests.
+- Grow coverage around changed behavior; do not require a coverage overhaul
+  or a blanket percentage target for each task.
 
 - Add focused unit or integration tests for changed behavior and meaningful
   failure paths. A regression check should fail without the fix and exercise

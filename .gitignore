@@ -60,3 +60,7 @@ dev-archive/
 /config/local.toml
 /bak/
 \#*
+
+# Disposable local issue records
+/LOCAL_ISSUES.md
+/CLOSED_LOCAL_ISSUES.md

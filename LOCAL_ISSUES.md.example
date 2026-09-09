@@ -1,0 +1,16 @@
+# Local Issues
+
+Copy to LOCAL_ISSUES.md (ignored by Git). Use stable L-prefixed IDs and retain
+this counter when purging completed history. Required fields are problem,
+acceptance criteria, and status; add shared-issue links or notes when useful.
+After validation, when ready to commit, move completed entries to
+CLOSED_LOCAL_ISSUES.md with a short resolution and validation receipt.
+
+**Last local issue ID assigned:** L0
+
+## Entry format
+
+    ## L<next integer>: Short title
+    Status: Open
+    Problem: Describe the observable problem.
+    Acceptance criteria: State the conditions for completion.

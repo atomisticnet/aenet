@@ -1,14 +1,15 @@
 ---
 name: issue-workflow
-description: Plan, implement, review, validate, and close aenet work tracked by ROADMAP.md or GitHub issues. Use for addressing tracked work, not read-only exploration or triage.
+description: Plan, implement, review, validate, and close aenet work tracked by shared or local issues, or explicitly linked GitHub issues. Use for addressing tracked work, not read-only exploration or triage.
 ---
 
 # Issue Workflow
 
 Follow AGENTS.md for approval, task storage, and external-action permissions.
 Read [shared engineering standards](../references/engineering-standards.md)
-before implementation or review. The current tracker is ROADMAP.md; do not
-import aenet-python's global/local issue migration implicitly.
+before implementation or review. Use ISSUES.md for shared work and
+LOCAL_ISSUES.md for implementation tasks; a small task needs only a local
+issue. Keep records proportional to the work.
 
 ## Establish the contract and plan
 
@@ -30,8 +31,9 @@ not need repeated approval unless its scope or contracts materially change.
 
 ## Implement and review
 
-Establish a failing test or reproducible check before changing behavior when
-practical. Implement one approved logical unit, updating relevant tests,
+Apply the shared engineering standards' test-first policy, including
+characterization coverage and documented exceptions. Implement one approved
+logical unit, updating relevant tests,
 interface comments, documentation, and task evidence together. Use the
 [build-test skill](../build-test/SKILL.md) for backend checks and the
 [documentation skill](../documentation/SKILL.md) for substantive docs work.
@@ -51,12 +53,14 @@ Run focused checks, then broaden as regression risk requires. Compare every
 acceptance criterion with the final implementation and actual validation.
 Distinguish environment failures, product failures, and unrun checks.
 
-Archive a resolved roadmap task only after validation, when review-ready,
-using AGENTS.md's location and status rules. The receipt records outcome,
-commands/results, limitations, related tasks, and follow-up work. Remove the
-resolved entry after archiving; do not require a commit hash in advance.
-Leave work open if a promised deliverable or required validation is missing.
-Only update public issue records with appropriate user authorization.
+Close local work after validation, when ready to commit, by moving its entry
+into CLOSED_LOCAL_ISSUES.md with a concise outcome and validation receipt.
+For completed shared work, move its issue file to closed-issues/ and remove
+its active index entry before merging, following AGENTS.md. Neither closure
+requires a final commit hash or a date in the filename. Preserve ID counters.
+Leave deferred issues indexed and keep an issue open when a promised
+deliverable or required validation is missing. Do not close a parent merely
+because one child is complete. Only update GitHub with user authorization.
 
 Summarize the result and evidence, identify remaining work, and propose a
 commit message referencing the relevant task or explicitly identified GitHub

@@ -28,7 +28,7 @@
 Read each applicable `SKILL.md` completely before using its workflow:
 
 - [issue-workflow](skills/issue-workflow/SKILL.md): implement and close work
-  tracked by the private roadmap or GitHub issues.
+  tracked by shared or local issues, or explicitly linked GitHub issues.
 - [code-review](skills/code-review/SKILL.md): review commits, branches, or
   working-tree changes; includes the pre-commit review checklist.
 - [build-test](skills/build-test/SKILL.md): configure, build, and validate
@@ -49,9 +49,9 @@ during implementation and review.
   the proposed plan. Approval covers its described implementation and
   validation steps. Ask again when discoveries materially change scope,
   behavior, risk, or public contracts, not for routine implementation choices.
-- Use test-driven development: establish a failing regression test or other
-  reproducible check before changing behavior when practical. Add or update
-  meaningful tests for new or modified functionality.
+- Follow the practical test-first policy in the shared engineering standards.
+  Add meaningful automated coverage for new or changed behavior; explain
+  exceptions to test-first development and validate before completion.
 - Keep changes scoped to the approved logical unit; preserve unrelated user
   edits. Ask when requirements are ambiguous or progress is blocked.
 - Keep procedure comments, help text, and maintained documentation current
@@ -63,27 +63,42 @@ during implementation and review.
 - Do not commit without user confirmation. Do not infer authorization to
   send messages, update GitHub, push, merge, or publish from local task work.
 
-# Planning and task tracking
+# Shared issues
 
-- Keep `ROADMAP.md` as the private authoritative list of active, pending,
-  and explicitly deferred tasks. Use short stable IDs such as `T012` or
-  `BUG007`; check both ROADMAP.md and dev-archive/ before assigning an ID.
-- Give work a problem, scope, acceptance criteria, and relevant dependencies.
-  One task should normally be a coherent reviewable unit, not an arbitrary
-  implementation step.
-- After validation, when resolved work is ready to commit, archive it in
-  `dev-archive/<yyyymmdd>-<task-id>-<description>.md` with an explicit status
-  (`done`, `deferred`, `dropped`, or `moved-to-github`), resolution, validation,
-  limitations, and follow-up references. A commit hash is not required yet.
-- Remove resolved tasks from ROADMAP.md after archiving. Deferred work may
-  remain on the roadmap when it is still intended future work.
-- GitHub issues are public, contributor-facing records; private roadmap,
-  notes, and archives are not automatically suitable for publication.
-  Update or close authorized GitHub issues only when the governing criteria
-  and validation are satisfied. Closing a child does not close its parent.
-- Migration to global/local issue files is pending separate review. Do not
-  create competing trackers, renumber old tasks, or publish private records
-  as part of ordinary issue work.
+- Use tracked `ISSUES.md` as the concise index of active and deferred shared
+  work. Store substantial descriptions in `issues/<id>-<description>.md`.
+- Assign stable integer IDs. Retain a last-assigned-ID counter in ISSUES.md;
+  never reuse IDs. Categories belong in titles or optional metadata.
+- Require only a problem, acceptance criteria, and status. Add plans,
+  dependencies, and evidence when useful. Small work may live entirely in
+  the local tracker; do not require a shared/local pair for every change.
+- Substantive shared issues should normally use separate branches.
+- After validation and review, before merging the issue branch, move resolved
+  issue files to `closed-issues/<id>-<description>.md` and remove their active
+  index entries. Record resolution, meaningful validation, and limitations.
+  Dates and commit hashes are optional; Git records history. Keep deferred
+  issues in the active index with an explicit deferred status.
+- Refer to repository issues as `issue 3` and GitHub issues explicitly as
+  `GitHub #3` or by URL; their number spaces are independent. Commit messages
+  should reference the relevant shared issue when applicable.
+- Public GitHub updates still require authorization. Do not copy private
+  notes into shared files without reviewing them for contributor relevance.
+  Closing a child does not imply that its parent is complete.
+
+# Local issues
+
+- Use ignored `LOCAL_ISSUES.md` for current implementation tasks, following
+  `LOCAL_ISSUES.md.example`. Assign IDs L1, L2, etc., and retain its
+  last-assigned-ID counter even when completed history is purged.
+- Each local issue is a coherent unit of work with a problem, acceptance
+  criteria, and status; a shared-issue reference is optional.
+- After validation, when ready to commit, move completed entries into ignored
+  `CLOSED_LOCAL_ISSUES.md` with a short resolution and validation receipt.
+  A final commit hash is not required. Purge these disposable records only
+  after work is committed and durable findings are promoted as needed.
+- ROADMAP.md is retired. Existing dev-archive/ records remain private legacy
+  history; do not rename them or use them as the active tracker. Migrated
+  issues retain their legacy ID once for traceability.
 
 # Development notes
 
@@ -91,4 +106,3 @@ during implementation and review.
   and intermediate findings; create it when needed.
 - Notes are non-authoritative and may become stale. Promote durable findings
   into maintained documentation, tests, source comments, or task contracts.
-- Keep local backups under untracked `bak/`; preserve existing backups.

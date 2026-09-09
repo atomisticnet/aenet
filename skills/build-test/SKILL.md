@@ -39,6 +39,14 @@ The default build excludes the main artifacts. Use explicit targets:
 under src/tests/ and must be registered in src/CMakeLists.txt, including the
 existing test-build target and fixture dependencies as appropriate.
 
+For a test-first change, add or extend a focused case using src/ext/unittest.f90
+and the existing test-driver pattern. Build it and confirm CTest reports the
+intended failure before implementing the fix. Ensure assertion failures reach
+a nonzero process exit status (see tst_exit_nonzero_if_failed); printed failure
+messages alone are not sufficient. Then implement, rebuild, rerun the focused
+case, and broaden validation according to risk. CTest runs the test programs;
+it does not require a different development cycle or a new test framework.
+
 ## Validate according to the change
 
 - Numerical changes: focused module tests, then the broader suite for shared

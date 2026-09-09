@@ -8,6 +8,8 @@ Apply relevant items to the requested scope; do not manufacture findings.
 - The implementation neither silently narrows nor expands the agreed scope.
 - Control flow and procedure responsibilities are understandable in context.
 - New helpers, options, validation, and dependencies serve current needs.
+- Remove unnecessary concepts when correctness, compatibility, and clarity
+  would be preserved; do not generalize for hypothetical future needs.
 - No unrelated edits, dead paths, duplicated logic, or accidental artifacts.
 
 ## Numerical and interface correctness
