@@ -1,0 +1,39 @@
+name: L4 temporary feasibility experiment
+on:
+  push:
+    branches: [codex/l4-feasibility-experiment]
+    paths: ['l4/**', '.github/workflows/l4-experiment.yml']
+permissions:
+  contents: write
+jobs:
+  experiment:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, macos-14]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build, inspect, and relocate
+        shell: bash
+        run: |
+          mkdir -p evidence
+          bash l4/run.sh 2>&1 | tee evidence/${{ matrix.os }}.log
+      - name: Save experimental evidence on this branch
+        if: always()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add evidence/
+          git commit -m 'Record L4 ${{ matrix.os }} experiment evidence' || exit 0
+          for attempt in 1 2 3; do
+            git pull --rebase origin codex/l4-feasibility-experiment
+            git push origin HEAD:codex/l4-feasibility-experiment && exit 0
+            sleep 3
+          done
+          exit 1
