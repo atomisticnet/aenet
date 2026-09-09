@@ -1,0 +1,470 @@
+Linux runnervm9xg2d 6.8.0-1064-azure #72~22.04.1-Ubuntu SMP Wed Jul 22 23:39:45 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+e72aeda6df8e62721e7775c9328ca76d9e474dde
+Reading package lists...
+Building dependency tree...
+Reading state information...
+gfortran is already the newest version (4:11.2.0-1ubuntu1).
+patchelf is already the newest version (0.14.3-1).
+The following additional packages will be installed:
+  cmake-data dh-elpa-helper libjsoncpp25 libopenblas-pthread-dev libopenblas0
+  libopenblas0-pthread librhash0
+Suggested packages:
+  cmake-doc ninja-build cmake-format
+The following NEW packages will be installed:
+  cmake cmake-data dh-elpa-helper libjsoncpp25 libopenblas-dev
+  libopenblas-pthread-dev libopenblas0 libopenblas0-pthread librhash0
+0 upgraded, 9 newly installed, 0 to remove and 53 not upgraded.
+Need to get 18.6 MB of archives.
+After this operation, 139 MB of additional disk space will be used.
+Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+Get:2 http://azure.archive.ubuntu.com/ubuntu jammy/main amd64 libjsoncpp25 amd64 1.9.5-3 [80.0 kB]
+Get:3 http://azure.archive.ubuntu.com/ubuntu jammy/main amd64 librhash0 amd64 1.4.2-1ubuntu1 [125 kB]
+Get:4 http://azure.archive.ubuntu.com/ubuntu jammy/main amd64 dh-elpa-helper all 2.0.9ubuntu1 [7610 B]
+Get:5 http://azure.archive.ubuntu.com/ubuntu jammy-updates/main amd64 cmake-data all 3.22.1-1ubuntu1.22.04.2 [1913 kB]
+Get:6 http://azure.archive.ubuntu.com/ubuntu jammy-updates/main amd64 cmake amd64 3.22.1-1ubuntu1.22.04.2 [5010 kB]
+Get:7 http://azure.archive.ubuntu.com/ubuntu jammy/universe amd64 libopenblas0-pthread amd64 0.3.20+ds-1 [6803 kB]
+Get:8 http://azure.archive.ubuntu.com/ubuntu jammy/universe amd64 libopenblas0 amd64 0.3.20+ds-1 [6098 B]
+Get:9 http://azure.archive.ubuntu.com/ubuntu jammy/universe amd64 libopenblas-pthread-dev amd64 0.3.20+ds-1 [4634 kB]
+Get:10 http://azure.archive.ubuntu.com/ubuntu jammy/universe amd64 libopenblas-dev amd64 0.3.20+ds-1 [18.6 kB]
+Fetched 18.6 MB in 1s (33.3 MB/s)
+Selecting previously unselected package libjsoncpp25:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 262009 files and directories currently installed.)
+Preparing to unpack .../0-libjsoncpp25_1.9.5-3_amd64.deb ...
+Unpacking libjsoncpp25:amd64 (1.9.5-3) ...
+Selecting previously unselected package librhash0:amd64.
+Preparing to unpack .../1-librhash0_1.4.2-1ubuntu1_amd64.deb ...
+Unpacking librhash0:amd64 (1.4.2-1ubuntu1) ...
+Selecting previously unselected package dh-elpa-helper.
+Preparing to unpack .../2-dh-elpa-helper_2.0.9ubuntu1_all.deb ...
+Unpacking dh-elpa-helper (2.0.9ubuntu1) ...
+Selecting previously unselected package cmake-data.
+Preparing to unpack .../3-cmake-data_3.22.1-1ubuntu1.22.04.2_all.deb ...
+Unpacking cmake-data (3.22.1-1ubuntu1.22.04.2) ...
+Selecting previously unselected package cmake.
+Preparing to unpack .../4-cmake_3.22.1-1ubuntu1.22.04.2_amd64.deb ...
+Unpacking cmake (3.22.1-1ubuntu1.22.04.2) ...
+Selecting previously unselected package libopenblas0-pthread:amd64.
+Preparing to unpack .../5-libopenblas0-pthread_0.3.20+ds-1_amd64.deb ...
+Unpacking libopenblas0-pthread:amd64 (0.3.20+ds-1) ...
+Selecting previously unselected package libopenblas0:amd64.
+Preparing to unpack .../6-libopenblas0_0.3.20+ds-1_amd64.deb ...
+Unpacking libopenblas0:amd64 (0.3.20+ds-1) ...
+Selecting previously unselected package libopenblas-pthread-dev:amd64.
+Preparing to unpack .../7-libopenblas-pthread-dev_0.3.20+ds-1_amd64.deb ...
+Unpacking libopenblas-pthread-dev:amd64 (0.3.20+ds-1) ...
+Selecting previously unselected package libopenblas-dev:amd64.
+Preparing to unpack .../8-libopenblas-dev_0.3.20+ds-1_amd64.deb ...
+Unpacking libopenblas-dev:amd64 (0.3.20+ds-1) ...
+Setting up libopenblas0-pthread:amd64 (0.3.20+ds-1) ...
+update-alternatives: using /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 to provide /usr/lib/x86_64-linux-gnu/libblas.so.3 (libblas.so.3-x86_64-linux-gnu) in auto mode
+update-alternatives: using /usr/lib/x86_64-linux-gnu/openblas-pthread/liblapack.so.3 to provide /usr/lib/x86_64-linux-gnu/liblapack.so.3 (liblapack.so.3-x86_64-linux-gnu) in auto mode
+update-alternatives: using /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblas.so.0 to provide /usr/lib/x86_64-linux-gnu/libopenblas.so.0 (libopenblas.so.0-x86_64-linux-gnu) in auto mode
+Setting up dh-elpa-helper (2.0.9ubuntu1) ...
+Setting up libjsoncpp25:amd64 (1.9.5-3) ...
+Setting up libopenblas0:amd64 (0.3.20+ds-1) ...
+Setting up librhash0:amd64 (1.4.2-1ubuntu1) ...
+Setting up cmake-data (3.22.1-1ubuntu1.22.04.2) ...
+Setting up libopenblas-pthread-dev:amd64 (0.3.20+ds-1) ...
+update-alternatives: using /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so to provide /usr/lib/x86_64-linux-gnu/libblas.so (libblas.so-x86_64-linux-gnu) in auto mode
+update-alternatives: using /usr/lib/x86_64-linux-gnu/openblas-pthread/liblapack.so to provide /usr/lib/x86_64-linux-gnu/liblapack.so (liblapack.so-x86_64-linux-gnu) in auto mode
+update-alternatives: using /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblas.so to provide /usr/lib/x86_64-linux-gnu/libopenblas.so (libopenblas.so-x86_64-linux-gnu) in auto mode
+Setting up libopenblas-dev:amd64 (0.3.20+ds-1) ...
+Setting up cmake (3.22.1-1ubuntu1.22.04.2) ...
+Processing triggers for man-db (2.10.2-1) ...
+Not building database; man-db/auto-update is not 'true'.
+Processing triggers for libc-bin (2.35-0ubuntu3.14) ...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+GNU Fortran (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+cmake version 3.31.6
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+-- The Fortran compiler identification is GNU 11.4.0
+-- Detecting Fortran compiler ABI info
+-- Detecting Fortran compiler ABI info - done
+-- Check for working Fortran compiler: /usr/bin/gfortran - skipped
+-- Looking for Fortran sgemm
+-- Looking for Fortran sgemm - found
+-- Found BLAS: /usr/lib/x86_64-linux-gnu/libopenblas.a
+-- Looking for Fortran cheev
+-- Looking for Fortran cheev - found
+-- Found LAPACK: /usr/lib/x86_64-linux-gnu/libopenblas.a;/usr/lib/x86_64-linux-gnu/libopenblas.a
+-- Install prefix set to: /home/runner/work/aenet/aenet for backwards compatibility
+-- Override with `cmake -DCMAKE_INSTALL_PREFIX=...`
+-- Configuring done (4.4s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/runner/work/aenet/aenet/build-l4
+[  1%] Extracting L-BFGS-B sources from /home/runner/work/aenet/aenet/lib/Lbfgsb.3.0.tar.gz
+[  1%] Extracting L-BFGS-B sources from /home/runner/work/aenet/aenet/lib/Lbfgsb.3.0.tar.gz
+[  2%] Building Fortran object src/CMakeFiles/lbfgsb_static.dir/__/_third_party/lbfgsb/Lbfgsb.3.0/blas.f.o
+[  3%] Building Fortran object src/CMakeFiles/lbfgsb_static.dir/__/_third_party/lbfgsb/Lbfgsb.3.0/lbfgsb.f.o
+[  4%] Building Fortran object src/CMakeFiles/lbfgsb_static.dir/__/_third_party/lbfgsb/Lbfgsb.3.0/linpack.f.o
+[  6%] Building Fortran object src/CMakeFiles/lbfgsb_static.dir/__/_third_party/lbfgsb/Lbfgsb.3.0/timer.f.o
+[  7%] Linking Fortran static library ../lib/liblbfgsb.a
+[  7%] Built target lbfgsb_static
+[  8%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/io.f90.o
+[  9%] Building Fortran object src/CMakeFiles/aenet_static.dir/aeio.f90.o
+[ 10%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/feedforward.f90.o
+[ 12%] Building Fortran object src/CMakeFiles/aenet_static.dir/constants.f90.o
+[ 13%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/xsflib.f90.o
+[ 14%] Building Fortran object src/CMakeFiles/aenet_static.dir/geometry.f90.o
+[ 15%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/sortlib.f90.o
+[ 17%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/lclist.f90.o
+[ 18%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/chebyshev.f90.o
+[ 19%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/sfbasis.f90.o
+[ 20%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/symmfunc.f90.o
+[ 21%] Building Fortran object src/CMakeFiles/aenet_static.dir/sfsetup.f90.o
+[ 23%] Building Fortran object src/CMakeFiles/aenet_static.dir/trainset.f90.o
+[ 24%] Building Fortran object src/CMakeFiles/aenet_static.dir/potential.f90.o
+[ 25%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/timing.f90.o
+[ 26%] Building Fortran object src/CMakeFiles/aenet_static.dir/aenet.f90.o
+[ 28%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/arglib.f90.o
+[ 29%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/unittest.f90.o
+[ 30%] Building Fortran object src/CMakeFiles/aenet_static.dir/input.f90.o
+[ 31%] Building Fortran object src/CMakeFiles/aenet_static.dir/parallel.F90.o
+[ 32%] Building Fortran object src/CMakeFiles/aenet_static.dir/random.f90.o
+[ 34%] Building Fortran object src/CMakeFiles/aenet_static.dir/optimize.f90.o
+[ 35%] Building Fortran object src/CMakeFiles/aenet_static.dir/pytorchoutput.f90.o
+[ 36%] Linking Fortran static library ../lib/libaenet.a
+[ 36%] Built target aenet_static
+[ 37%] Building Fortran object src/CMakeFiles/test_xsflib.dir/tests/test_xsflib.f90.o
+[ 39%] Linking Fortran executable ../unittests/test_xsflib
+[ 39%] Built target test_xsflib
+[ 40%] Building Fortran object src/CMakeFiles/test_feedforward.dir/tests/test_feedforward.f90.o
+[ 41%] Linking Fortran executable ../unittests/test_feedforward
+[ 41%] Built target test_feedforward
+[ 42%] Building Fortran object src/CMakeFiles/test_geometry.dir/tests/test_geometry.f90.o
+[ 43%] Linking Fortran executable ../unittests/test_geometry
+[ 43%] Built target test_geometry
+[ 45%] Building Fortran object src/CMakeFiles/test_lclist.dir/tests/test_lclist.f90.o
+[ 46%] Linking Fortran executable ../unittests/test_lclist
+[ 46%] Built target test_lclist
+[ 47%] Building Fortran object src/CMakeFiles/test_sfbasis.dir/tests/test_sfbasis.f90.o
+[ 48%] Linking Fortran executable ../unittests/test_sfbasis
+[ 48%] Built target test_sfbasis
+[ 50%] Building Fortran object src/CMakeFiles/test_sfsetup.dir/tests/test_sfsetup.f90.o
+[ 51%] Linking Fortran executable ../unittests/test_sfsetup
+[ 51%] Built target test_sfsetup
+[ 52%] Building Fortran object src/CMakeFiles/test_symmfunc.dir/tests/test_symmfunc.f90.o
+[ 53%] Linking Fortran executable ../unittests/test_symmfunc
+[ 53%] Built target test_symmfunc
+[ 53%] Built target build_tests
+[ 54%] Building Fortran object src/CMakeFiles/predict.x.dir/predict.F90.o
+[ 56%] Linking Fortran executable ../bin/predict.x_openblas
+[ 56%] Built target predict.x
+[ 57%] Building Fortran object src/CMakeFiles/generate.x.dir/generate.f90.o
+[ 58%] Linking Fortran executable ../bin/generate.x_openblas
+[ 58%] Built target generate.x
+[ 59%] Building Fortran object src/CMakeFiles/train.x.dir/train.f90.o
+[ 60%] Linking Fortran executable ../bin/train.x_openblas
+[ 60%] Built target train.x
+[ 60%] Built target main
+[ 62%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/io.f90.o
+[ 63%] Building Fortran object src/CMakeFiles/aenet_shared.dir/aeio.f90.o
+[ 64%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/feedforward.f90.o
+[ 65%] Building Fortran object src/CMakeFiles/aenet_shared.dir/constants.f90.o
+[ 67%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/xsflib.f90.o
+[ 68%] Building Fortran object src/CMakeFiles/aenet_shared.dir/geometry.f90.o
+[ 69%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/sortlib.f90.o
+[ 70%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/lclist.f90.o
+[ 71%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/chebyshev.f90.o
+[ 73%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/sfbasis.f90.o
+[ 74%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/symmfunc.f90.o
+[ 75%] Building Fortran object src/CMakeFiles/aenet_shared.dir/sfsetup.f90.o
+[ 76%] Building Fortran object src/CMakeFiles/aenet_shared.dir/trainset.f90.o
+[ 78%] Building Fortran object src/CMakeFiles/aenet_shared.dir/potential.f90.o
+[ 79%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/timing.f90.o
+[ 80%] Building Fortran object src/CMakeFiles/aenet_shared.dir/aenet.f90.o
+[ 81%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/arglib.f90.o
+[ 82%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/unittest.f90.o
+[ 84%] Building Fortran object src/CMakeFiles/aenet_shared.dir/input.f90.o
+[ 85%] Building Fortran object src/CMakeFiles/aenet_shared.dir/parallel.F90.o
+[ 86%] Building Fortran object src/CMakeFiles/aenet_shared.dir/random.f90.o
+[ 87%] Building Fortran object src/CMakeFiles/aenet_shared.dir/optimize.f90.o
+[ 89%] Building Fortran object src/CMakeFiles/aenet_shared.dir/pytorchoutput.f90.o
+[ 90%] Linking Fortran shared library ../lib/libaenet.so
+[ 90%] Built target aenet_shared
+[ 90%] Built target lib
+[ 91%] Building Fortran object src/CMakeFiles/trnset2ASCII.x.dir/tools/trnset2ASCII.f90.o
+[ 92%] Linking Fortran executable ../tools/trnset2ASCII.x
+[ 92%] Built target trnset2ASCII.x
+[ 93%] Building Fortran object src/CMakeFiles/fingerprint.x.dir/tools/fingerprint.f90.o
+[ 95%] Linking Fortran executable ../tools/fingerprint.x
+[ 95%] Built target fingerprint.x
+[ 96%] Building Fortran object src/CMakeFiles/neighbors.x.dir/tools/neighbors.f90.o
+[ 97%] Linking Fortran executable ../tools/neighbors.x
+[ 97%] Built target neighbors.x
+[ 98%] Building Fortran object src/CMakeFiles/trnset_info.x.dir/tools/trnset_info.f90.o
+[100%] Linking Fortran executable ../tools/trnset_info.x
+[100%] Built target trnset_info.x
+[100%] Built target tools
+[100%] Built target build_all
+Internal ctest changing into directory: /home/runner/work/aenet/aenet/build-l4
+Test project /home/runner/work/aenet/aenet/build-l4
+      Start 19: build_test_binaries
+ 1/19 Test #19: build_test_binaries ..............   Passed    0.15 sec
+      Start  1: feedforward:IO
+ 2/19 Test  #1: feedforward:IO ...................   Passed    0.04 sec
+      Start  2: feedforward:eval
+ 3/19 Test  #2: feedforward:eval .................   Passed    0.01 sec
+      Start  3: feedforward:activation
+ 4/19 Test  #3: feedforward:activation ...........   Passed    0.00 sec
+      Start  4: geometry:isolated
+ 5/19 Test  #4: geometry:isolated ................   Passed    0.00 sec
+      Start  5: geometry:periodic
+ 6/19 Test  #5: geometry:periodic ................   Passed    0.00 sec
+      Start  6: lclist:fcc_primitive
+ 7/19 Test  #6: lclist:fcc_primitive .............   Passed    0.00 sec
+      Start  7: lclist:fcc_conventional
+ 8/19 Test  #7: lclist:fcc_conventional ..........   Passed    0.04 sec
+      Start  8: lclist:fcc_isolated
+ 9/19 Test  #8: lclist:fcc_isolated ..............   Passed    0.00 sec
+      Start  9: sfbasis:setup
+10/19 Test  #9: sfbasis:setup ....................   Passed    0.00 sec
+      Start 10: sfbasis:fcc_rotation
+11/19 Test #10: sfbasis:fcc_rotation .............   Passed    0.00 sec
+      Start 11: sfbasis:derivatives
+12/19 Test #11: sfbasis:derivatives ..............   Passed    0.45 sec
+      Start 12: sfsetup:IO_chebyshev
+13/19 Test #12: sfsetup:IO_chebyshev .............   Passed    0.00 sec
+      Start 13: sfsetup:IO_behler2011
+14/19 Test #13: sfsetup:IO_behler2011 ............   Passed    0.00 sec
+      Start 14: symmfunc:setup
+15/19 Test #14: symmfunc:setup ...................   Passed    0.00 sec
+      Start 15: symmfunc:fcc_rotation
+16/19 Test #15: symmfunc:fcc_rotation ............   Passed    0.02 sec
+      Start 16: symmfunc:derivatives
+17/19 Test #16: symmfunc:derivatives .............   Passed    0.34 sec
+      Start 17: xsflib:isolated
+18/19 Test #17: xsflib:isolated ..................   Passed    0.00 sec
+      Start 18: xsflib:periodic
+19/19 Test #18: xsflib:periodic ..................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 19
+
+Total Test time (real) =   1.11 sec
+-- Install configuration: "Release"
+-- Installing: /home/runner/work/_temp/stage/bin/generate.x_openblas
+-- Installing: /home/runner/work/_temp/stage/bin/train.x_openblas
+-- Installing: /home/runner/work/_temp/stage/bin/predict.x_openblas
+-- Installing: /home/runner/work/_temp/stage/lib/libaenet.a
+-- Installing: /home/runner/work/_temp/stage/lib/libaenet.so
+-- Installing: /home/runner/work/_temp/stage/tools/fingerprint.x
+-- Installing: /home/runner/work/_temp/stage/tools/neighbors.x
+-- Installing: /home/runner/work/_temp/stage/tools/trnset_info.x
+-- Installing: /home/runner/work/_temp/stage/tools/trnset2ASCII.x
+bin/api-smoke
+	linux-vdso.so.1 (0x00007fffb13a1000)
+	libaenet.so => /home/runner/work/_temp/stage/bin/../lib/libaenet.so (0x00007fddaced8000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fddacc00000)
+	libgfortran.so.5 => /home/runner/work/_temp/stage/bin/../lib/libgfortran.so.5 (0x00007fddac800000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fddacb19000)
+	libgcc_s.so.1 => /home/runner/work/_temp/stage/bin/../lib/libgcc_s.so.1 (0x00007fddaceaa000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fddaea1f000)
+	libquadmath.so.0 => /home/runner/work/_temp/stage/bin/../lib/libquadmath.so.0 (0x00007fddace61000)
+
+bin/generate.x_openblas
+	linux-vdso.so.1 (0x00007ffe14783000)
+	libgfortran.so.5 => /home/runner/work/_temp/stage/bin/../lib/libgfortran.so.5 (0x00007f065cc00000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f065cf05000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f065c800000)
+	libquadmath.so.0 => /home/runner/work/_temp/stage/bin/../lib/libquadmath.so.0 (0x00007f065cbb7000)
+	libgcc_s.so.1 => /home/runner/work/_temp/stage/bin/../lib/libgcc_s.so.1 (0x00007f065cb95000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f065ea73000)
+
+bin/predict.x_openblas
+	linux-vdso.so.1 (0x00007ffcf7892000)
+	libgfortran.so.5 => /home/runner/work/_temp/stage/bin/../lib/libgfortran.so.5 (0x00007f64fe800000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f64feb45000)
+	libgcc_s.so.1 => /home/runner/work/_temp/stage/bin/../lib/libgcc_s.so.1 (0x00007f64feb23000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f64fe400000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f6500707000)
+	libquadmath.so.0 => /home/runner/work/_temp/stage/bin/../lib/libquadmath.so.0 (0x00007f64fe7b7000)
+
+bin/train.x_openblas
+	linux-vdso.so.1 (0x00007ffde12fc000)
+	libgfortran.so.5 => /home/runner/work/_temp/stage/bin/../lib/libgfortran.so.5 (0x00007fdf07800000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fdf07b23000)
+	libgcc_s.so.1 => /home/runner/work/_temp/stage/bin/../lib/libgcc_s.so.1 (0x00007fdf07b01000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fdf07400000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fdf096d3000)
+	libquadmath.so.0 => /home/runner/work/_temp/stage/bin/../lib/libquadmath.so.0 (0x00007fdf077b7000)
+
+lib/libaenet.so
+	linux-vdso.so.1 (0x00007ffedbbc6000)
+	libgfortran.so.5 => /home/runner/work/_temp/stage/lib/libgfortran.so.5 (0x00007fc322c00000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fc322b19000)
+	libgcc_s.so.1 => /home/runner/work/_temp/stage/lib/libgcc_s.so.1 (0x00007fc322faa000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fc322800000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fc324b19000)
+	libquadmath.so.0 => /home/runner/work/_temp/stage/lib/libquadmath.so.0 (0x00007fc322f61000)
+
+lib/libgcc_s.so.1
+	linux-vdso.so.1 (0x00007ffcf5fd5000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f2a43c00000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f2a43fff000)
+
+lib/libgfortran.so.5
+	linux-vdso.so.1 (0x00007ffd885fa000)
+	libquadmath.so.0 => /home/runner/work/_temp/stage/lib/libquadmath.so.0 (0x00007ff2a6c44000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007ff2a6b51000)
+	libgcc_s.so.1 => /home/runner/work/_temp/stage/lib/libgcc_s.so.1 (0x00007ff2a6b2f000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007ff2a6400000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007ff2a6c8f000)
+
+lib/libquadmath.so.0
+	linux-vdso.so.1 (0x00007fff7c586000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f3ec2c93000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f3ec2a00000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f3ec2dd1000)
+
+tools/fingerprint.x
+	linux-vdso.so.1 (0x00007ffdba781000)
+	libgfortran.so.5 => /home/runner/work/_temp/stage/tools/../lib/libgfortran.so.5 (0x00007f188ee00000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f188ed19000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f188ea00000)
+	libquadmath.so.0 => /home/runner/work/_temp/stage/tools/../lib/libquadmath.so.0 (0x00007f188f143000)
+	libgcc_s.so.1 => /home/runner/work/_temp/stage/tools/../lib/libgcc_s.so.1 (0x00007f188f121000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f1890be6000)
+
+tools/neighbors.x
+	linux-vdso.so.1 (0x00007ffc76f67000)
+	libgfortran.so.5 => /home/runner/work/_temp/stage/tools/../lib/libgfortran.so.5 (0x00007f5600400000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f5600319000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f5600000000)
+	libquadmath.so.0 => /home/runner/work/_temp/stage/tools/../lib/libquadmath.so.0 (0x00007f56006eb000)
+	libgcc_s.so.1 => /home/runner/work/_temp/stage/tools/../lib/libgcc_s.so.1 (0x00007f56002f7000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f5602185000)
+
+tools/trnset2ASCII.x
+	linux-vdso.so.1 (0x00007ffcadec9000)
+	libgfortran.so.5 => /home/runner/work/_temp/stage/tools/../lib/libgfortran.so.5 (0x00007fcd9fa00000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fcd9f919000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fcd9f600000)
+	libquadmath.so.0 => /home/runner/work/_temp/stage/tools/../lib/libquadmath.so.0 (0x00007fcd9fd79000)
+	libgcc_s.so.1 => /home/runner/work/_temp/stage/tools/../lib/libgcc_s.so.1 (0x00007fcd9fd57000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fcd9fe04000)
+
+tools/trnset_info.x
+	linux-vdso.so.1 (0x00007f106e1e8000)
+	libgfortran.so.5 => /home/runner/work/_temp/stage/tools/../lib/libgfortran.so.5 (0x00007f106de00000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f106dd19000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f106da00000)
+	libquadmath.so.0 => /home/runner/work/_temp/stage/tools/../lib/libquadmath.so.0 (0x00007f106e159000)
+	libgcc_s.so.1 => /home/runner/work/_temp/stage/tools/../lib/libgcc_s.so.1 (0x00007f106e137000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f106e1ea000)
+
+Unable to find image 'ubuntu:22.04' locally
+22.04: Pulling from library/ubuntu
+d544298cabd5: Pulling fs layer
+d544298cabd5: Verifying Checksum
+d544298cabd5: Download complete
+d544298cabd5: Pull complete
+Digest: sha256:2edbbc5dc405e9612ba3584ce95480277e3eb374407b5505fe26f17df77c7dbc
+Status: Downloaded newer image for ubuntu:22.04
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  libexpat1 libmpdec3 libpython3-stdlib libpython3.10-minimal
+  libpython3.10-stdlib libreadline8 libsqlite3-0 media-types python3-minimal
+  python3.10 python3.10-minimal readline-common
+Suggested packages:
+  python3-doc python3-tk python3-venv python3.10-venv python3.10-doc binutils
+  binfmt-support readline-doc
+The following NEW packages will be installed:
+  libexpat1 libmpdec3 libpython3-stdlib libpython3.10-minimal
+  libpython3.10-stdlib libreadline8 libsqlite3-0 media-types python3
+  python3-minimal python3.10 python3.10-minimal readline-common
+0 upgraded, 13 newly installed, 0 to remove and 26 not upgraded.
+Need to get 6561 kB of archives.
+After this operation, 23.6 MB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-minimal amd64 3.10.12-1~22.04.18 [817 kB]
+Get:2 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libexpat1 amd64 2.4.7-1ubuntu0.7 [92.1 kB]
+Get:3 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10-minimal amd64 3.10.12-1~22.04.18 [2277 kB]
+Get:4 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-minimal amd64 3.10.6-1~22.04.1 [24.3 kB]
+Get:5 http://archive.ubuntu.com/ubuntu jammy/main amd64 media-types all 7.0.0 [25.5 kB]
+Get:6 http://archive.ubuntu.com/ubuntu jammy/main amd64 libmpdec3 amd64 2.5.1-2build2 [86.8 kB]
+Get:7 http://archive.ubuntu.com/ubuntu jammy/main amd64 readline-common all 8.1.2-1 [53.5 kB]
+Get:8 http://archive.ubuntu.com/ubuntu jammy/main amd64 libreadline8 amd64 8.1.2-1 [153 kB]
+Get:9 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsqlite3-0 amd64 3.37.2-2ubuntu0.7 [643 kB]
+Get:10 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-stdlib amd64 3.10.12-1~22.04.18 [1850 kB]
+Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10 amd64 3.10.12-1~22.04.18 [508 kB]
+Get:12 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3-stdlib amd64 3.10.6-1~22.04.1 [6812 B]
+Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3 amd64 3.10.6-1~22.04.1 [22.8 kB]
+debconf: delaying package configuration, since apt-utils is not installed
+Fetched 6561 kB in 2s (3780 kB/s)
+Selecting previously unselected package libpython3.10-minimal:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 4393 files and directories currently installed.)
+Preparing to unpack .../libpython3.10-minimal_3.10.12-1~22.04.18_amd64.deb ...
+Unpacking libpython3.10-minimal:amd64 (3.10.12-1~22.04.18) ...
+Selecting previously unselected package libexpat1:amd64.
+Preparing to unpack .../libexpat1_2.4.7-1ubuntu0.7_amd64.deb ...
+Unpacking libexpat1:amd64 (2.4.7-1ubuntu0.7) ...
+Selecting previously unselected package python3.10-minimal.
+Preparing to unpack .../python3.10-minimal_3.10.12-1~22.04.18_amd64.deb ...
+Unpacking python3.10-minimal (3.10.12-1~22.04.18) ...
+Setting up libpython3.10-minimal:amd64 (3.10.12-1~22.04.18) ...
+Setting up libexpat1:amd64 (2.4.7-1ubuntu0.7) ...
+Setting up python3.10-minimal (3.10.12-1~22.04.18) ...
+Selecting previously unselected package python3-minimal.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 4697 files and directories currently installed.)
+Preparing to unpack .../0-python3-minimal_3.10.6-1~22.04.1_amd64.deb ...
+Unpacking python3-minimal (3.10.6-1~22.04.1) ...
+Selecting previously unselected package media-types.
+Preparing to unpack .../1-media-types_7.0.0_all.deb ...
+Unpacking media-types (7.0.0) ...
+Selecting previously unselected package libmpdec3:amd64.
+Preparing to unpack .../2-libmpdec3_2.5.1-2build2_amd64.deb ...
+Unpacking libmpdec3:amd64 (2.5.1-2build2) ...
+Selecting previously unselected package readline-common.
+Preparing to unpack .../3-readline-common_8.1.2-1_all.deb ...
+Unpacking readline-common (8.1.2-1) ...
+Selecting previously unselected package libreadline8:amd64.
+Preparing to unpack .../4-libreadline8_8.1.2-1_amd64.deb ...
+Unpacking libreadline8:amd64 (8.1.2-1) ...
+Selecting previously unselected package libsqlite3-0:amd64.
+Preparing to unpack .../5-libsqlite3-0_3.37.2-2ubuntu0.7_amd64.deb ...
+Unpacking libsqlite3-0:amd64 (3.37.2-2ubuntu0.7) ...
+Selecting previously unselected package libpython3.10-stdlib:amd64.
+Preparing to unpack .../6-libpython3.10-stdlib_3.10.12-1~22.04.18_amd64.deb ...
+Unpacking libpython3.10-stdlib:amd64 (3.10.12-1~22.04.18) ...
+Selecting previously unselected package python3.10.
+Preparing to unpack .../7-python3.10_3.10.12-1~22.04.18_amd64.deb ...
+Unpacking python3.10 (3.10.12-1~22.04.18) ...
+Selecting previously unselected package libpython3-stdlib:amd64.
+Preparing to unpack .../8-libpython3-stdlib_3.10.6-1~22.04.1_amd64.deb ...
+Unpacking libpython3-stdlib:amd64 (3.10.6-1~22.04.1) ...
+Setting up python3-minimal (3.10.6-1~22.04.1) ...
+Selecting previously unselected package python3.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5127 files and directories currently installed.)
+Preparing to unpack .../python3_3.10.6-1~22.04.1_amd64.deb ...
+Unpacking python3 (3.10.6-1~22.04.1) ...
+Setting up media-types (7.0.0) ...
+Setting up libsqlite3-0:amd64 (3.37.2-2ubuntu0.7) ...
+Setting up libmpdec3:amd64 (2.5.1-2build2) ...
+Setting up readline-common (8.1.2-1) ...
+Setting up libreadline8:amd64 (8.1.2-1) ...
+Setting up libpython3.10-stdlib:amd64 (3.10.12-1~22.04.18) ...
+Setting up libpython3-stdlib:amd64 (3.10.6-1~22.04.1) ...
+Setting up python3.10 (3.10.12-1~22.04.18) ...
+Setting up python3 (3.10.6-1~22.04.1) ...
+running python rtupdate hooks for python3.10...
+running python post-rtupdate hooks for python3.10...
+Processing triggers for libc-bin (2.35-0ubuntu3.14) ...
+C API initialization/type mapping/finalization passed
+generate/train/predict passed; repeated energy: -0.90394138
+
+L4 runtime experiment passed
