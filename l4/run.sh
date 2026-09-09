@@ -4,8 +4,8 @@ set -euo pipefail
 uname -a
 git rev-parse HEAD
 if [[ "$RUNNER_OS" == macOS ]]; then
-  brew install gcc openblas libomp
-  fc="$(brew --prefix gcc)/bin/gfortran"
+  brew install gcc@14 openblas libomp
+  fc="$(brew --prefix gcc@14)/bin/gfortran-14"
   omp_flags="-L$(brew --prefix libomp)/lib -lomp"
   args=(-DCMAKE_PREFIX_PATH="$(brew --prefix openblas)" "-DCMAKE_EXE_LINKER_FLAGS=$omp_flags" "-DCMAKE_SHARED_LINKER_FLAGS=$omp_flags")
 else
@@ -20,6 +20,7 @@ cmake -S . -B build-l4 -DBUILD_AENET=ON -DCMAKE_Fortran_COMPILER="$fc" -DCMAKE_B
 cmake --build build-l4 --target build_all --parallel 1
 ctest --test-dir build-l4 --output-on-failure
 cmake --install build-l4 --prefix "$RUNNER_TEMP/stage"
+if [[ "$RUNNER_OS" == macOS ]]; then nm -g "$RUNNER_TEMP/stage/lib/libaenet.dylib" | grep aenet_; fi
 cc l4/harness.c -Isrc -L"$RUNNER_TEMP/stage/lib" -laenet -Wl,-rpath,"$RUNNER_TEMP/stage/lib" -o "$RUNNER_TEMP/stage/bin/api-smoke"
 if [[ "$RUNNER_OS" == macOS ]]; then
   install_name_tool -add_rpath @loader_path/../lib "$RUNNER_TEMP/stage/bin/api-smoke"
