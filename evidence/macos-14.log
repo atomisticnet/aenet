@@ -1,0 +1,64 @@
+Darwin iad20-fj923-3824cd00-2663-4dbd-8472-0f49281c318b-FAE7006AFB79.local 23.6.0 Darwin Kernel Version 23.6.0: Tue Jul 21 21:56:54 PDT 2026; root:xnu-10063.141.1.713.39~1/RELEASE_ARM64_VMAPPLE arm64
+e72aeda6df8e62721e7775c9328ca76d9e474dde
+[32m==>[0m [1mDownloading bottle manifests[0m
+✔︎ Bottle Manifest gcc (16.2.0)
+✔︎ Bottle Manifest openblas (0.3.34)
+[34m==>[0m [1mWould install 2 formulae:[0m
+gcc openblas
+[34m==>[0m [1mWould install 2 dependencies for openblas:[0m
+gcc
+libomp
+[32m==>[0m [1mFetching downloads for: [32mgcc[39m and [32mopenblas[39m[0m
+✔︎ Bottle libomp (23.1.0)
+✔︎ Bottle Manifest libomp (23.1.0)
+✔︎ Bottle openblas (0.3.34)
+✔︎ Bottle gcc (16.2.0)
+[34m==>[0m [1mPouring gcc--16.2.0.arm64_sonoma.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/gcc/16.2.0: 1,707 files, 500.3MB
+[32m==>[0m [1mInstalling openblas dependency: [32mlibomp[39m[0m
+[34m==>[0m [1mPouring libomp--23.1.0.arm64_sonoma.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/libomp/23.1.0: 11 files, 1.8MB
+[32m==>[0m [1mInstalling [32mopenblas[39m[0m
+[34m==>[0m [1mPouring openblas--0.3.34.arm64_sonoma.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/openblas/0.3.34: 30 files, 40.3MB
+[32m==>[0m [1mCaveats[0m
+[34m==>[0m [1mopenblas[0m
+openblas is keg-only, which means it was not symlinked into /opt/homebrew,
+because macOS provides BLAS in Accelerate.framework.
+
+For compilers to find openblas you may need to set:
+  export LDFLAGS="-L/opt/homebrew/opt/openblas/lib"
+  export CPPFLAGS="-I/opt/homebrew/opt/openblas/include"
+
+For pkgconf to find openblas you may need to set:
+  export PKG_CONFIG_PATH="/opt/homebrew/opt/openblas/lib/pkgconfig"
+
+For cmake to find openblas you may need to set:
+  export CMAKE_PREFIX_PATH="/opt/homebrew/opt/openblas"
+GNU Fortran (Homebrew GCC 16.2.0) 16.2.0
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+cmake version 4.4.3
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+-- The Fortran compiler identification is GNU 16.2.0
+-- Checking whether Fortran compiler has -isysroot
+-- Checking whether Fortran compiler has -isysroot - no
+-- Checking whether Fortran compiler supports OSX deployment target flag
+-- Checking whether Fortran compiler supports OSX deployment target flag - no
+-- Detecting Fortran compiler ABI info
+-- Detecting Fortran compiler ABI info - done
+-- Check for working Fortran compiler: /opt/homebrew/opt/gcc/bin/gfortran - skipped
+-- Looking for Fortran sgemm
+-- Looking for Fortran sgemm - not found
+CMake Error at /opt/homebrew/share/cmake/Modules/FindPackageHandleStandardArgs.cmake:290 (message):
+  Could NOT find BLAS (missing: BLAS_LIBRARIES)
+Call Stack (most recent call first):
+  /opt/homebrew/share/cmake/Modules/FindPackageHandleStandardArgs.cmake:654 (_FPHSA_FAILURE_MESSAGE)
+  /opt/homebrew/share/cmake/Modules/FindBLAS.cmake:1509 (find_package_handle_standard_args)
+  src/CMakeLists.txt:127 (find_package)
+
+
+-- Configuring incomplete, errors occurred!
