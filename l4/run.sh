@@ -15,7 +15,7 @@ else
 fi
 "$fc" --version
 cmake --version
-cmake -S . -B build-l4 -DBUILD_AENET=ON -DCMAKE_Fortran_COMPILER="$fc" -DCMAKE_BUILD_TYPE=Release -DUSE_MPI=OFF -DUSE_MKL=OFF -DUSE_OPENBLAS=ON "${args[@]}"
+cmake -S . -B build-l4 -DBUILD_AENET=ON -DCMAKE_Fortran_COMPILER="$fc" -DCMAKE_BUILD_TYPE=Release -DUSE_MPI=OFF -DUSE_MKL=OFF -DUSE_OPENBLAS=ON "${args[@]}" || { cat build-l4/CMakeFiles/CMakeConfigureLog.yaml; exit 1; }
 cmake --build build-l4 --target build_all --parallel 1
 ctest --test-dir build-l4 --output-on-failure
 cmake --install build-l4 --prefix "$RUNNER_TEMP/stage"
