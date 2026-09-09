@@ -4,9 +4,10 @@ set -euo pipefail
 uname -a
 git rev-parse HEAD
 if [[ "$RUNNER_OS" == macOS ]]; then
-  brew install gcc openblas
+  brew install gcc openblas libomp
   fc="$(brew --prefix gcc)/bin/gfortran"
-  args=(-DCMAKE_PREFIX_PATH="$(brew --prefix openblas)" -DCMAKE_EXE_LINKER_FLAGS=-lgomp -DCMAKE_SHARED_LINKER_FLAGS=-lgomp)
+  omp_flags="-L$(brew --prefix libomp)/lib -lomp"
+  args=(-DCMAKE_PREFIX_PATH="$(brew --prefix openblas)" "-DCMAKE_EXE_LINKER_FLAGS=$omp_flags" "-DCMAKE_SHARED_LINKER_FLAGS=$omp_flags")
 else
   sudo apt-get update -qq
   sudo apt-get install -y gfortran libopenblas-dev cmake patchelf
