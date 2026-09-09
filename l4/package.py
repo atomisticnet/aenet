@@ -3,21 +3,25 @@ import pathlib, platform, re, shutil, subprocess, sys
 root=pathlib.Path(sys.argv[1]).resolve();mac=platform.system()=='Darwin'
 def out(*args):return subprocess.check_output(args,text=True)
 queue=[p for d in ['bin','tools','lib'] for p in (root/d).iterdir() if p.is_file() and not p.name.endswith('.a')]
-seen=set()
+seen=set(); origins={}
 while queue:
  p=queue.pop()
  if p in seen:continue
  seen.add(p)
  deps=([l.strip().split(' (')[0] for l in out('otool','-L',str(p)).splitlines()[1:]] if mac else re.findall(r'=>\s+(/\S+)',out('ldd',str(p))))
  for dep in deps:
+  original_dep=dep
+  if mac and dep.startswith('@rpath/') and p in origins:
+   candidate=origins[p].parent/pathlib.Path(dep).name
+   if candidate.exists():dep=str(candidate)
   if mac:
    if not dep.startswith('/') or dep.startswith(('/usr/lib/','/System/')):continue
   elif pathlib.Path(dep).name.startswith(('libc.so','libm.so','libpthread.so','libdl.so','librt.so')):continue
   dest=root/'lib'/pathlib.Path(dep).name
-  if not dest.exists():shutil.copy2(dep,dest);queue.append(dest)
+  if not dest.exists():shutil.copy2(dep,dest);origins[dest]=pathlib.Path(dep);queue.append(dest)
   if mac:
    replacement=('@loader_path/' if p.parent.name=='lib' else '@loader_path/../lib/')+dest.name
-   subprocess.run(['install_name_tool','-change',dep,replacement,str(p)],check=True)
+   subprocess.run(['install_name_tool','-change',original_dep,replacement,str(p)],check=True)
  if mac:
   if p.suffix=='.dylib':subprocess.run(['install_name_tool','-id','@rpath/'+p.name,str(p)],check=True)
  else:subprocess.run(['patchelf','--set-rpath','$ORIGIN' if p.parent.name=='lib' else '$ORIGIN/../lib',str(p)],check=True)
