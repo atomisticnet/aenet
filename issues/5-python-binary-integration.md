@@ -18,3 +18,10 @@ that project; this issue tracks the backend distribution dependency.
   and library paths without manual entry.
 - Coordinate with [binary release automation](4-binary-release-automation.md)
   and record the companion implementation or an explicit scope decision.
+
+## Scheduling
+
+Begin after the first binary release is available and its archive layout,
+compatibility contract, and installation workflow have been exercised.
+This convenience feature does not block closure of
+[the first-release milestone](1-binary-distribution.md).
