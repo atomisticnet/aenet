@@ -1,0 +1,18 @@
+# Optional machine-specific development tool locations.
+# Copy to config/local.toml (ignored by Git) and adapt as needed.
+# Agents read this file as guidance; no build system parses it.
+# Compiler flags and build defaults remain in CMakeLists.txt files.
+
+# [tools]
+# cmake = "/path/to/cmake"
+# ctest = "/path/to/ctest"
+# gfortran = "/path/to/gfortran"
+# ifx = "/path/to/ifx"
+# ifort = "/path/to/ifort"
+# emacs = "/path/to/emacs"
+# pandoc = "/path/to/pandoc"
+
+# Optional argument vector for an environment-managed documentation command.
+# This does not install or select a documentation framework.
+# [documentation]
+# run_prefix = ["micromamba", "run", "-n", "my-dev-environment"]
