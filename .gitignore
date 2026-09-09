@@ -43,11 +43,20 @@ example*
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
-Makefile
+/Makefile
 CTestTestfile.cmake
 install_manifest.txt
-*.cmake
 build/
+/build-*/
 
 temp/
 tmp/
+
+ROADMAP.md
+dev-notes/
+dev-archive/
+
+# Local policy configuration, backups, and editor recovery files
+/config/local.toml
+/bak/
+\#*
