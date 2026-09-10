@@ -27,3 +27,9 @@ Platform feasibility is tracked locally under issue 1, packaging/tests by issue 
 user documentation by issue 8. Actual first-release publication and public
 asset verification are tracked locally under issue 1; workflow development does not itself
 authorize a push, remote dispatch, or publication.
+
+## Feasibility handoff
+
+See the [proposed release contract](../doc/binary-release-contract.md) for
+experimental evidence and limitations. Before enabling parallel builds,
+resolve the observed static/shared Fortran module-output race or retain single-job builds as an explicit limitation.

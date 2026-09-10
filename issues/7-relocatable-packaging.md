@@ -26,3 +26,14 @@ runtime dependencies before CI can deliver usable release candidates.
 
 Issue 4 owns CI orchestration; issue 8 owns user installation guidance;
 local release work owns publication. No publication is part of this issue.
+
+## Feasibility handoff
+
+See the [proposed release contract](../doc/binary-release-contract.md) for
+experimental evidence and limitations. Use the demonstrated platform-specific
+runtime strategy as the starting point, and validate actual archives and the full minimum-OS contract. The
+first macOS candidate uses GNU 14; GNU 16 C exports remain unverified.
+
+The extended feasibility report proposes system Accelerate on macOS and
+OpenBLAS on Linux. Both macOS variants passed runtime checks; the proposal
+simplifies dependencies and does not claim a benchmarked performance gain.
