@@ -1,0 +1,330 @@
+Darwin sjc22-bt144-0c298107-4508-4981-8076-8142a326a648-5E61A3CFE833.local 23.6.0 Darwin Kernel Version 23.6.0: Tue Jul 21 21:56:54 PDT 2026; root:xnu-10063.141.1.713.39~1/RELEASE_ARM64_VMAPPLE arm64
+53e9fd995f1d884c1afb9d267886b14fdb19c00b
+[33mWarning:[0m gcc@14 14.4.0 is already installed and up-to-date.
+To reinstall 14.4.0, run:
+  brew reinstall gcc@14
+GNU Fortran (Homebrew GCC 14.4.0) 14.4.0
+Copyright (C) 2024 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+cmake version 4.4.3
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+-- The Fortran compiler identification is GNU 14.4.0
+-- Checking whether Fortran compiler has -isysroot
+-- Checking whether Fortran compiler has -isysroot - no
+-- Checking whether Fortran compiler supports OSX deployment target flag
+-- Checking whether Fortran compiler supports OSX deployment target flag - no
+-- Detecting Fortran compiler ABI info
+-- Detecting Fortran compiler ABI info - done
+-- Check for working Fortran compiler: /opt/homebrew/opt/gcc@14/bin/gfortran-14 - skipped
+-- Looking for Fortran dgemm
+-- Looking for Fortran dgemm - found
+-- Found BLAS: /Applications/Xcode_15.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Accelerate.framework
+-- Looking for Fortran cheev
+-- Looking for Fortran cheev - found
+-- Found LAPACK: /Applications/Xcode_15.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Accelerate.framework;/Applications/Xcode_15.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Accelerate.framework
+-- Install prefix set to: /Users/runner/work/aenet/aenet for backwards compatibility
+-- Override with `cmake -DCMAKE_INSTALL_PREFIX=...`
+-- Configuring done (5.4s)
+-- Generating done (0.7s)
+-- Build files have been written to: /Users/runner/work/aenet/aenet/build-l4
+[  1%] Extracting L-BFGS-B sources from /Users/runner/work/aenet/aenet/lib/Lbfgsb.3.0.tar.gz
+[  1%] Extracting L-BFGS-B sources from /Users/runner/work/aenet/aenet/lib/Lbfgsb.3.0.tar.gz
+[  2%] Building Fortran object src/CMakeFiles/lbfgsb_static.dir/__/_third_party/lbfgsb/Lbfgsb.3.0/blas.f.o
+[  3%] Building Fortran object src/CMakeFiles/lbfgsb_static.dir/__/_third_party/lbfgsb/Lbfgsb.3.0/lbfgsb.f.o
+[  4%] Building Fortran object src/CMakeFiles/lbfgsb_static.dir/__/_third_party/lbfgsb/Lbfgsb.3.0/linpack.f.o
+[  6%] Building Fortran object src/CMakeFiles/lbfgsb_static.dir/__/_third_party/lbfgsb/Lbfgsb.3.0/timer.f.o
+[  7%] Linking Fortran static library ../lib/liblbfgsb.a
+[  7%] Built target lbfgsb_static
+[  8%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/io.f90.o
+[  9%] Building Fortran object src/CMakeFiles/aenet_static.dir/aeio.f90.o
+[ 10%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/feedforward.f90.o
+[ 12%] Building Fortran object src/CMakeFiles/aenet_static.dir/constants.f90.o
+[ 13%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/xsflib.f90.o
+[ 14%] Building Fortran object src/CMakeFiles/aenet_static.dir/geometry.f90.o
+[ 15%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/sortlib.f90.o
+[ 17%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/lclist.f90.o
+[ 18%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/chebyshev.f90.o
+[ 19%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/sfbasis.f90.o
+[ 20%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/symmfunc.f90.o
+[ 21%] Building Fortran object src/CMakeFiles/aenet_static.dir/sfsetup.f90.o
+[ 23%] Building Fortran object src/CMakeFiles/aenet_static.dir/trainset.f90.o
+[ 24%] Building Fortran object src/CMakeFiles/aenet_static.dir/potential.f90.o
+[ 25%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/timing.f90.o
+[ 26%] Building Fortran object src/CMakeFiles/aenet_static.dir/aenet.f90.o
+[ 28%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/arglib.f90.o
+[ 29%] Building Fortran object src/CMakeFiles/aenet_static.dir/ext/unittest.f90.o
+[ 30%] Building Fortran object src/CMakeFiles/aenet_static.dir/input.f90.o
+[ 31%] Building Fortran object src/CMakeFiles/aenet_static.dir/parallel.F90.o
+[ 32%] Building Fortran object src/CMakeFiles/aenet_static.dir/random.f90.o
+[ 34%] Building Fortran object src/CMakeFiles/aenet_static.dir/optimize.f90.o
+[ 35%] Building Fortran object src/CMakeFiles/aenet_static.dir/pytorchoutput.f90.o
+[ 36%] Linking Fortran static library ../lib/libaenet.a
+[ 36%] Built target aenet_static
+[ 37%] Building Fortran object src/CMakeFiles/test_xsflib.dir/tests/test_xsflib.f90.o
+[ 39%] Linking Fortran executable ../unittests/test_xsflib
+[ 39%] Built target test_xsflib
+[ 40%] Building Fortran object src/CMakeFiles/test_feedforward.dir/tests/test_feedforward.f90.o
+[ 41%] Linking Fortran executable ../unittests/test_feedforward
+[ 41%] Built target test_feedforward
+[ 42%] Building Fortran object src/CMakeFiles/test_geometry.dir/tests/test_geometry.f90.o
+[ 43%] Linking Fortran executable ../unittests/test_geometry
+[ 43%] Built target test_geometry
+[ 45%] Building Fortran object src/CMakeFiles/test_lclist.dir/tests/test_lclist.f90.o
+[ 46%] Linking Fortran executable ../unittests/test_lclist
+[ 46%] Built target test_lclist
+[ 47%] Building Fortran object src/CMakeFiles/test_sfbasis.dir/tests/test_sfbasis.f90.o
+[ 48%] Linking Fortran executable ../unittests/test_sfbasis
+[ 48%] Built target test_sfbasis
+[ 50%] Building Fortran object src/CMakeFiles/test_sfsetup.dir/tests/test_sfsetup.f90.o
+[ 51%] Linking Fortran executable ../unittests/test_sfsetup
+[ 51%] Built target test_sfsetup
+[ 52%] Building Fortran object src/CMakeFiles/test_symmfunc.dir/tests/test_symmfunc.f90.o
+[ 53%] Linking Fortran executable ../unittests/test_symmfunc
+[ 53%] Built target test_symmfunc
+[ 53%] Built target build_tests
+[ 54%] Building Fortran object src/CMakeFiles/predict.x.dir/predict.F90.o
+[ 56%] Linking Fortran executable ../bin/predict.x_serial
+[ 56%] Built target predict.x
+[ 57%] Building Fortran object src/CMakeFiles/generate.x.dir/generate.f90.o
+[ 58%] Linking Fortran executable ../bin/generate.x_serial
+[ 58%] Built target generate.x
+[ 59%] Building Fortran object src/CMakeFiles/train.x.dir/train.f90.o
+[ 60%] Linking Fortran executable ../bin/train.x_serial
+[ 60%] Built target train.x
+[ 60%] Built target main
+[ 62%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/io.f90.o
+[ 63%] Building Fortran object src/CMakeFiles/aenet_shared.dir/aeio.f90.o
+[ 64%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/feedforward.f90.o
+[ 65%] Building Fortran object src/CMakeFiles/aenet_shared.dir/constants.f90.o
+[ 67%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/xsflib.f90.o
+[ 68%] Building Fortran object src/CMakeFiles/aenet_shared.dir/geometry.f90.o
+[ 69%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/sortlib.f90.o
+[ 70%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/lclist.f90.o
+[ 71%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/chebyshev.f90.o
+[ 73%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/sfbasis.f90.o
+[ 74%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/symmfunc.f90.o
+[ 75%] Building Fortran object src/CMakeFiles/aenet_shared.dir/sfsetup.f90.o
+[ 76%] Building Fortran object src/CMakeFiles/aenet_shared.dir/trainset.f90.o
+[ 78%] Building Fortran object src/CMakeFiles/aenet_shared.dir/potential.f90.o
+[ 79%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/timing.f90.o
+[ 80%] Building Fortran object src/CMakeFiles/aenet_shared.dir/aenet.f90.o
+[ 81%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/arglib.f90.o
+[ 82%] Building Fortran object src/CMakeFiles/aenet_shared.dir/ext/unittest.f90.o
+[ 84%] Building Fortran object src/CMakeFiles/aenet_shared.dir/input.f90.o
+[ 85%] Building Fortran object src/CMakeFiles/aenet_shared.dir/parallel.F90.o
+[ 86%] Building Fortran object src/CMakeFiles/aenet_shared.dir/random.f90.o
+[ 87%] Building Fortran object src/CMakeFiles/aenet_shared.dir/optimize.f90.o
+[ 89%] Building Fortran object src/CMakeFiles/aenet_shared.dir/pytorchoutput.f90.o
+[ 90%] Linking Fortran shared library ../lib/libaenet.dylib
+[ 90%] Built target aenet_shared
+[ 90%] Built target lib
+[ 91%] Building Fortran object src/CMakeFiles/trnset2ASCII.x.dir/tools/trnset2ASCII.f90.o
+[ 92%] Linking Fortran executable ../tools/trnset2ASCII.x
+[ 92%] Built target trnset2ASCII.x
+[ 93%] Building Fortran object src/CMakeFiles/fingerprint.x.dir/tools/fingerprint.f90.o
+[ 95%] Linking Fortran executable ../tools/fingerprint.x
+[ 95%] Built target fingerprint.x
+[ 96%] Building Fortran object src/CMakeFiles/neighbors.x.dir/tools/neighbors.f90.o
+[ 97%] Linking Fortran executable ../tools/neighbors.x
+[ 97%] Built target neighbors.x
+[ 98%] Building Fortran object src/CMakeFiles/trnset_info.x.dir/tools/trnset_info.f90.o
+[100%] Linking Fortran executable ../tools/trnset_info.x
+[100%] Built target trnset_info.x
+[100%] Built target tools
+[100%] Built target build_all
+Test project /Users/runner/work/aenet/aenet/build-l4
+      Start 19: build_test_binaries
+ 1/19 Test #19: build_test_binaries ..............   Passed    0.37 sec
+      Start  1: feedforward:IO
+ 2/19 Test  #1: feedforward:IO ...................   Passed    0.04 sec
+      Start  2: feedforward:eval
+ 3/19 Test  #2: feedforward:eval .................   Passed    0.00 sec
+      Start  3: feedforward:activation
+ 4/19 Test  #3: feedforward:activation ...........   Passed    0.00 sec
+      Start  4: geometry:isolated
+ 5/19 Test  #4: geometry:isolated ................   Passed    0.00 sec
+      Start  5: geometry:periodic
+ 6/19 Test  #5: geometry:periodic ................   Passed    0.00 sec
+      Start  6: lclist:fcc_primitive
+ 7/19 Test  #6: lclist:fcc_primitive .............   Passed    0.00 sec
+      Start  7: lclist:fcc_conventional
+ 8/19 Test  #7: lclist:fcc_conventional ..........   Passed    0.02 sec
+      Start  8: lclist:fcc_isolated
+ 9/19 Test  #8: lclist:fcc_isolated ..............   Passed    0.00 sec
+      Start  9: sfbasis:setup
+10/19 Test  #9: sfbasis:setup ....................   Passed    0.00 sec
+      Start 10: sfbasis:fcc_rotation
+11/19 Test #10: sfbasis:fcc_rotation .............   Passed    0.00 sec
+      Start 11: sfbasis:derivatives
+12/19 Test #11: sfbasis:derivatives ..............   Passed    0.32 sec
+      Start 12: sfsetup:IO_chebyshev
+13/19 Test #12: sfsetup:IO_chebyshev .............   Passed    0.00 sec
+      Start 13: sfsetup:IO_behler2011
+14/19 Test #13: sfsetup:IO_behler2011 ............   Passed    0.00 sec
+      Start 14: symmfunc:setup
+15/19 Test #14: symmfunc:setup ...................   Passed    0.00 sec
+      Start 15: symmfunc:fcc_rotation
+16/19 Test #15: symmfunc:fcc_rotation ............   Passed    0.01 sec
+      Start 16: symmfunc:derivatives
+17/19 Test #16: symmfunc:derivatives .............   Passed    0.18 sec
+      Start 17: xsflib:isolated
+18/19 Test #17: xsflib:isolated ..................   Passed    0.00 sec
+      Start 18: xsflib:periodic
+19/19 Test #18: xsflib:periodic ..................   Passed    0.00 sec
+
+100% tests passed out of 19
+
+Total Test time (real) =   1.01 sec
+-- Install configuration: "Release"
+-- Installing: /Users/runner/work/_temp/stage/bin/generate.x_serial
+-- Installing: /Users/runner/work/_temp/stage/bin/train.x_serial
+-- Installing: /Users/runner/work/_temp/stage/bin/predict.x_serial
+-- Installing: /Users/runner/work/_temp/stage/lib/libaenet.a
+-- Installing: /Users/runner/work/_temp/stage/lib/libaenet.dylib
+-- Installing: /Users/runner/work/_temp/stage/tools/fingerprint.x
+-- Installing: /Users/runner/work/_temp/stage/tools/neighbors.x
+-- Installing: /Users/runner/work/_temp/stage/tools/trnset_info.x
+-- Installing: /Users/runner/work/_temp/stage/tools/trnset2ASCII.x
+0000000000002c00 T ___aenet_MOD___copy___iso_c_binding_C_ptr
+000000000007c3f0 S ___aenet_MOD___def_init___iso_c_binding_C_ptr
+000000000007c020 D ___aenet_MOD___vtab___iso_c_binding_C_ptr
+0000000000003ecc T ___aenet_MOD_aenet_convert_atom_types
+000000000000582c T ___aenet_MOD_aenet_init
+0000000000004ce0 T ___aenet_MOD_aenet_load_potential
+0000000000003084 T ___aenet_MOD_aenet_sfb_init
+000000000007c3f8 S _aenet_Rc_max
+000000000007c400 S _aenet_Rc_min
+0000000000004c80 T _aenet_all_loaded
+0000000000004a00 T _aenet_atomic_energy
+0000000000004224 T _aenet_atomic_energy_and_forces
+0000000000003ccc T _aenet_convert_atom_types
+00000000000054e0 T _aenet_final
+0000000000004c60 T _aenet_free_atom_energy
+0000000000005ca0 T _aenet_init
+00000000000052c0 T _aenet_load_potential
+0000000000005188 T _aenet_load_potential_ascii
+00000000000032c8 T _aenet_nbl_final
+0000000000003320 T _aenet_nbl_init
+000000000000328c T _aenet_nbl_neighbors
+000000000007c408 S _aenet_nnb_max
+000000000007c40c S _aenet_nsf_max
+00000000000053e8 T _aenet_print_info
+0000000000002da4 T _aenet_sfb_eval
+0000000000002e40 T _aenet_sfb_final
+0000000000002e80 T _aenet_sfb_init
+0000000000002e20 T _aenet_sfb_nvalues
+0000000000002c0c T _aenet_sfb_reconstruct_radial
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libquadmath.0.dylib
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libquadmath.0.dylib
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libgfortran.5.dylib
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libgfortran.5.dylib
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libgfortran.5.dylib
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libgfortran.5.dylib
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libgcc_s.1.1.dylib (for architecture arm64)
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/_temp/stage/lib/libgcc_s.1.1.dylib (for architecture arm64)
+/Users/runner/work/_temp/stage/bin/api-smoke: replacing existing signature
+/Users/runner/work/_temp/stage/bin/generate.x_serial: replacing existing signature
+/Users/runner/work/_temp/stage/bin/predict.x_serial: replacing existing signature
+/Users/runner/work/_temp/stage/bin/train.x_serial: replacing existing signature
+/Users/runner/work/_temp/stage/lib/libaenet.dylib: replacing existing signature
+/Users/runner/work/_temp/stage/lib/libgcc_s.1.1.dylib: replacing existing signature
+/Users/runner/work/_temp/stage/lib/libgfortran.5.dylib: replacing existing signature
+/Users/runner/work/_temp/stage/lib/libquadmath.0.dylib: replacing existing signature
+/Users/runner/work/_temp/stage/tools/fingerprint.x: replacing existing signature
+/Users/runner/work/_temp/stage/tools/neighbors.x: replacing existing signature
+/Users/runner/work/_temp/stage/tools/trnset2ASCII.x: replacing existing signature
+/Users/runner/work/_temp/stage/tools/trnset_info.x: replacing existing signature
+bin/api-smoke
+/Users/runner/work/_temp/stage/bin/api-smoke:
+	@rpath/libaenet.dylib (compatibility version 0.0.0, current version 0.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+bin/generate.x_serial
+/Users/runner/work/_temp/stage/bin/generate.x_serial:
+	@loader_path/../lib/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate (compatibility version 1.0.0, current version 4.0.0)
+	@loader_path/../lib/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+bin/predict.x_serial
+/Users/runner/work/_temp/stage/bin/predict.x_serial:
+	@loader_path/../lib/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate (compatibility version 1.0.0, current version 4.0.0)
+	@loader_path/../lib/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+bin/train.x_serial
+/Users/runner/work/_temp/stage/bin/train.x_serial:
+	@loader_path/../lib/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate (compatibility version 1.0.0, current version 4.0.0)
+	@loader_path/../lib/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+lib/libaenet.dylib
+/Users/runner/work/_temp/stage/lib/libaenet.dylib:
+	@rpath/libaenet.dylib (compatibility version 0.0.0, current version 0.0.0)
+	@loader_path/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate (compatibility version 1.0.0, current version 4.0.0)
+	@loader_path/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+lib/libgcc_s.1.1.dylib
+/Users/runner/work/_temp/stage/lib/libgcc_s.1.1.dylib (architecture arm64):
+	@rpath/libgcc_s.1.1.dylib (compatibility version 1.0.0, current version 1.1.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+lib/libgfortran.5.dylib
+/Users/runner/work/_temp/stage/lib/libgfortran.5.dylib:
+	@rpath/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	@loader_path/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	@loader_path/libgcc_s.1.1.dylib (compatibility version 1.0.0, current version 1.1.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+lib/libquadmath.0.dylib
+/Users/runner/work/_temp/stage/lib/libquadmath.0.dylib:
+	@rpath/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+tools/fingerprint.x
+/Users/runner/work/_temp/stage/tools/fingerprint.x:
+	@loader_path/../lib/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate (compatibility version 1.0.0, current version 4.0.0)
+	@loader_path/../lib/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+tools/neighbors.x
+/Users/runner/work/_temp/stage/tools/neighbors.x:
+	@loader_path/../lib/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate (compatibility version 1.0.0, current version 4.0.0)
+	@loader_path/../lib/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+tools/trnset2ASCII.x
+/Users/runner/work/_temp/stage/tools/trnset2ASCII.x:
+	@loader_path/../lib/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate (compatibility version 1.0.0, current version 4.0.0)
+	@loader_path/../lib/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+tools/trnset_info.x
+/Users/runner/work/_temp/stage/tools/trnset_info.x:
+	@loader_path/../lib/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)
+	/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate (compatibility version 1.0.0, current version 4.0.0)
+	@loader_path/../lib/libquadmath.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)
+
+      cmd LC_BUILD_VERSION
+  cmdsize 32
+ platform 1
+    minos 14.0
+      sdk 14.0
+   ntools 1
+     tool 3
+C API initialization/type mapping/finalization passed
+generate/train/predict passed; repeated energy: -0.81593048
+ Total energy               :           -0.90350926 eV
+
+L4 runtime experiment passed
