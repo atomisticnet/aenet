@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, macos-14]
+        os: [macos-14]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     env:
@@ -22,7 +22,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p evidence
-          bash l4/run.sh 2>&1 | tee evidence/${{ matrix.os }}.log
+          bash l4/run.sh 2>&1 | tee evidence/${{ matrix.os }}-accelerate.log
       - name: Save experimental evidence on this branch
         if: always()
         shell: bash

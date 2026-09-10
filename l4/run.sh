@@ -4,10 +4,9 @@ set -euo pipefail
 uname -a
 git rev-parse HEAD
 if [[ "$RUNNER_OS" == macOS ]]; then
-  brew install gcc@14 openblas libomp
+  brew install gcc@14
   fc="$(brew --prefix gcc@14)/bin/gfortran-14"
-  omp_flags="-L$(brew --prefix libomp)/lib -lomp"
-  args=(-DCMAKE_PREFIX_PATH="$(brew --prefix openblas)" "-DCMAKE_EXE_LINKER_FLAGS=$omp_flags" "-DCMAKE_SHARED_LINKER_FLAGS=$omp_flags")
+  args=(-DUSE_OPENBLAS=OFF -DBLA_VENDOR=Apple)
 else
   sudo apt-get update -qq
   sudo apt-get install -y gfortran libopenblas-dev cmake patchelf
@@ -29,7 +28,7 @@ fi
 python3 l4/package.py "$RUNNER_TEMP/stage"
 mv "$RUNNER_TEMP/stage" "$RUNNER_TEMP/relocated"
 if [[ "$RUNNER_OS" == macOS ]]; then
-  otool -l "$RUNNER_TEMP/relocated/bin/predict.x_openblas" | grep -A6 LC_BUILD_VERSION
+  otool -l "$RUNNER_TEMP/relocated/bin/predict.x_serial" | grep -A6 LC_BUILD_VERSION
   # Block reads of non-system toolchains; this is not older-OS validation.
   profile='(version 1)(allow default)(deny file-read* (subpath "/opt/homebrew") (subpath "/usr/local") (subpath "/Library/Developer") (subpath "/Applications/Xcode.app"))'
   sandbox-exec -p "$profile" "$RUNNER_TEMP/relocated/bin/api-smoke"
@@ -40,7 +39,7 @@ if [[ "$RUNNER_OS" == macOS ]]; then
   rm smoke.train smoke.train.scaled Cu.nn
   for name in generate train predict; do
     args=("$name.in"); [[ "$name" != predict ]] || args+=(3.xsf)
-    sandbox-exec -p "$profile" "$RUNNER_TEMP/relocated/bin/$name.x_openblas" "${args[@]}" > "$name-restricted.log" 2>&1
+    sandbox-exec -p "$profile" "$RUNNER_TEMP/relocated/bin/$name.x_serial" "${args[@]}" > "$name-restricted.log" 2>&1
     if grep -E 'Error:|runtime error|Library not loaded' "$name-restricted.log"; then exit 1; fi
   done
   grep 'Total energy' predict-restricted.log
