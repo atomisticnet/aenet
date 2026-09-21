@@ -178,7 +178,7 @@ set_target_properties(lbfgsb_static PROPERTIES
 # ==============================================================================
 
 set(SRC_FILES
-    aenet.f90 aeio.f90 constants.f90
+    aenet.f90 aeio.f90 constants.f90 version.F90
     geometry.f90 input.f90 optimize.f90 parallel.F90
     potential.f90 random.f90 sfsetup.f90
     trainset.f90 pytorchoutput.f90
@@ -198,7 +198,10 @@ add_library(aenet_static STATIC ${SRC_FILES} ${EXT_FILES})
 add_library(aenet_shared SHARED ${SRC_FILES} ${EXT_FILES})
 
 set_target_properties(aenet_static PROPERTIES OUTPUT_NAME "aenet")
-set_target_properties(aenet_shared PROPERTIES OUTPUT_NAME "aenet")
+set_target_properties(aenet_shared PROPERTIES OUTPUT_NAME "aenet"
+    VERSION "${PROJECT_VERSION}" SOVERSION "${PROJECT_VERSION_MAJOR}")
+set_source_files_properties(version.F90 PROPERTIES
+    COMPILE_DEFINITIONS "AENET_VERSION_STRING=\"${PROJECT_VERSION}\"")
 
 # Per-target module directory (avoid global collisions)
 set_target_properties(aenet_static PROPERTIES Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/modules)
@@ -212,6 +215,8 @@ target_link_libraries(aenet_static PRIVATE lbfgsb_static)
 target_link_libraries(aenet_shared PRIVATE lbfgsb_static)
 
 if(USE_MPI)
+    target_compile_definitions(aenet_static PUBLIC PARALLEL)
+    target_compile_definitions(aenet_shared PUBLIC PARALLEL)
     target_link_libraries(aenet_static PUBLIC MPI::MPI_Fortran)
     target_link_libraries(aenet_shared PUBLIC MPI::MPI_Fortran)
 endif()
@@ -299,7 +304,8 @@ add_custom_target(main DEPENDS generate.x train.x predict.x)
 add_custom_target(lib DEPENDS aenet_static aenet_shared)
 add_custom_target(tools DEPENDS fingerprint.x neighbors.x trnset_info.x trnset2ASCII.x)
 add_custom_target(build_tests
-   DEPENDS test_feedforward test_geometry test_lclist test_sfbasis
+   DEPENDS generate.x train.x predict.x
+           test_feedforward test_geometry test_lclist test_sfbasis
            test_sfsetup test_symmfunc test_xsflib)
 add_custom_target(build_all DEPENDS main lib tools build_tests)
 
@@ -374,3 +380,48 @@ install(TARGETS aenet_static aenet_shared
 install(TARGETS fingerprint.x neighbors.x trnset_info.x trnset2ASCII.x
         RUNTIME DESTINATION
         tools)
+
+# CLI tests also run under two MPI ranks for the parallel programs.
+foreach(program generate train predict)
+  foreach(mode version noargs missing)
+    set(test_name "startup:${program}:${mode}")
+    add_test(NAME "${test_name}" COMMAND "${CMAKE_COMMAND}"
+      "-DPROGRAM=$<TARGET_FILE:${program}.x>" "-DNAME=${program}.x"
+      "-DVERSION=${PROJECT_VERSION}" "-DMODE=${mode}"
+      "-DWORK=${CMAKE_CURRENT_BINARY_DIR}/${test_name}"
+      -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/cmake/check_startup.cmake")
+    set_tests_properties("${test_name}" PROPERTIES
+      FIXTURES_REQUIRED test_fixture TIMEOUT 30)
+    if(USE_MPI AND NOT program STREQUAL "generate")
+      add_test(NAME "${test_name}:mpi" COMMAND "${CMAKE_COMMAND}"
+        "-DPROGRAM=$<TARGET_FILE:${program}.x>" "-DNAME=${program}.x"
+        "-DVERSION=${PROJECT_VERSION}" "-DMODE=${mode}"
+        "-DLAUNCHER=${MPIEXEC_EXECUTABLE};${MPIEXEC_NUMPROC_FLAG};2;${MPIEXEC_PREFLAGS}"
+        "-DPOSTFLAGS=${MPIEXEC_POSTFLAGS}"
+        "-DWORK=${CMAKE_CURRENT_BINARY_DIR}/${test_name}:mpi"
+        -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/cmake/check_startup.cmake")
+      set_tests_properties("${test_name}:mpi" PROPERTIES
+        FIXTURES_REQUIRED test_fixture TIMEOUT 30 PROCESSORS 2)
+    endif()
+  endforeach()
+endforeach()
+
+add_test(NAME release:version_input COMMAND "${CMAKE_COMMAND}"
+  "-DSOURCE=${CMAKE_CURRENT_SOURCE_DIR}"
+  "-DWORK=${CMAKE_CURRENT_BINARY_DIR}/release-version-input"
+  -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/cmake/check_release.cmake")
+
+if(NOT USE_MPI)
+  add_test(NAME version:rebuild COMMAND "${CMAKE_COMMAND}"
+    "-DSOURCE=${CMAKE_SOURCE_DIR}"
+    "-DWORK=${CMAKE_CURRENT_BINARY_DIR}/version-rebuild"
+    "-DCOMPILER=${CMAKE_Fortran_COMPILER}"
+    "-DBLA_VENDOR=${BLA_VENDOR}"
+    "-DUSE_OPENBLAS=${USE_OPENBLAS}"
+    "-DPREFIX_PATH=${CMAKE_PREFIX_PATH}"
+    "-DEXE_LINKER_FLAGS=${CMAKE_EXE_LINKER_FLAGS}"
+    "-DSHARED_LINKER_FLAGS=${CMAKE_SHARED_LINKER_FLAGS}"
+    "-DEXECUTABLE_SUFFIX=${AENET_SUFFIX}"
+    -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/cmake/check_version_rebuild.cmake")
+  set_tests_properties(version:rebuild PROPERTIES RUN_SERIAL TRUE TIMEOUT 300)
+endif()

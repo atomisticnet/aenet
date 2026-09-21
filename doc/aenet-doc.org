@@ -17,6 +17,32 @@
 # contents from the main README.org file
 #+INCLUDE: "../README.org" :lines "3-"
 
+* Version queries and release versions
+
+  =src/VERSION= is the canonical release version, in =MAJOR.MINOR.PATCH=
+  form (currently =2.0.4=). Git release tags add a =v= prefix, for example
+  =v2.0.4=. CMake reads this file and automatically reconfigures on changes.
+
+  Each main executable accepts a standalone =--version= argument. For
+  example, =train.x_serial --version= prints exactly =train.x 2.0.4=
+  followed by a newline and exits successfully. The reported program name
+  omits build suffixes. This query needs no input files and creates no
+  application output files. MPI builds print once and finalize all ranks.
+  Missing arguments or nonexistent input files produce a nonzero exit.
+
+  CMake shared libraries use the full release as =VERSION= and its major
+  component as =SOVERSION=. An incompatible public ABI change requires a
+  major release. This introduces a versioned library identity; downstream
+  binaries should be relinked when adopting this convention. Static library
+  names and existing executable suffixes are unchanged. Legacy Makefiles
+  also read =src/VERSION= for executable queries and retain their existing
+  library naming conventions.
+
+  From =src/=, run =./prepare-release.sh MAJOR.MINOR.PATCH= to update the
+  version and source license headers. The script rejects prefixed or
+  prerelease versions before editing files. It prints the corresponding
+  =vMAJOR.MINOR.PATCH= tag commands but does not commit, tag, or publish.
+
 * General concepts
   <<concepts>>
 

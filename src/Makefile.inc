@@ -31,12 +31,14 @@ LIB = ../lib/liblbfgsb.a
 
 #------------------------------ objects -------------------------------#
 
-OBJECTS  = aenet.o aeio.o chebyshev.o constants.o feedforward.o geometry.o \
+OBJECTS  = version.o aenet.o aeio.o chebyshev.o constants.o feedforward.o \
+           geometry.o \
            input.o io.o lclist.o optimize.o parallel.o potential.o random.o \
            sfbasis.o sfsetup.o sortlib.o symmfunc.o timing.o trainset.o \
 		   xsflib.o pytorchoutput.o
 
-PICOBJECTS  = aenet_pic.o aeio_pic.o chebyshev_pic.o constants_pic.o \
+PICOBJECTS  = version_pic.o aenet_pic.o aeio_pic.o chebyshev_pic.o \
+              constants_pic.o \
               feedforward_pic.o geometry_pic.o input_pic.o io_pic.o \
               lclist_pic.o optimize_pic.o parallel_pic.o potential_pic.o \
               random_pic.o sfbasis_pic.o sfsetup_pic.o sortlib_pic.o \
@@ -67,6 +69,12 @@ generate : $(TARGET1)
 train    : $(TARGET2)
 predict  : $(TARGET3)
 lib      : libaenet.a libaenet.so
+
+version.o: version.F90 VERSION
+	$(FC) $(FCFLAGS) -DAENET_VERSION_STRING='"$(version)"' $< -o $@
+
+version_pic.o: version.F90 VERSION
+	$(FC) $(FCFLAGS) -fPIC -DAENET_VERSION_STRING='"$(version)"' $< -o $@
 
 %.o : %.f90
 	$(FC) $(FCFLAGS) $< -o $*.o

@@ -22,7 +22,8 @@ build-variant information should be represented in release archive names.
 ## Dependencies and boundary
 
 Use the release contract required by [issue 1](1-binary-distribution.md) and
-[versioning policy](2-canonical-versioning.md). Settle runtime-library placement
-with [packaging](7-relocatable-packaging.md) so extracted archives can be
-relocated. Issue 7 owns dependency bundling and clean-environment execution
-checks. Do not add developer suffix options without a demonstrated need.
+[versioning policy](../closed-issues/2-canonical-versioning.md). Settle
+runtime-library placement with [packaging](7-relocatable-packaging.md) so
+extracted archives can be relocated. Issue 7 owns dependency bundling and
+clean-environment execution checks. Do not add developer suffix options
+without a demonstrated need.

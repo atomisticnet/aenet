@@ -100,6 +100,8 @@ program generate
                       pyo_write_atom_sf_info,       &
                       pyo_select_force_structures
 
+  use aenet_version, only: aenet_version_string, version_requested
+
   implicit none
 
   !--------------------------------------------------------------------!
@@ -447,6 +449,11 @@ contains !=============================================================!
     integer :: nargs
     logical :: fexists
 
+    if (version_requested()) then
+       write(*,'(a)') 'generate.x ' // aenet_version_string
+       stop
+    end if
+
     call aeio_header("generate.x - training set generation", char='=')
     write(*,*)
 
@@ -456,8 +463,7 @@ contains !=============================================================!
     if (nargs < 1) then
        write(0,*) "Error: No input file provided."
        call print_usage()
-       call finalize()
-       stop
+       stop 1
     end if
 
     call get_command_argument(1, value=inFile)
@@ -465,8 +471,7 @@ contains !=============================================================!
     if (.not. fexists) then
        write(0,*) "Error: File not found: ", trim(inFile)
        call print_usage()
-       call finalize()
-       stop
+       stop 1
     end if
 
   end subroutine initialize
@@ -513,6 +518,7 @@ contains !=============================================================!
     write(*,*) "generate.x -- Generate training sets for use with `train.x'"
     write(*,'(1x,70("-"))')
     write(*,*) 'Usage: generate.x <input-file>'
+    write(*,*) '       generate.x --version'
     write(*,*)
     write(*,*) 'See the documentation or the source code for a description of the '
     write(*,*) 'input file format.'

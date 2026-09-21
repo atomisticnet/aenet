@@ -36,7 +36,15 @@ if(NOT BUILD_AENET)
 endif()
 
 if(BUILD_AENET)
-  project(AENET Fortran)
+  file(READ "${CMAKE_CURRENT_SOURCE_DIR}/src/VERSION" AENET_VERSION)
+  string(STRIP "${AENET_VERSION}" AENET_VERSION)
+  if(NOT AENET_VERSION MATCHES
+      "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$")
+    message(FATAL_ERROR "src/VERSION must contain MAJOR.MINOR.PATCH")
+  endif()
+  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/VERSION")
+  project(AENET VERSION ${AENET_VERSION} LANGUAGES Fortran)
   set(AENET_SUPERBUILD ON)
   include(CTest)
   add_subdirectory(src)

@@ -80,6 +80,8 @@ program predict
                        pp_sum,                         &
                        ppMaster, ppRank, ppSize
 
+  use aenet_version, only: aenet_version_string, version_requested
+
   implicit none
 
   !--------------------------------------------------------------------!
@@ -325,31 +327,48 @@ contains
     type(InputData),  intent(out) :: inp
 
 
-    logical :: fexists
+    logical :: fexists, show_version, stopnow
     integer :: nargs
     integer :: stat
     integer :: itype
 
     call pp_init()
 
+    ! All ranks take the same exit path before application resources exist.
+    show_version = .false.
+    if (ppMaster) show_version = version_requested()
+    call pp_bcast(show_version)
+    if (show_version) then
+       if (ppMaster) write(*,'(a)') 'predict.x ' // &
+            aenet_version_string
+       call pp_final()
+       stop
+    end if
+
+    stopnow = .false.
     if (ppMaster) then
        nargs = command_argument_count()
        if (nargs < 1) then
           write(0,*) "Error: No input file specified."
           call print_usage()
-          call finalize()
-          stop
+          stopnow = .true.
+       else
+          call get_command_argument(1, value=inFile)
+          inquire(file=trim(inFile), exist=fexists)
+          if (.not. fexists) then
+             write(0,*) "Error: File not found: ", trim(inFile)
+             call print_usage()
+             stopnow = .true.
+          end if
        end if
+    end if
+    call pp_bcast(stopnow)
+    if (stopnow) then
+       call pp_final()
+       stop 1
+    end if
 
-       call get_command_argument(1, value=inFile)
-       inquire(file=trim(inFile), exist=fexists)
-       if (.not. fexists) then
-          write(0,*) "Error: File not found: ", trim(inFile)
-          call print_usage()
-          call finalize()
-          stop
-       end if
-
+    if (ppMaster) then
        ! read name of structure from command line, if present
        if (nargs > 1) then
           call get_command_argument(2, value=strucFile)
@@ -379,7 +398,7 @@ contains
        call aenet_load_potential(itype, inp%netFile(itype), stat, &
             is_ascii=inp%pot_is_ascii)
        if (stat /= 0) then
-       write(0,*) 'Error: could not load ANN potentials'
+          write(0,*) 'Error: could not load ANN potentials'
           call finalize()
           stop
        end if
@@ -425,6 +444,7 @@ contains
     write(*,*) "predict.x -- Predict/interpolate atomic energy."
     write(*,'(1x,70("-"))')
     write(*,*) 'Usage: predict.x <input-file> [<structure files>]'
+    write(*,*) '       predict.x --version'
     write(*,*)
     write(*,*) 'See the documentation or the source code for a description of the'
     write(*,*) 'input file format.  Structure files can either be listed in the'

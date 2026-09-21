@@ -10,18 +10,30 @@ usage="
  Usage:
     $0 NEW_VERSION
 
- NEW_VERSION is the version number of the upcoming release.
+ NEW_VERSION is MAJOR.MINOR.PATCH, without a v prefix.
+ Run this script from src/. Release tags use vMAJOR.MINOR.PATCH.
 
  The script does the following:
    1. Update the VERSION file.
    2. Update the license header in every source file.
 "
 
-if [[ $# -lt 1 ]] || [ "$1" == "-h" ] || [ "$1" == "--help" ]
-then
+if [[ $# == 1 && ( "$1" == "-h" || "$1" == "--help" ) ]]; then
     echo "${usage}"
     exit 0
 fi
+
+# Validate before writing VERSION or any source headers.
+version_pattern='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'
+if [[ $# != 1 || ! "$1" =~ ${version_pattern} ]]; then
+    echo "Error: expected MAJOR.MINOR.PATCH without a v prefix." >&2
+    exit 1
+fi
+if [[ ! -f VERSION || ! -f license-header.txt ]]; then
+    echo "Error: run prepare-release.sh from src/." >&2
+    exit 1
+fi
+set -e
 
 #-------------- make sure all required tools are present --------------#
 
@@ -36,9 +48,8 @@ done
 
 #------------------------ collect information -------------------------#
 
-branch="$(git rev-parse --abbrev-ref HEAD)"
 version="$1"
-current_version="$(git describe --abbrev=0)"
+current_version="$(cat VERSION)"
 
 echo
 echo " Preparing bump from version ${current_version} to version $1."
@@ -88,8 +99,8 @@ done
 
 #----------------------------------------------------------------------#
 
-echo " Tag the new release with    : git tag -a ${version}"
-echo " Push the tags to origin with: git push --tags origin"
+echo " Tag the new release with    : git tag -a v${version}"
+echo " Push the tags to origin with: git push origin v${version}"
 echo
 
 exit 0

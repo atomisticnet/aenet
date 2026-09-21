@@ -125,6 +125,8 @@ program train
                          ts_write_structure_info, &
                          ts_skip_atoms
 
+  use aenet_version, only: aenet_version_string, version_requested
+
   implicit none
 
   !--------------------------------------------------------------------!
@@ -509,11 +511,22 @@ contains !=============================================================!
 
     character(len=*), intent(out) :: inFile
 
-    logical :: fexists
+    logical :: fexists, show_version
     integer :: nargs
     logical :: stopnow
 
     call pp_init()
+
+    ! All ranks take the same exit path before application resources exist.
+    show_version = .false.
+    if (ppMaster) show_version = version_requested()
+    call pp_bcast(show_version)
+    if (show_version) then
+       if (ppMaster) write(*,'(a)') 'train.x ' // &
+            aenet_version_string
+       call pp_final()
+       stop
+    end if
 
     stopnow = .false.
     if (ppMaster) then
@@ -528,25 +541,24 @@ contains !=============================================================!
           write(0,*) "Error: No input file provided."
           call print_usage()
           stopnow = .true.
+       else
+          call get_command_argument(1, value=inFile)
+          inquire(file=trim(inFile), exist=fexists)
+          if (.not. fexists) then
+             write(0,*) "Error: File not found: ", trim(inFile)
+             call print_usage()
+             stopnow = .true.
+          end if
        end if
-
-       call get_command_argument(1, value=inFile)
-       inquire(file=trim(inFile), exist=fexists)
-       if (.not. fexists) then
-          write(0,*) "Error: File not found: ", trim(inFile)
-          call print_usage()
-          stopnow = .true.
-       end if
-
-       call random_init()
     end if
 
     call pp_bcast(stopnow)
     if (stopnow) then
-       call finalize()
-       stop
+       call pp_final()
+       stop 1
     end if
 
+    if (ppMaster) call random_init()
     call pp_print_info()
 
   end subroutine initialize
@@ -700,6 +712,7 @@ contains !=============================================================!
     write(*,*) "train.x -- Train an atomic energy NN."
     write(*,'(1x,70("-"))')
     write(*,*) 'Usage: train.x <input-file>'
+    write(*,*) '       train.x --version'
     write(*,*)
     write(*,*) 'See the documentation or the source code for a description of the '
     write(*,*) 'input file format.'
