@@ -63,6 +63,22 @@ during implementation and review.
 - Do not commit without user confirmation. Do not infer authorization to
   send messages, update GitHub, push, merge, or publish from local task work.
 
+# Branch workflow
+
+- Keep `master` as the stable, release-ready branch and `dev` as the persistent
+  integration branch for upcoming work. Integrate coherent, reviewed changes
+  from `dev` into `master` deliberately.
+- Use local topic branches based on `dev` when isolation helps implementation
+  or review. Substantive shared issues should normally use such a branch, but
+  do not publish topic branches merely because an issue has one.
+- Publish a topic branch only when collaboration or hosted validation requires
+  it. For disposable CI experiments, use a clearly named `test/<purpose>`
+  branch and delete it after recording the result in the relevant issue or
+  maintained documentation. Do not retain unique work only on a test branch.
+- Normally keep only `master` and `dev` as persistent branches in the shared
+  repository. Creating, updating, or deleting remote branches remains a public
+  Git operation and requires authorization under the development workflow.
+
 # Shared issues
 
 - Use tracked `ISSUES.md` as the concise index of active and deferred shared
@@ -72,7 +88,8 @@ during implementation and review.
 - Require only a problem, acceptance criteria, and status. Add plans,
   dependencies, and evidence when useful. Small work may live entirely in
   the local tracker; do not require a shared/local pair for every change.
-- Substantive shared issues should normally use separate branches.
+- Substantive shared issues should normally use local topic branches as
+  described in the branch workflow.
 - After validation and review, before merging the issue branch, move resolved
   issue files to `closed-issues/<id>-<description>.md` and remove their active
   index entries. Record resolution, meaningful validation, and limitations.

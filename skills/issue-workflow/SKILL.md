@@ -38,6 +38,11 @@ interface comments, documentation, and task evidence together. Use the
 [build-test skill](../build-test/SKILL.md) for backend checks and the
 [documentation skill](../documentation/SKILL.md) for substantive docs work.
 
+For substantive shared work, use a local topic branch based on `dev` when
+isolation is useful. Follow the branch workflow in `AGENTS.md`: local topic
+branches are not routinely public, and temporary `test/<purpose>` branches
+used for hosted validation are deleted after their evidence is recorded.
+
 Before declaring the unit ready to commit, inspect its complete diff and
 apply the [review checklist](../code-review/references/review-checklist.md).
 Passing tests do not substitute for reviewing numerical correctness,
