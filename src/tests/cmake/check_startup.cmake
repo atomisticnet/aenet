@@ -14,6 +14,8 @@
 # and G. Ceder, PRB 96 (2017) 014112.
 
 # Run in an isolated directory; MPI launchers may write diagnostics to stderr.
+cmake_policy(SET CMP0054 NEW)
+
 file(MAKE_DIRECTORY "${WORK}")
 if(MODE STREQUAL "version")
   set(args --version)
