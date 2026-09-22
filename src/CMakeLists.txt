@@ -367,14 +367,21 @@ endif()
 message(STATUS "Install prefix set to: ${CMAKE_INSTALL_PREFIX} for backwards compatibility")
 message(STATUS "Override with `cmake -DCMAKE_INSTALL_PREFIX=...`")
 
-# Install main executables with suffix
-install(TARGETS generate.x train.x predict.x
-        RUNTIME DESTINATION bin)
+# Keep variant suffixes in the build tree, but expose stable installed names.
+install(PROGRAMS $<TARGET_FILE:generate.x>
+        DESTINATION bin RENAME generate.x)
+install(PROGRAMS $<TARGET_FILE:train.x>
+        DESTINATION bin RENAME train.x)
+install(PROGRAMS $<TARGET_FILE:predict.x>
+        DESTINATION bin RENAME predict.x)
 
 # Install libraries
 install(TARGETS aenet_static aenet_shared
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib)
+
+# Install the public C interface.
+install(FILES aenet.h DESTINATION include)
 
 # Install tool executables without suffix
 install(TARGETS fingerprint.x neighbors.x trnset_info.x trnset2ASCII.x
@@ -410,6 +417,18 @@ add_test(NAME release:version_input COMMAND "${CMAKE_COMMAND}"
   "-DSOURCE=${CMAKE_CURRENT_SOURCE_DIR}"
   "-DWORK=${CMAKE_CURRENT_BINARY_DIR}/release-version-input"
   -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/cmake/check_release.cmake")
+
+add_test(NAME install:layout COMMAND "${CMAKE_COMMAND}"
+  "-DBUILD=${CMAKE_BINARY_DIR}"
+  "-DWORK=${CMAKE_CURRENT_BINARY_DIR}/install-layout"
+  "-DVERSION=${PROJECT_VERSION}"
+  "-DEXECUTABLE_SUFFIX=${AENET_SUFFIX}"
+  "-DSHARED_PREFIX=${CMAKE_SHARED_LIBRARY_PREFIX}"
+  "-DSHARED_SUFFIX=${CMAKE_SHARED_LIBRARY_SUFFIX}"
+  "-DSTATIC_PREFIX=${CMAKE_STATIC_LIBRARY_PREFIX}"
+  "-DSTATIC_SUFFIX=${CMAKE_STATIC_LIBRARY_SUFFIX}"
+  -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/cmake/check_install_layout.cmake")
+set_tests_properties(install:layout PROPERTIES RUN_SERIAL TRUE TIMEOUT 300)
 
 if(NOT USE_MPI)
   add_test(NAME version:rebuild COMMAND "${CMAKE_COMMAND}"

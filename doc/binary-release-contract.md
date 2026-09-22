@@ -1,7 +1,8 @@
-# Binary release feasibility and proposed contract
+# Binary release feasibility and contract
 
-Status: feasibility demonstrated on both targets; proposed contract awaiting
-review. This is not a released-platform support guarantee. Source examined: `9be145096da995cbf3c68346cc8d3ebf7a0a07b3`.
+Status: feasibility demonstrated on both targets; contract accepted for
+implementation. This is not a released-platform support guarantee. Source
+examined: `9be145096da995cbf3c68346cc8d3ebf7a0a07b3`.
 No production Fortran/CMake source was changed during the experiments.
 
 ## Scope
@@ -59,14 +60,16 @@ state, atom-type conversion with known expected mapping, and finalization.
   resolves within the relocated tree; libSystem remains external.
 - Linux experiments bundled libgfortran.so.5, libquadmath.so.0, and libgcc_s.so.1
   while retaining system libc/libm/loader. OpenBLAS was statically linked.
-- Known installed-layout gaps remain in issue 3: suffixed main executables
-  and no installed aenet.h.
+- Developer build trees retain variant suffixes on the main executables.
+  Installed trees expose stable executable names and include `aenet.h`.
 
-## Proposed release choices
+## Release choices
 
-- Start with Ubuntu 22.04/glibc 2.35 as the demonstrated Linux runtime
-  environment. Do not claim generic Linux or older-glibc compatibility yet.
-- Use macOS 14 arm64 with GNU 14 as the first candidate baseline. The hosted
+- Require Ubuntu 22.04/glibc 2.35 or newer for the first Linux release. This
+  is the demonstrated runtime baseline; do not claim generic Linux or
+  older-glibc compatibility yet.
+- Require macOS 14 or newer on arm64 for the first macOS release and use GNU
+  14 to build it. The hosted
   experiment ran on macOS 14.6 (Darwin 23.6), and predict reports minos 14.0
   and SDK 14.0. This does not establish every macOS 14 patch level or every
   bundled library deployment target; inspect the full closure and validate
@@ -76,13 +79,15 @@ state, atom-type conversion with known expected mapping, and finalization.
   and packaging evidence: it removes the OpenBLAS/OpenMP runtime dependency.
   This is not a measured speedup recommendation. Keep OpenBLAS for Linux.
   Bundle non-system compiler runtimes on both platforms; keep system
-  libraries/frameworks external. User approval of this choice is pending.
+  libraries/frameworks external.
 - Use relative runtime load paths; remove build-directory rpaths and inspect
   transitive dependency closure. Apply ad-hoc signatures after modifying
   Mach-O files where required. This is not Developer ID signing/notarization.
-- Candidate names: aenet-<version>-macos-arm64-gnu-serial.tar.gz and
-  aenet-<version>-linux-x86_64-gnu-serial.tar.gz, with bin/, tools/, lib/,
-  include/aenet.h, and notices. Final names/layout belong to issues 2/3/7.
+- Release archive names are
+  `aenet-<version>-macos-arm64-gnu-serial.tar.gz` and
+  `aenet-<version>-linux-x86_64-gnu-serial.tar.gz`, with `bin/`, `tools/`,
+  `lib/`, `include/aenet.h`, and notices. Issue 7 adds the runtime libraries
+  and notices without changing this top-level layout.
 
 ## Accelerate extension: correctness, packaging, and performance
 
@@ -198,18 +203,17 @@ Immutable successful evidence:
 
 ## Follow-up
 
-The authorized temporary experiment is on
-[codex/l4-feasibility-experiment](https://github.com/atomisticnet/aenet/tree/codex/l4-feasibility-experiment),
-with executable scripts under l4/ and per-platform logs under evidence/.
-Its commits and workflow are experimental and have not been merged. Private
-raw local logs remain in dev-notes/l4/.
+The temporary experiment branches were deleted after their durable evidence
+was recorded at the immutable links above. Their commits and workflows were
+experimental and were not merged. Private raw local logs remain in
+dev-notes/l4/.
 
 GitHub currently provides native macOS arm64 and Ubuntu x86_64 runners:
 [hosted runner reference](https://docs.github.com/en/actions/reference/runners/github-hosted-runners).
 Runner labels establish execution availability, not artifact compatibility.
 
-L4 awaits approval of this proposed contract; both platform feasibility
-experiments now have successful evidence. No candidate archives were
+Both platform feasibility experiments have successful evidence, and the
+contract was accepted for implementation. No candidate archives were
 published. The experiments use installed trees rather than testing final
 compressed release archives; that remains issue 7 work. Issues 2/3 own version/layout, issue 7 owns production
 packaging and runtime tests, issue 4 owns CI orchestration, issue 8 owns user

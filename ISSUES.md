@@ -8,7 +8,7 @@ Details live in issues/; completed issue files move to closed-issues/.
 | ID | Status | Issue |
 | --- | --- | --- |
 | 1 | Active | [Umbrella: first backend binary release](issues/1-binary-distribution.md) |
-| 3 | Pending | [Normalize installed artifacts](issues/3-installed-artifacts.md) |
+| 3 | Active | [Normalize installed artifacts](issues/3-installed-artifacts.md) |
 | 4 | Pending | [Automate GNU serial binary releases](issues/4-binary-release-automation.md) |
 | 5 | Deferred | [Integrate binaries with aenet-python](issues/5-python-binary-integration.md) |
 | 7 | Pending | [Package and validate relocatable binaries](issues/7-relocatable-packaging.md) |

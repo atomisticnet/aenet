@@ -1,6 +1,6 @@
 # Issue 3: Normalize installed artifact naming and layout
 
-**Status:** Pending
+**Status:** Active
 **Parent:** [Issue 1](1-binary-distribution.md)
 **Legacy ID:** REL002
 
