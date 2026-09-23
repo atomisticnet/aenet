@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+# This file is part of the AENET package.
+#
+# Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+import argparse
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+
+from elf_common import (BUNDLED_RUNTIMES, check_dependency_policy, elf_files,
+                        inspect_elf)
+
+
+def compiler_runtime(compiler, soname):
+    result = subprocess.check_output(
+        [compiler, f"-print-file-name={soname}"], text=True
+    ).strip()
+    path = Path(result)
+    if result == soname or not path.is_file():
+        raise ValueError(f"compiler did not locate {soname}")
+    return path.resolve()
+
+
+def prepare(stage, compiler, patchelf, readelf):
+    expected_suffix = "-linux-x86_64-gnu-serial"
+    if not stage.is_dir() or not stage.name.endswith(expected_suffix):
+        raise ValueError("stage is not a Linux x86_64 GNU serial archive root")
+
+    initial = elf_files(stage, readelf)
+    for path in initial:
+        needed, _ = inspect_elf(path, readelf)
+        dynamic_blas = {name for name in needed
+                        if name.startswith(("libopenblas.so", "libblas.so",
+                                            "liblapack.so"))}
+        if dynamic_blas:
+            check_dependency_policy(dynamic_blas, set())
+
+    for soname in BUNDLED_RUNTIMES:
+        shutil.copy2(compiler_runtime(compiler, soname), stage / "lib" / soname)
+
+    objects = elf_files(stage, readelf)
+    for path in objects:
+        runpath = "$ORIGIN" if path.parent.name == "lib" else "$ORIGIN/../lib"
+        subprocess.run(
+            [patchelf, "--set-rpath", runpath, str(path)], check=True
+        )
+
+    bundled = {path.name for path in (stage / "lib").iterdir()}
+    for path in objects:
+        needed, runpath = inspect_elf(path, readelf)
+        expected = "$ORIGIN" if path.parent.name == "lib" else "$ORIGIN/../lib"
+        if runpath != expected:
+            raise ValueError(f"incorrect relative RUNPATH in {path}")
+        check_dependency_policy(needed, bundled)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Bundle and inspect the Linux GNU runtime closure."
+    )
+    parser.add_argument("--stage", required=True, type=Path)
+    parser.add_argument("--compiler", default="gfortran")
+    parser.add_argument("--patchelf", default="patchelf")
+    parser.add_argument("--readelf", default="readelf")
+    args = parser.parse_args()
+    try:
+        prepare(args.stage, args.compiler, args.patchelf, args.readelf)
+    except (OSError, subprocess.CalledProcessError, ValueError) as error:
+        print(f"linux prepare: {error}", file=sys.stderr)
+        return 1
+    print(f"prepared {args.stage}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

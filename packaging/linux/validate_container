@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+# This file is part of the AENET package.
+#
+# Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+import argparse
+from pathlib import Path
+import subprocess
+import sys
+
+
+ROOT = Path(__file__).resolve().parents[2]
+CONTAINER_SCRIPT = r"""
+apt-get update -qq
+apt-get install -y --no-install-recommends binutils python3
+test -z "${LD_LIBRARY_PATH:-}"
+! command -v gfortran
+python3 /checks/packaging/validate "/input/$ARCHIVE_NAME"
+mkdir /tmp/extracted
+tar -C /tmp/extracted -xzf "/input/$ARCHIVE_NAME"
+python3 /checks/packaging/linux/validate_runtime \
+  --root "/tmp/extracted/$ARCHIVE_ROOT" \
+  --api-smoke /validation/api-smoke \
+  --work /tmp/runtime-smoke
+"""
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Validate a Linux archive in a clean Ubuntu 22.04 container."
+    )
+    parser.add_argument("archive", type=Path)
+    parser.add_argument("--api-smoke", required=True, type=Path)
+    parser.add_argument("--docker", default="docker")
+    args = parser.parse_args()
+    archive = args.archive.resolve()
+    checksum = Path(str(archive) + ".sha256")
+    api_smoke = args.api_smoke.resolve()
+    if not archive.is_file() or not checksum.is_file() or not api_smoke.is_file():
+        parser.error("archive, checksum sidecar, and API smoke binary are required")
+    archive_root = archive.name[:-len(".tar.gz")]
+    command = [
+        args.docker, "run", "--rm",
+        "-e", f"ARCHIVE_NAME={archive.name}",
+        "-e", f"ARCHIVE_ROOT={archive_root}",
+        "-e", "OMP_NUM_THREADS=1", "-e", "OPENBLAS_NUM_THREADS=1",
+        "-v", f"{archive.parent}:/input:ro",
+        "-v", f"{ROOT}:/checks:ro",
+        "-v", f"{api_smoke}:/validation/api-smoke:ro",
+        "ubuntu:22.04", "bash", "-euc", CONTAINER_SCRIPT,
+    ]
+    try:
+        subprocess.run(command, check=True)
+    except (OSError, subprocess.CalledProcessError) as error:
+        print(f"Linux container validation: {error}", file=sys.stderr)
+        return 1
+    print(f"validated {archive} in Ubuntu 22.04")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

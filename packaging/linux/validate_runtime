@@ -1,0 +1,99 @@
+#!/usr/bin/env python3
+# This file is part of the AENET package.
+#
+# Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+import argparse
+import os
+from pathlib import Path
+import platform
+import shutil
+import subprocess
+import sys
+
+from elf_common import (BUNDLED_RUNTIMES, check_dependency_policy,
+                        check_runtime_resolution, elf_files, inspect_elf,
+                        parse_ldd, parse_machine, command_output)
+
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def validate(root, api_smoke, work, readelf, ldd):
+    if platform.system() != "Linux" or platform.machine() != "x86_64":
+        raise ValueError("runtime validation requires Linux x86_64")
+    if shutil.which("gfortran") is not None:
+        raise ValueError("runtime environment contains a Fortran compiler")
+    if os.environ.get("LD_LIBRARY_PATH"):
+        raise ValueError("LD_LIBRARY_PATH must be unset")
+    marker = "-linux-x86_64-gnu-serial"
+    if marker not in root.name:
+        raise ValueError("archive root is not the Linux release variant")
+    version = root.name.split("aenet-", 1)[1].split(marker, 1)[0]
+
+    for name in ("generate", "train", "predict"):
+        executable = root / "bin" / f"{name}.x"
+        output = subprocess.check_output(
+            [str(executable), "--version"], text=True
+        ).strip()
+        if output != f"{name}.x {version}":
+            raise ValueError(f"incorrect version output from {name}.x")
+
+    major = version.split(".", 1)[0]
+    library = root / "lib" / f"libaenet.so.{version}"
+    if not library.is_file():
+        raise ValueError("versioned shared library is missing")
+    if os.readlink(root / "lib" / "libaenet.so") != f"libaenet.so.{major}":
+        raise ValueError("libaenet.so link is incorrect")
+    if os.readlink(root / "lib" / f"libaenet.so.{major}") != library.name:
+        raise ValueError("libaenet major-version link is incorrect")
+
+    bundled = {path.name for path in (root / "lib").iterdir()}
+    for runtime in BUNDLED_RUNTIMES:
+        if runtime not in bundled:
+            raise ValueError(f"bundled runtime is missing: {runtime}")
+    objects = elf_files(root, readelf)
+    for path in objects:
+        needed, runpath = inspect_elf(path, readelf)
+        expected = "$ORIGIN" if path.parent.name == "lib" else "$ORIGIN/../lib"
+        if runpath != expected:
+            raise ValueError(f"incorrect relative RUNPATH in {path}")
+        check_dependency_policy(needed, bundled)
+        resolved = parse_ldd(subprocess.check_output([ldd, path], text=True))
+        check_runtime_resolution(resolved, needed & bundled, root / "lib")
+
+    parse_machine(command_output([readelf, "-h", api_smoke]))
+    parse_ldd(subprocess.check_output([ldd, api_smoke], text=True))
+    subprocess.run([str(api_smoke), str(library)], check=True)
+    subprocess.run(
+        [sys.executable, ROOT / "packaging/tests/runtime_smoke.py", root, work],
+        check=True,
+    )
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Validate an extracted Linux archive without a toolchain."
+    )
+    parser.add_argument("--root", required=True, type=Path)
+    parser.add_argument("--api-smoke", required=True, type=Path)
+    parser.add_argument("--work", required=True, type=Path)
+    parser.add_argument("--readelf", default="readelf")
+    parser.add_argument("--ldd", default="ldd")
+    args = parser.parse_args()
+    try:
+        validate(args.root.resolve(), args.api_smoke.resolve(), args.work,
+                 args.readelf, args.ldd)
+    except (OSError, subprocess.CalledProcessError, ValueError) as error:
+        print(f"linux runtime validation: {error}", file=sys.stderr)
+        return 1
+    print(f"validated Linux runtime {args.root}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

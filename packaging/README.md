@@ -55,3 +55,49 @@ with:
 ```sh
 python3 packaging/tests/test_archive.py
 ```
+
+## Linux x86_64
+
+After `build` produces the Linux install tree, bundle the runtime libraries
+reported by the same GNU compiler and rewrite every ELF runtime search path:
+
+```sh
+packaging/linux/prepare \
+  --stage /tmp/aenet-stage/aenet-2.0.4-linux-x86_64-gnu-serial \
+  --compiler /usr/bin/gfortran
+```
+
+This step requires `patchelf` and `readelf`. It copies
+`libgfortran.so.5`, `libquadmath.so.0`, and `libgcc_s.so.1`, then verifies the
+full shipped ELF closure. It rejects shared OpenBLAS, BLAS, or LAPACK and any
+dependency outside the bundled runtimes and the Ubuntu 22.04 baseline system
+libraries. Add the required license material, then create the archive with
+the common `package` command.
+
+Build the C API test before entering the independent runtime environment:
+
+```sh
+packaging/linux/build_api_smoke \
+  --output /tmp/aenet-validation/api-smoke
+```
+
+The test is linked only to the system dynamic-loading API. It receives the
+extracted `libaenet.so` path at runtime and checks exported API symbols,
+initialization, atom-type conversion, and finalization.
+
+The release gate runs the structural validator, extracts the actual archive,
+and checks it in an Ubuntu 22.04 container:
+
+```sh
+packaging/linux/validate_container \
+  /tmp/aenet-dist/aenet-2.0.4-linux-x86_64-gnu-serial.tar.gz \
+  --api-smoke /tmp/aenet-validation/api-smoke
+```
+
+The container installs Python and binary-inspection tools but no compiler. It
+requires an empty `LD_LIBRARY_PATH`, verifies x86_64 ELF metadata and relative
+RUNPATHs, checks that bundled dependencies resolve from the extracted tree,
+runs exact CLI version checks and the prebuilt C API test, and executes the
+generate/train/predict numerical smoke workflow. Docker and network access to
+the Ubuntu package repositories are prerequisites for this validation entry
+point.

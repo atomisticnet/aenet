@@ -114,18 +114,22 @@ class ArchiveTests(unittest.TestCase):
 
 
 class BuildEntryPointTests(unittest.TestCase):
+    def fake_tool(self, work):
+        log = work / "commands.txt"
+        tool = work / "tool"
+        tool.write_text(
+            "#!/bin/sh\nprintf '%s\\n' \"$*\" >> \"$COMMAND_LOG\"\n",
+            encoding="utf-8",
+        )
+        tool.chmod(0o755)
+        environment = os.environ.copy()
+        environment["COMMAND_LOG"] = str(log)
+        return tool, log, environment
+
     def test_macos_build_uses_accelerate_and_serial_execution(self):
         with tempfile.TemporaryDirectory() as temporary:
             work = Path(temporary)
-            log = work / "commands.txt"
-            tool = work / "tool"
-            tool.write_text(
-                "#!/bin/sh\nprintf '%s\\n' \"$*\" >> \"$COMMAND_LOG\"\n",
-                encoding="utf-8",
-            )
-            tool.chmod(0o755)
-            environment = os.environ.copy()
-            environment["COMMAND_LOG"] = str(log)
+            tool, log, environment = self.fake_tool(work)
             result = subprocess.run(
                 [str(BUILD), "--platform", "macos-arm64",
                  "--compiler", "/toolchain/gfortran-14",
@@ -142,6 +146,22 @@ class BuildEntryPointTests(unittest.TestCase):
             root = f"aenet-{VERSION}-macos-arm64-gnu-serial"
             self.assertIn(root, commands[3])
             self.assertIn(root, result.stdout)
+
+    def test_linux_build_selects_openblas(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            work = Path(temporary)
+            tool, log, environment = self.fake_tool(work)
+            subprocess.run(
+                [str(BUILD), "--platform", "linux-x86_64",
+                 "--compiler", "/usr/bin/gfortran",
+                 "--build-dir", str(work / "build-tree"),
+                 "--stage-parent", str(work / "stage"),
+                 "--cmake", str(tool), "--ctest", str(tool)],
+                check=True, capture_output=True, text=True, env=environment,
+            )
+            configure = log.read_text(encoding="utf-8").splitlines()[0]
+            self.assertIn("-DUSE_OPENBLAS=ON", configure)
+            self.assertNotIn("-DBLA_VENDOR=Apple", configure)
 
 
 if __name__ == "__main__":

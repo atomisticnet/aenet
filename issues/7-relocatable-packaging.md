@@ -34,6 +34,26 @@ temporary source commit `75681eb`; committed log `922fe23` on
 `codex/l8-linux-validation`. The first run exposed a CMake script-policy
 portability defect, addressed separately by local issue L9.
 
+## Production Linux packaging evidence
+
+The maintained issue 7 entry points passed on GitHub's Ubuntu 22.04 x86_64
+runner in [workflow run
+35815467080](https://github.com/atomisticnet/aenet/actions/runs/35815467080).
+The run used the repository's common build command with GNU Fortran and static
+OpenBLAS, passed the full 31-entry CTest suite, bundled the GNU Fortran,
+quadmath, and GCC support runtimes, and created the named archive plus SHA-256
+sidecar. The production inspection rejected non-x86_64 objects, unexpected
+dependencies, dynamic BLAS/LAPACK, and non-relative runtime search paths.
+
+The final gate validated the compressed archive itself in a fresh Ubuntu
+22.04 container with no Fortran compiler and no `LD_LIBRARY_PATH`. All bundled
+dependencies resolved from the extracted `lib/` directory. Exact CLI version
+checks, the prebuilt native C API test, and the generate/train/predict numerical
+smoke workflow passed. The temporary test branch and workflow were deleted
+after the run. This establishes the Linux implementation; the candidate is not
+publishable until local issue L15 adds and validates the complete dependency
+notices and paired-platform metadata.
+
 ## Acceptance criteria
 
 - Implement repeatable packaging for both platforms using the approved
