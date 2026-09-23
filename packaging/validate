@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+# This file is part of the AENET package.
+#
+# Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+import argparse
+import hashlib
+from pathlib import Path, PurePosixPath
+import sys
+import tarfile
+
+from archive_common import (REQUIRED_DIRECTORIES, check_link_target,
+                            check_member_path, check_root_name, file_hash)
+
+
+def read_manifest(tar, root):
+    name = f"{root}/manifest.txt"
+    member = tar.getmember(name)
+    stream = tar.extractfile(member)
+    if stream is None:
+        raise ValueError("manifest is not a regular file")
+    records = {}
+    for raw_line in stream.read().decode("utf-8").splitlines():
+        if not raw_line or raw_line.startswith("#"):
+            continue
+        if raw_line.startswith("SHA256 "):
+            _, digest, mode, path = raw_line.split(" ", 3)
+            record = ("file", int(mode, 8), digest)
+        elif raw_line.startswith("SYMLINK "):
+            prefix, target = raw_line.split(" -> ", 1)
+            _, mode, path = prefix.split(" ", 2)
+            record = ("symlink", int(mode, 8), target)
+        else:
+            raise ValueError(f"invalid manifest record: {raw_line}")
+        if path in records:
+            raise ValueError(f"duplicate manifest path: {path}")
+        records[path] = record
+    return records
+
+
+def validate(archive):
+    suffix = ".tar.gz"
+    if not archive.name.endswith(suffix):
+        raise ValueError("archive must end in .tar.gz")
+    root = archive.name[:-len(suffix)]
+    check_root_name(root)
+
+    checksum = Path(str(archive) + ".sha256")
+    if not checksum.is_file():
+        raise ValueError(f"missing checksum: {checksum.name}")
+    expected = file_hash(archive)
+    if checksum.read_text(encoding="ascii") != f"{expected}  {archive.name}\n":
+        raise ValueError("checksum does not match archive")
+
+    with tarfile.open(archive, "r:gz") as tar:
+        members = tar.getmembers()
+        names = {member.name for member in members}
+        if len(names) != len(members):
+            raise ValueError("archive contains duplicate member paths")
+        if root not in names or not tar.getmember(root).isdir():
+            raise ValueError("archive root directory is missing")
+        for member in members:
+            check_member_path(member.name, root)
+            if member.islnk():
+                raise ValueError(f"hard links are not allowed: {member.name}")
+            if member.issym():
+                check_link_target(member.name, member.linkname, root)
+            if not (member.isfile() or member.isdir() or member.issym()):
+                raise ValueError(f"unsupported archive member: {member.name}")
+        for directory in REQUIRED_DIRECTORIES:
+            if f"{root}/{directory}" not in names:
+                raise ValueError(f"archive is missing directory: {directory}")
+
+        records = read_manifest(tar, root)
+        payload_names = {
+            member.name[len(root) + 1:]
+            for member in members
+            if member.name != f"{root}/manifest.txt" and
+            (member.isfile() or member.issym())
+        }
+        if set(records) != payload_names:
+            raise ValueError("manifest does not match archive payload")
+        by_name = {member.name: member for member in members}
+        for path, (kind, mode, value) in records.items():
+            member = by_name[f"{root}/{path}"]
+            if member.mode != mode:
+                raise ValueError(f"manifest mode mismatch: {path}")
+            if kind == "symlink":
+                if not member.issym() or member.linkname != value:
+                    raise ValueError(f"manifest link mismatch: {path}")
+            else:
+                stream = tar.extractfile(member)
+                if stream is None:
+                    raise ValueError(f"manifest file mismatch: {path}")
+                digest = hashlib.sha256(stream.read()).hexdigest()
+                if digest != value:
+                    raise ValueError(f"manifest digest mismatch: {path}")
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Validate an AENET binary release archive."
+    )
+    parser.add_argument("archive", type=Path)
+    args = parser.parse_args()
+    try:
+        validate(args.archive)
+    except (KeyError, OSError, UnicodeError, ValueError, tarfile.TarError) as error:
+        print(f"validate: {error}", file=sys.stderr)
+        return 1
+    print(f"validated {args.archive}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

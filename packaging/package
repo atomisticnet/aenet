@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+# This file is part of the AENET package.
+#
+# Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+import argparse
+import gzip
+import io
+import os
+from pathlib import Path
+import sys
+import tarfile
+
+from archive_common import (REQUIRED_DIRECTORIES, check_link_target,
+                            check_root_name, file_hash)
+
+
+def payload(stage):
+    entries = []
+    for path in sorted(stage.rglob("*"), key=lambda item: item.as_posix()):
+        relative = path.relative_to(stage).as_posix()
+        mode = path.lstat().st_mode & 0o777
+        if path.is_symlink():
+            target = os.readlink(path)
+            check_link_target(f"{stage.name}/{relative}", target, stage.name)
+            entries.append((path, relative, mode, "symlink", target))
+        elif path.is_dir():
+            entries.append((path, relative, mode, "directory", ""))
+        elif path.is_file():
+            entries.append((path, relative, mode, "file", file_hash(path)))
+        else:
+            raise ValueError(f"unsupported file type: {relative}")
+    return entries
+
+
+def manifest_bytes(entries):
+    lines = ["# type mode sha256/path or path -> target\n"]
+    for _, relative, mode, kind, value in entries:
+        if kind == "file":
+            lines.append(f"SHA256 {value} {mode:04o} {relative}\n")
+        elif kind == "symlink":
+            lines.append(f"SYMLINK {mode:04o} {relative} -> {value}\n")
+    return "".join(lines).encode("utf-8")
+
+
+def tar_info(name, mode, epoch, kind="file", size=0, linkname=""):
+    info = tarfile.TarInfo(name)
+    info.uid = 0
+    info.gid = 0
+    info.uname = ""
+    info.gname = ""
+    info.mtime = epoch
+    info.mode = mode
+    info.size = size
+    if kind == "directory":
+        info.type = tarfile.DIRTYPE
+    elif kind == "symlink":
+        info.type = tarfile.SYMTYPE
+        info.linkname = linkname
+    return info
+
+
+def create_archive(stage, output, epoch):
+    check_root_name(stage.name)
+    if not stage.is_dir():
+        raise ValueError(f"stage is not a directory: {stage}")
+    missing = [name for name in REQUIRED_DIRECTORIES
+               if not (stage / name).is_dir()]
+    if missing:
+        raise ValueError("stage is missing directories: " + ", ".join(missing))
+
+    entries = payload(stage)
+    manifest = manifest_bytes(entries)
+    output.mkdir(parents=True, exist_ok=True)
+    archive = output / f"{stage.name}.tar.gz"
+    with archive.open("wb") as raw:
+        with gzip.GzipFile(filename="", mode="wb", fileobj=raw,
+                           mtime=epoch) as compressed:
+            with tarfile.open(fileobj=compressed, mode="w",
+                              format=tarfile.GNU_FORMAT) as tar:
+                tar.addfile(tar_info(stage.name, 0o755, epoch, "directory"))
+                for path, relative, mode, kind, value in entries:
+                    name = f"{stage.name}/{relative}"
+                    if kind == "directory":
+                        tar.addfile(tar_info(name, mode, epoch, kind))
+                    elif kind == "symlink":
+                        tar.addfile(tar_info(name, mode, epoch, kind,
+                                             linkname=value))
+                    else:
+                        info = tar_info(name, mode, epoch, size=path.stat().st_size)
+                        with path.open("rb") as stream:
+                            tar.addfile(info, stream)
+                name = f"{stage.name}/manifest.txt"
+                tar.addfile(tar_info(name, 0o644, epoch, size=len(manifest)),
+                            io.BytesIO(manifest))
+
+    digest = file_hash(archive)
+    checksum = output / f"{archive.name}.sha256"
+    checksum.write_text(f"{digest}  {archive.name}\n", encoding="ascii")
+    return archive
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Create a deterministic AENET binary release archive."
+    )
+    parser.add_argument("--stage", required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument(
+        "--epoch", type=int,
+        default=int(os.environ.get("SOURCE_DATE_EPOCH", "0")),
+        help="normalized archive timestamp (default: SOURCE_DATE_EPOCH or 0)",
+    )
+    args = parser.parse_args()
+    if args.epoch < 0:
+        parser.error("--epoch must be non-negative")
+    try:
+        archive = create_archive(args.stage, args.output, args.epoch)
+    except (OSError, ValueError) as error:
+        print(f"package: {error}", file=sys.stderr)
+        return 1
+    print(archive)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

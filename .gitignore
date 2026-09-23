@@ -8,6 +8,7 @@ debug
 __pycache__
 core.c
 build
+!/packaging/build
 example*
 .vscode
 *.pyc

@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+# This file is part of the AENET package.
+#
+# Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+import argparse
+from pathlib import Path
+import subprocess
+import sys
+
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def run(command):
+    print("+", " ".join(str(item) for item in command), flush=True)
+    subprocess.run([str(item) for item in command], check=True)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Build, test, and stage a GNU serial AENET binary release."
+    )
+    parser.add_argument("--platform", required=True,
+                        choices=("macos-arm64", "linux-x86_64"))
+    parser.add_argument("--build-dir", required=True, type=Path)
+    parser.add_argument("--stage-parent", required=True, type=Path)
+    parser.add_argument("--compiler", required=True)
+    parser.add_argument("--cmake", default="cmake")
+    parser.add_argument("--ctest", default="ctest")
+    args = parser.parse_args()
+
+    version = (ROOT / "src" / "VERSION").read_text(encoding="ascii").strip()
+    stage = args.stage_parent / (
+        f"aenet-{version}-{args.platform}-gnu-serial"
+    )
+    if args.build_dir.exists() or stage.exists():
+        parser.error("build directory and stage must not already exist")
+
+    configure = [
+        args.cmake, "-S", ROOT, "-B", args.build_dir,
+        "-DBUILD_AENET=ON", "-DCMAKE_BUILD_TYPE=Release",
+        f"-DCMAKE_Fortran_COMPILER={args.compiler}",
+        "-DUSE_MPI=OFF", "-DUSE_MKL=OFF",
+    ]
+    if args.platform == "macos-arm64":
+        configure.extend(("-DUSE_OPENBLAS=OFF", "-DBLA_VENDOR=Apple"))
+    else:
+        configure.append("-DUSE_OPENBLAS=ON")
+
+    try:
+        run(configure)
+        run([args.cmake, "--build", args.build_dir, "--target", "build_all",
+             "--parallel", "1"])
+        run([args.ctest, "--test-dir", args.build_dir,
+             "--output-on-failure"])
+        run([args.cmake, "--install", args.build_dir, "--prefix", stage])
+    except (OSError, subprocess.CalledProcessError) as error:
+        print(f"build: {error}", file=sys.stderr)
+        return 1
+    print(stage)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

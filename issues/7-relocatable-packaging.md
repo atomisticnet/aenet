@@ -1,6 +1,6 @@
 # Issue 7: Package and validate relocatable binaries
 
-**Status:** Pending
+**Status:** Active
 **Parent:** [Issue 1](1-binary-distribution.md)
 **Dependencies:** Approved release contract under issue 1;
 [2](../closed-issues/2-canonical-versioning.md),
