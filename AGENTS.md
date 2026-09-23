@@ -59,9 +59,22 @@ during implementation and review.
 - Complete the applicable review and validation before declaring work done.
   Report unavailable checks and unresolved limitations explicitly.
 - Summarize changes, testing, task status, and follow-up work. Leave handoff
-  notes for phased work and propose a focused commit message.
+  notes for phased work and propose a commit message following the policy
+  below.
 - Do not commit without user confirmation. Do not infer authorization to
   send messages, update GitHub, push, merge, or publish from local task work.
+
+# Commit messages
+
+- Write a simple, specific subject that explains the change to a developer
+  without context from the current task or conversation. Describe the
+  repository outcome rather than the development activity or status.
+- Add a body when the subject alone does not explain relevant motivation,
+  behavior, compatibility decisions, validation, or limitations. Do not
+  repeat the subject in the body; omit the body for a genuinely
+  self-explanatory change.
+- Reference the relevant repository issue or explicitly identified GitHub
+  issue when applicable.
 
 # Branch workflow
 
@@ -96,8 +109,7 @@ during implementation and review.
   Dates and commit hashes are optional; Git records history. Keep deferred
   issues in the active index with an explicit deferred status.
 - Refer to repository issues as `issue 3` and GitHub issues explicitly as
-  `GitHub #3` or by URL; their number spaces are independent. Commit messages
-  should reference the relevant shared issue when applicable.
+  `GitHub #3` or by URL; their number spaces are independent.
 - Public GitHub updates still require authorization. Do not copy private
   notes into shared files without reviewing them for contributor relevance.
   Closing a child does not imply that its parent is complete.

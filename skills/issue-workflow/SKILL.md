@@ -67,6 +67,6 @@ Leave deferred issues indexed and keep an issue open when a promised
 deliverable or required validation is missing. Do not close a parent merely
 because one child is complete. Only update GitHub with user authorization.
 
-Summarize the result and evidence, identify remaining work, and propose a
-commit message referencing the relevant task or explicitly identified GitHub
-issue. Do not commit without confirmation.
+Summarize the result and evidence, identify remaining work, and propose the
+complete commit message under the `AGENTS.md` policy, including a body when
+the change warrants one. Do not commit without confirmation.
