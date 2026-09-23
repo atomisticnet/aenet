@@ -3,7 +3,8 @@
 **Status:** Pending
 **Parent:** [Issue 1](1-binary-distribution.md)
 **Dependencies:** Approved release contract under issue 1;
-[2](../closed-issues/2-canonical-versioning.md), [3](3-installed-artifacts.md)
+[2](../closed-issues/2-canonical-versioning.md),
+[3](../closed-issues/3-installed-artifacts.md)
 
 ## Problem
 
