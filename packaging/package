@@ -16,7 +16,8 @@ import sys
 import tarfile
 
 from archive_common import (REQUIRED_DIRECTORIES, check_link_target,
-                            check_root_name, file_hash)
+                            check_root_name, file_hash, read_metadata,
+                            validate_metadata)
 
 
 def payload(stage):
@@ -72,6 +73,14 @@ def create_archive(stage, output, epoch):
                if not (stage / name).is_dir()]
     if missing:
         raise ValueError("stage is missing directories: " + ", ".join(missing))
+    metadata = stage / "metadata.json"
+    if not metadata.is_file():
+        raise ValueError("stage is missing metadata.json")
+    license_names = {
+        path.name for path in (stage / "licenses").iterdir()
+        if path.is_file() and not path.is_symlink()
+    }
+    validate_metadata(read_metadata(metadata), stage.name, license_names)
 
     entries = payload(stage)
     manifest = manifest_bytes(entries)

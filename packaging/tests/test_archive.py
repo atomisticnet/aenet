@@ -8,6 +8,7 @@
 # obtain one at http://mozilla.org/MPL/2.0/.
 
 import hashlib
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -40,8 +41,29 @@ class ArchiveTests(unittest.TestCase):
         library = self.stage / "lib" / "libaenet.so.2.0.4"
         library.write_bytes(b"library\n")
         os.symlink(library.name, self.stage / "lib" / "libaenet.so.2")
-        (self.stage / "licenses" / "AENET.txt").write_text(
-            "license\n", encoding="utf-8"
+        notices = ["AENET-MPL-2.0.txt", "GCC-GPL-3.0.txt",
+                   "GCC-RUNTIME-LIBRARY-EXCEPTION.txt", "L-BFGS-B.txt",
+                   "OpenBLAS.txt"]
+        for name in notices:
+            (self.stage / "licenses" / name).write_text(
+                "license\n", encoding="utf-8"
+            )
+        metadata = {
+            "schema_version": 1,
+            "aenet_version": VERSION,
+            "archive_root": ARCHIVE_ROOT,
+            "platform": "linux-x86_64",
+            "build_configuration": "Release GNU serial",
+            "source_revision": "a" * 40,
+            "compiler": {"family": "GNU Fortran", "version": "11.4.0"},
+            "blas": {"name": "OpenBLAS", "version": "0.3.20",
+                     "linkage": "static"},
+            "bundled_runtime_libraries": ["libgfortran.so.5"],
+            "licenses": notices,
+            "file_inventory": "manifest.txt",
+        }
+        (self.stage / "metadata.json").write_text(
+            json.dumps(metadata) + "\n", encoding="utf-8"
         )
 
     def tearDown(self):
@@ -84,6 +106,8 @@ class ArchiveTests(unittest.TestCase):
             contents = manifest.read().decode("utf-8")
             self.assertIn("bin/generate.x", contents)
             self.assertIn("lib/libaenet.so.2 -> libaenet.so.2.0.4", contents)
+            self.assertIn("metadata.json", contents)
+            self.assertIn("licenses/OpenBLAS.txt", contents)
 
         subprocess.run([str(VALIDATE), str(archive1)], check=True)
 
@@ -99,6 +123,12 @@ class ArchiveTests(unittest.TestCase):
         result = self.run_package(self.work / "output", check=False)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("unsafe symbolic link", result.stderr)
+
+    def test_rejects_incomplete_redistribution_notices(self):
+        (self.stage / "licenses" / "OpenBLAS.txt").unlink()
+        result = self.run_package(self.work / "output", check=False)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("license files", result.stderr)
 
     def test_validation_rejects_a_changed_archive(self):
         output = self.work / "output"

@@ -20,10 +20,26 @@ Use `--platform linux-x86_64` with the Linux GNU compiler for the Linux
 candidate. Both the build directory and computed stage directory must be new.
 This prevents an older build or staged runtime from entering a candidate.
 
-The platform packaging steps add runtime libraries and license material to
-the stage. Once it contains `bin/`, `tools/`, `lib/`, `include/`, and
-`licenses/`, `package` creates the archive, `manifest.txt`, and SHA-256
-sidecar:
+The platform packaging steps add runtime libraries to the stage. Next,
+`finalize` installs the AENET, L-BFGS-B, GCC runtime, and platform BLAS notices
+and writes deterministic `metadata.json`. Pass the full source commit so a
+candidate identifies the code that produced it:
+
+```sh
+packaging/finalize \
+  --stage /tmp/aenet-stage/aenet-2.0.4-macos-arm64-gnu-serial \
+  --compiler /path/to/gfortran-14 \
+  --source-revision "$(git rev-parse HEAD)"
+```
+
+Linux also requires `--openblas-version`, normally obtained with
+`pkg-config --modversion openblas`. Metadata records the AENET version,
+platform, release configuration, source revision, GNU compiler version,
+BLAS/LAPACK provider and linkage, bundled GNU runtime filenames, installed
+notices, and the `manifest.txt` inventory reference.
+
+Once finalized, `package` creates the archive, complete hashed file and mode
+inventory in `manifest.txt`, and SHA-256 sidecar:
 
 ```sh
 packaging/package \
@@ -41,7 +57,8 @@ special files, and names outside the two approved platform contracts fail
 packaging.
 
 `validate` verifies the archive name and root, SHA-256 sidecar, required
-directories, safe paths and links, file modes, content hashes, and manifest:
+directories, metadata schema, platform-specific notices, safe paths and
+links, file modes, content hashes, and manifest:
 
 ```sh
 packaging/validate \
@@ -71,8 +88,16 @@ This step requires `patchelf` and `readelf`. It copies
 `libgfortran.so.5`, `libquadmath.so.0`, and `libgcc_s.so.1`, then verifies the
 full shipped ELF closure. It rejects shared OpenBLAS, BLAS, or LAPACK and any
 dependency outside the bundled runtimes and the Ubuntu 22.04 baseline system
-libraries. Add the required license material, then create the archive with
-the common `package` command.
+libraries. Finalize the stage with the compiler and the linked OpenBLAS
+version, then create the archive with the common `package` command:
+
+```sh
+packaging/finalize \
+  --stage /tmp/aenet-stage/aenet-2.0.4-linux-x86_64-gnu-serial \
+  --compiler /usr/bin/gfortran \
+  --source-revision "$(git rev-parse HEAD)" \
+  --openblas-version "$(pkg-config --modversion openblas)"
+```
 
 Build the C API test before entering the independent runtime environment:
 
@@ -122,7 +147,7 @@ OpenMP runtimes are rejected. The command rewrites bundled dependencies to
 Mach-O object is arm64 with a deployment target no newer than macOS 14.0, and
 applies and verifies ad-hoc signatures after all load-command changes.
 
-After adding the required license material, use the common `package` command.
+Finalize the stage with the common command shown above, then use `package`.
 Build the separately mounted API test and validate the final archive with:
 
 ```sh

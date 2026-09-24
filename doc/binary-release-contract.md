@@ -156,15 +156,17 @@ claiming a production performance benefit, repeat with representative data
 and the intended training method; such a claim is not needed to choose the
 simpler macOS runtime packaging.
 
-## Notices and release gates
+## Notices, metadata, and release gates
 
-Inventory exact versions and notices for AENET (MPL-2.0), OpenBLAS (its
-redistribution notice), bundled GCC runtimes (their licenses and runtime
-exception where applicable), and L-BFGS-B. The OpenBLAS macOS experiment also bundled LLVM OpenMP, which adds its
-own license/notice requirements; the proposed Accelerate variant does not. The local GCC installation contains
-COPYING, COPYING.LIB, and COPYING.RUNTIME; the local OpenBLAS installation
-contains LICENSE. This inventory is not completed release-compliance review.
-Issue 7 must collect the actual redistribution materials before publication.
+Production packaging installs the AENET MPL-2.0 license, the license supplied
+with the bundled L-BFGS-B 3.0 sources, GPLv3 and the GCC Runtime Library
+Exception for the bundled GNU runtimes, and the OpenBLAS BSD notice on Linux.
+macOS uses system Accelerate and therefore has no OpenBLAS or OpenMP payload or
+notice. `metadata.json` records the source revision, AENET and compiler
+versions, target platform, build configuration, BLAS/LAPACK provider and
+linkage, bundled runtime filenames, installed notices, and the location of the
+hashed file inventory. The archive validator enforces this schema and the
+platform-specific notice set.
 
 Release gates must cover clean builds/CTest, extracted-file and architecture
 checks, transitive dependency resolution, independent-runtime CLI/API tests,
@@ -212,9 +214,16 @@ GitHub currently provides native macOS arm64 and Ubuntu x86_64 runners:
 [hosted runner reference](https://docs.github.com/en/actions/reference/runners/github-hosted-runners).
 Runner labels establish execution availability, not artifact compatibility.
 
-Both platform feasibility experiments have successful evidence, and the
-contract was accepted for implementation. No candidate archives were
-published. The experiments use installed trees rather than testing final
-compressed release archives; that remains issue 7 work. Issues 2/3 own version/layout, issue 7 owns production
-packaging and runtime tests, issue 4 owns CI orchestration, issue 8 owns user
-instructions, and local publication work verifies the actual downloads.
+Both platform feasibility experiments and production archive implementations
+have successful native evidence. Linux production validation is recorded in
+[run 35815467080](https://github.com/atomisticnet/aenet/actions/runs/35815467080),
+and macOS arm64 production validation is recorded in
+[run 36026156581](https://github.com/atomisticnet/aenet/actions/runs/36026156581).
+The completed notice and metadata contract passed for both native candidates
+from one revision in [paired run
+36027659670](https://github.com/atomisticnet/aenet/actions/runs/36027659670).
+The maintained commands under `packaging/` now own build, runtime relocation,
+metadata/notices, deterministic archive creation, and extracted-archive
+validation. Issue 4 consumes these commands for CI orchestration; issue 8 owns
+user instructions, and local publication work verifies actual downloads and
+macOS quarantine behavior. No candidate archive has been published.

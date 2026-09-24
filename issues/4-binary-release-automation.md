@@ -3,7 +3,7 @@
 **Status:** Pending
 **Legacy ID:** CI001
 **Parent:** [Issue 1](1-binary-distribution.md)
-**Dependency:** [Issue 7](7-relocatable-packaging.md)
+**Dependency:** [Issue 7](../closed-issues/7-relocatable-packaging.md)
 
 ## Problem
 

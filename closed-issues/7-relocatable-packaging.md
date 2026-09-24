@@ -1,10 +1,9 @@
 # Issue 7: Package and validate relocatable binaries
 
-**Status:** Active
-**Parent:** [Issue 1](1-binary-distribution.md)
+**Status:** Done
+**Parent:** [Issue 1](../issues/1-binary-distribution.md)
 **Dependencies:** Approved release contract under issue 1;
-[2](../closed-issues/2-canonical-versioning.md),
-[3](../closed-issues/3-installed-artifacts.md)
+[2](2-canonical-versioning.md), [3](3-installed-artifacts.md)
 
 ## Problem
 
@@ -50,9 +49,8 @@ The final gate validated the compressed archive itself in a fresh Ubuntu
 dependencies resolved from the extracted `lib/` directory. Exact CLI version
 checks, the prebuilt native C API test, and the generate/train/predict numerical
 smoke workflow passed. The temporary test branch and workflow were deleted
-after the run. This establishes the Linux implementation; the candidate is not
-publishable until local issue L15 adds and validates the complete dependency
-notices and paired-platform metadata.
+after the run. This established the Linux runtime implementation before L15
+added and validated the common notices and metadata contract.
 
 ## Production macOS packaging evidence
 
@@ -71,8 +69,22 @@ The final gate validated the compressed archive after extraction with common
 Homebrew and active Xcode developer paths denied by `sandbox-exec`. Exact CLI
 version checks, the separately built native C API test, and the
 generate/train/predict numerical smoke workflow passed. The temporary test
-branch and workflow were deleted after the run. Complete redistribution
-notices and paired-platform metadata remain assigned to local issue L15.
+branch and workflow were deleted after the run. L15 subsequently completed
+the redistribution notices and paired-platform metadata.
+
+## Paired final validation
+
+[Workflow run
+36027659670](https://github.com/atomisticnet/aenet/actions/runs/36027659670)
+validated the final contract from one source revision on both Ubuntu 22.04
+x86_64 and native macOS 14 arm64. Both jobs passed 21 packaging regressions,
+the full 31-entry CTest suite, platform runtime preparation, deterministic
+metadata and notice installation, archive and checksum creation, and the
+independent extracted-archive gate. The Linux container had no Fortran
+compiler or `LD_LIBRARY_PATH`; the macOS smoke tests denied the common
+Homebrew and active Xcode developer paths. Both native C API tests and
+generate/train/predict numerical workflows passed. The temporary branch and
+workflow were deleted after recording this evidence.
 
 ## Acceptance criteria
 
@@ -102,3 +114,23 @@ first macOS candidate uses GNU 14; GNU 16 C exports remain unverified.
 The extended feasibility report proposes system Accelerate on macOS and
 OpenBLAS on Linux. Both macOS variants passed runtime checks; the proposal
 simplifies dependencies and does not claim a benchmarked performance gain.
+
+## Resolution
+
+The repository now provides maintained commands to build and stage GNU serial
+release artifacts, relocate their platform-specific runtime dependencies,
+install deterministic metadata and required redistribution notices, create
+reproducible archives and checksums, and validate the extracted archives in
+independent runtime environments. Linux uses static OpenBLAS with bundled GNU
+runtimes; macOS uses system Accelerate with bundled GNU runtimes and ad-hoc
+signatures. The archive metadata and hashed manifest identify every candidate
+and its payload without build-machine paths.
+
+## Validation
+
+Focused implementation evidence is recorded above for Linux run 35815467080,
+macOS run 36026156581, and final paired run 36027659670. The paired run is the
+completion gate because it exercised the notice and metadata contract on both
+platforms from the same revision. No archive was published. Issue 4 owns
+permanent release CI, issue 8 owns installation guidance, and local release
+work owns publication and downloaded-artifact verification.

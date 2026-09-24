@@ -9,12 +9,14 @@
 
 import argparse
 import hashlib
+import json
 from pathlib import Path, PurePosixPath
 import sys
 import tarfile
 
 from archive_common import (REQUIRED_DIRECTORIES, check_link_target,
-                            check_member_path, check_root_name, file_hash)
+                            check_member_path, check_root_name, file_hash,
+                            validate_metadata)
 
 
 def read_manifest(tar, root):
@@ -75,6 +77,20 @@ def validate(archive):
             if f"{root}/{directory}" not in names:
                 raise ValueError(f"archive is missing directory: {directory}")
 
+        metadata_member = tar.getmember(f"{root}/metadata.json")
+        metadata_stream = tar.extractfile(metadata_member)
+        if metadata_stream is None:
+            raise ValueError("metadata.json is not a regular file")
+        metadata = json.loads(metadata_stream.read().decode("utf-8"))
+        license_prefix = f"{root}/licenses/"
+        license_names = {
+            member.name[len(license_prefix):]
+            for member in members
+            if member.isfile() and member.name.startswith(license_prefix) and
+            "/" not in member.name[len(license_prefix):]
+        }
+        validate_metadata(metadata, root, license_names)
+
         records = read_manifest(tar, root)
         payload_names = {
             member.name[len(root) + 1:]
@@ -109,7 +125,8 @@ def main():
     args = parser.parse_args()
     try:
         validate(args.archive)
-    except (KeyError, OSError, UnicodeError, ValueError, tarfile.TarError) as error:
+    except (json.JSONDecodeError, KeyError, OSError, UnicodeError, ValueError,
+            tarfile.TarError) as error:
         print(f"validate: {error}", file=sys.stderr)
         return 1
     print(f"validated {args.archive}")

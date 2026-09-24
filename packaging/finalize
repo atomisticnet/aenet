@@ -1,0 +1,144 @@
+#!/usr/bin/env python3
+# This file is part of the AENET package.
+#
+# Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+import argparse
+import json
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import sys
+import tarfile
+
+from archive_common import check_root_name
+
+
+ROOT = Path(__file__).resolve().parent.parent
+NOTICE_SOURCES = ROOT / "packaging" / "licenses"
+GCC_RUNTIME_PATTERNS = (
+    re.compile(r"libgfortran(?:\.so\.\d+|(?:\.\d+)*\.dylib)$"),
+    re.compile(r"libquadmath(?:\.so\.\d+|(?:\.\d+)*\.dylib)$"),
+    re.compile(r"libgcc_s(?:\.so\.\d+|(?:\.\d+)*\.dylib)$"),
+)
+
+
+def compiler_version(compiler):
+    version = subprocess.check_output(
+        [compiler, "-dumpfullversion"], text=True
+    ).strip()
+    if re.fullmatch(r"[0-9]+(?:\.[0-9]+)*", version) is None:
+        raise ValueError("compiler returned an invalid GNU version")
+    return version
+
+
+def runtime_libraries(stage):
+    names = sorted(
+        path.name for path in (stage / "lib").iterdir()
+        if path.is_file() and not path.is_symlink() and
+        any(pattern.fullmatch(path.name) for pattern in GCC_RUNTIME_PATTERNS)
+    )
+    for family in GCC_RUNTIME_PATTERNS:
+        if not any(family.fullmatch(name) for name in names):
+            raise ValueError("stage is missing a required GNU runtime library")
+    return names
+
+
+def install_notices(stage, include_openblas):
+    destination = stage / "licenses"
+    if destination.exists():
+        raise ValueError("stage already contains a licenses directory")
+    destination.mkdir()
+    shutil.copy2(ROOT / "LICENSE", destination / "AENET-MPL-2.0.txt")
+    with tarfile.open(ROOT / "lib" / "Lbfgsb.3.0.tar.gz", "r:gz") as source:
+        license_stream = source.extractfile("Lbfgsb.3.0/License.txt")
+        if license_stream is None:
+            raise ValueError("L-BFGS-B license is missing from its source archive")
+        (destination / "L-BFGS-B.txt").write_bytes(license_stream.read())
+    names = ("GCC-GPL-3.0.txt", "GCC-RUNTIME-LIBRARY-EXCEPTION.txt")
+    if include_openblas:
+        names += ("OpenBLAS.txt",)
+    for name in names:
+        shutil.copy2(NOTICE_SOURCES / name, destination / name)
+    return sorted(path.name for path in destination.iterdir())
+
+
+def finalize(stage, compiler, source_revision, openblas_version):
+    check_root_name(stage.name)
+    if not stage.is_dir():
+        raise ValueError(f"stage is not a directory: {stage}")
+    if re.fullmatch(r"[0-9a-f]{40}", source_revision) is None:
+        raise ValueError("source revision must be a full lowercase Git commit hash")
+    version = (ROOT / "src" / "VERSION").read_text(encoding="ascii").strip()
+    if not stage.name.startswith(f"aenet-{version}-"):
+        raise ValueError("stage version does not match src/VERSION")
+
+    if "-linux-x86_64-" in stage.name:
+        platform = "linux-x86_64"
+        if not openblas_version:
+            raise ValueError("--openblas-version is required for Linux")
+        blas = {"name": "OpenBLAS", "version": openblas_version,
+                "linkage": "static"}
+        include_openblas = True
+    else:
+        platform = "macos-arm64"
+        if openblas_version:
+            raise ValueError("--openblas-version is not valid for macOS")
+        blas = {"name": "Accelerate", "version": "system",
+                "linkage": "system"}
+        include_openblas = False
+
+    metadata_path = stage / "metadata.json"
+    if metadata_path.exists():
+        raise ValueError("stage already contains metadata.json")
+    compiler_release = compiler_version(compiler)
+    runtimes = runtime_libraries(stage)
+    notices = install_notices(stage, include_openblas)
+    metadata = {
+        "schema_version": 1,
+        "aenet_version": version,
+        "archive_root": stage.name,
+        "platform": platform,
+        "build_configuration": "Release GNU serial",
+        "source_revision": source_revision,
+        "compiler": {
+            "family": "GNU Fortran",
+            "version": compiler_release,
+        },
+        "blas": blas,
+        "bundled_runtime_libraries": runtimes,
+        "licenses": notices,
+        "file_inventory": "manifest.txt",
+    }
+    metadata_path.write_text(
+        json.dumps(metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Install release notices and deterministic archive metadata."
+    )
+    parser.add_argument("--stage", required=True, type=Path)
+    parser.add_argument("--compiler", required=True)
+    parser.add_argument("--source-revision", required=True)
+    parser.add_argument("--openblas-version")
+    args = parser.parse_args()
+    try:
+        finalize(args.stage.resolve(), args.compiler, args.source_revision,
+                 args.openblas_version)
+    except (KeyError, OSError, subprocess.CalledProcessError, tarfile.TarError,
+            ValueError) as error:
+        print(f"finalize: {error}", file=sys.stderr)
+        return 1
+    print(f"finalized {args.stage}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
