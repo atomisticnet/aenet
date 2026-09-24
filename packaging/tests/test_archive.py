@@ -141,6 +141,7 @@ class BuildEntryPointTests(unittest.TestCase):
             commands = log.read_text(encoding="utf-8").splitlines()
             self.assertIn("-DBLA_VENDOR=Apple", commands[0])
             self.assertIn("-DUSE_OPENBLAS=OFF", commands[0])
+            self.assertIn("-DCMAKE_OSX_DEPLOYMENT_TARGET=14.0", commands[0])
             self.assertIn("--parallel 1", commands[1])
             self.assertIn("--output-on-failure", commands[2])
             root = f"aenet-{VERSION}-macos-arm64-gnu-serial"

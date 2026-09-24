@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+# This file is part of the AENET package.
+#
+# Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+import argparse
+from pathlib import Path
+import subprocess
+import sys
+import tarfile
+import tempfile
+
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Extract and validate a macOS arm64 release archive."
+    )
+    parser.add_argument("archive", type=Path)
+    parser.add_argument("--api-smoke", required=True, type=Path)
+    args = parser.parse_args()
+    archive = args.archive.resolve()
+    try:
+        subprocess.run([ROOT / "packaging/validate", archive], check=True)
+        with tempfile.TemporaryDirectory(prefix="aenet-macos-validation-") as temp:
+            extracted = Path(temp) / "extracted"
+            extracted.mkdir()
+            with tarfile.open(archive, "r:gz") as tar:
+                tar.extractall(extracted)
+            archive_root = archive.name[:-len(".tar.gz")]
+            subprocess.run(
+                [ROOT / "packaging/macos/validate_runtime",
+                 "--root", extracted / archive_root,
+                 "--api-smoke", args.api_smoke.resolve(),
+                 "--work", Path(temp) / "runtime-smoke"],
+                check=True,
+            )
+    except (OSError, subprocess.CalledProcessError, tarfile.TarError) as error:
+        print(f"macOS archive validation: {error}", file=sys.stderr)
+        return 1
+    print(f"validated {archive}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

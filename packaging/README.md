@@ -101,3 +101,41 @@ runs exact CLI version checks and the prebuilt C API test, and executes the
 generate/train/predict numerical smoke workflow. Docker and network access to
 the Ubuntu package repositories are prerequisites for this validation entry
 point.
+
+## macOS arm64
+
+The first macOS candidate uses GNU Fortran 14 and system Accelerate. The common
+build command sets `CMAKE_OSX_DEPLOYMENT_TARGET=14.0`; runtime preparation
+rejects other GNU major versions:
+
+```sh
+packaging/macos/prepare \
+  --stage /tmp/aenet-stage/aenet-2.0.4-macos-arm64-gnu-serial \
+  --compiler /path/to/gfortran-14
+```
+
+This command recursively copies only the GNU Fortran, quadmath, and GCC
+support libraries. Accelerate, libSystem, and other `/System/Library` or
+`/usr/lib` dependencies remain operating-system dependencies. OpenBLAS and
+OpenMP runtimes are rejected. The command rewrites bundled dependencies to
+`@loader_path`, assigns relative dynamic-library IDs, verifies that every
+Mach-O object is arm64 with a deployment target no newer than macOS 14.0, and
+applies and verifies ad-hoc signatures after all load-command changes.
+
+After adding the required license material, use the common `package` command.
+Build the separately mounted API test and validate the final archive with:
+
+```sh
+packaging/macos/build_api_smoke \
+  --output /tmp/aenet-validation/api-smoke
+packaging/macos/validate_archive \
+  /tmp/aenet-dist/aenet-2.0.4-macos-arm64-gnu-serial.tar.gz \
+  --api-smoke /tmp/aenet-validation/api-smoke
+```
+
+Validation checks the compressed archive and a newly extracted tree. It
+repeats the architecture, deployment-target, dependency, and signature checks,
+then runs exact CLI version checks, the prebuilt C API test, and the numerical
+generate/train/predict workflow through `sandbox-exec`. The default profile
+denies reads from common Homebrew and Apple developer-toolchain locations so
+the checks cannot obtain the bundled runtimes from the build installation.

@@ -15,10 +15,10 @@ import re
 import subprocess
 
 
-def run(root, work, name, *arguments):
+def run(root, work, name, arguments, command_prefix):
     executable = root / "bin" / f"{name}.x"
     result = subprocess.run(
-        [str(executable), *arguments], cwd=work, text=True,
+        [*command_prefix, str(executable), *arguments], cwd=work, text=True,
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=90,
     )
     (work / f"{name}.log").write_text(result.stdout, encoding="utf-8")
@@ -33,10 +33,17 @@ def main():
     )
     parser.add_argument("root", type=Path)
     parser.add_argument("work", type=Path)
+    parser.add_argument(
+        "--sandbox-profile",
+        help="run each backend executable through sandbox-exec with this profile",
+    )
     args = parser.parse_args()
     root = args.root.resolve()
     work = args.work.resolve()
     work.mkdir(parents=True, exist_ok=False)
+    command_prefix = []
+    if args.sandbox_profile:
+        command_prefix = ["sandbox-exec", "-p", args.sandbox_profile]
     os.environ["OMP_NUM_THREADS"] = "1"
     os.environ["OPENBLAS_NUM_THREADS"] = "1"
 
@@ -61,7 +68,7 @@ def main():
         "OUTPUT smoke.train\nTYPES\n1\nCu 0\nSETUPS\nCu Cu.stp\n"
         f"FILES\n8\n{files}", encoding="utf-8",
     )
-    run(root, work, "generate", "generate.in")
+    run(root, work, "generate", ["generate.in"], command_prefix)
     if (work / "smoke.train").stat().st_size == 0:
         raise RuntimeError("generate produced an empty training set")
 
@@ -69,19 +76,21 @@ def main():
         "TRAININGSET smoke.train\nTESTPERCENT 0\nITERATIONS 2\n"
         "METHOD\nbfgs\nNETWORKS\nCu Cu.nn 1 3:tanh\n", encoding="utf-8",
     )
-    run(root, work, "train", "train.in")
+    run(root, work, "train", ["train.in"], command_prefix)
     if (work / "Cu.nn").stat().st_size == 0:
         raise RuntimeError("train produced an empty network")
 
     (work / "predict.in").write_text(
         "TYPES\n1\nCu\nNETWORKS\nCu Cu.nn\nFORCES\n", encoding="utf-8"
     )
-    output = run(root, work, "predict", "predict.in", "3.xsf")
+    output = run(root, work, "predict", ["predict.in", "3.xsf"], command_prefix)
     matches = re.findall(r"Total energy\s*:\s*([-+0-9.Ee]+)", output)
     if len(matches) != 1 or not math.isfinite(float(matches[0])):
         raise RuntimeError("predict did not report one finite total energy")
     energy = float(matches[0])
-    repeated = run(root, work, "predict", "predict.in", "3.xsf")
+    repeated = run(
+        root, work, "predict", ["predict.in", "3.xsf"], command_prefix
+    )
     repeated_energy = float(re.findall(
         r"Total energy\s*:\s*([-+0-9.Ee]+)", repeated
     )[0])

@@ -1,0 +1,125 @@
+#!/usr/bin/env python3
+# This file is part of the AENET package.
+#
+# Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+import argparse
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+
+from macho_common import (SYSTEM_PREFIXES, check_dependencies, command_output,
+                          dependencies, dylib_id, is_gcc_runtime, macho_files,
+                          parse_build_versions, verify_adhoc_signature)
+
+
+def replacement(path, name):
+    prefix = "@loader_path/" if path.parent.name == "lib" \
+        else "@loader_path/../lib/"
+    return prefix + name
+
+
+def prepare(stage, compiler, otool, lipo, install_name_tool, codesign):
+    expected_suffix = "-macos-arm64-gnu-serial"
+    if not stage.is_dir() or not stage.name.endswith(expected_suffix):
+        raise ValueError("stage is not a macOS arm64 GNU serial archive root")
+    compiler_version = command_output([compiler, "-dumpfullversion"]).strip()
+    if compiler_version.split(".", 1)[0] != "14":
+        raise ValueError("the first macOS binary release requires GNU 14")
+
+    queue = macho_files(stage, lipo)
+    origins = {}
+    seen = set()
+    while queue:
+        path = queue.pop(0)
+        if path in seen:
+            continue
+        seen.add(path)
+        identity = dylib_id(path, otool)
+        for dependency in dependencies(path, otool):
+            if dependency == identity or dependency.startswith(SYSTEM_PREFIXES):
+                continue
+            original = dependency
+            source = None
+            if dependency.startswith("/"):
+                source = Path(dependency)
+            elif dependency.startswith("@rpath/") and path in origins:
+                candidate = origins[path].parent / Path(dependency).name
+                if candidate.is_file():
+                    source = candidate
+            elif dependency.startswith("@loader_path/"):
+                candidate = path.parent / dependency[len("@loader_path/"):]
+                if candidate.is_file():
+                    continue
+            if source is None or not source.is_file():
+                raise ValueError(f"cannot resolve Mach-O dependency: {dependency}")
+            if not is_gcc_runtime(source.name):
+                raise ValueError(f"unexpected non-system dependency: {source}")
+            destination = stage / "lib" / source.name
+            if not destination.exists():
+                shutil.copy2(source.resolve(), destination)
+                origins[destination] = source.resolve()
+                queue.append(destination)
+            subprocess.run(
+                [install_name_tool, "-change", original,
+                 replacement(path, destination.name), str(path)], check=True,
+            )
+
+    objects = macho_files(stage, lipo)
+    for path in objects:
+        if path.suffix == ".dylib":
+            subprocess.run(
+                [install_name_tool, "-id", f"@rpath/{path.name}", str(path)],
+                check=True,
+            )
+    for path in objects:
+        subprocess.run(
+            [codesign, "--force", "--sign", "-", str(path)], check=True
+        )
+
+    bundled = {path.name for path in (stage / "lib").iterdir()}
+    accelerate = False
+    for path in objects:
+        current = dependencies(path, otool)
+        identity = dylib_id(path, otool)
+        if identity in current:
+            current.remove(identity)
+        check_dependencies(current, bundled)
+        accelerate = accelerate or any("Accelerate.framework" in dependency
+                                      for dependency in current)
+        parse_build_versions(command_output([otool, "-l", path]))
+        subprocess.run([codesign, "--verify", "--strict", str(path)], check=True)
+        verify_adhoc_signature(path, codesign)
+    if not accelerate:
+        raise ValueError("the macOS release does not link system Accelerate")
+    macho_files(stage, lipo, include_archives=True)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Bundle, rewrite, inspect, and sign the macOS GNU runtime."
+    )
+    parser.add_argument("--stage", required=True, type=Path)
+    parser.add_argument("--compiler", required=True)
+    parser.add_argument("--otool", default="otool")
+    parser.add_argument("--lipo", default="lipo")
+    parser.add_argument("--install-name-tool", default="install_name_tool")
+    parser.add_argument("--codesign", default="codesign")
+    args = parser.parse_args()
+    try:
+        prepare(args.stage, args.compiler, args.otool, args.lipo,
+                args.install_name_tool, args.codesign)
+    except (OSError, subprocess.CalledProcessError, ValueError) as error:
+        print(f"macOS prepare: {error}", file=sys.stderr)
+        return 1
+    print(f"prepared {args.stage}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

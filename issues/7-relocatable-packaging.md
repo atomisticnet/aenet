@@ -54,6 +54,26 @@ after the run. This establishes the Linux implementation; the candidate is not
 publishable until local issue L15 adds and validates the complete dependency
 notices and paired-platform metadata.
 
+## Production macOS packaging evidence
+
+The maintained issue 7 entry points passed on GitHub's native macOS 14 arm64
+runner in [workflow run
+36026156581](https://github.com/atomisticnet/aenet/actions/runs/36026156581).
+The run used GNU Fortran 14 with system Accelerate, passed the full 31-entry
+CTest suite, bundled the GNU Fortran, quadmath, and GCC support runtimes, and
+created the named archive plus SHA-256 sidecar. Preparation rewrote Mach-O
+dependencies to relative loader paths, set relative library IDs, applied
+ad-hoc signatures after modification, and rejected non-arm64 objects,
+deployment targets newer than macOS 14.0, OpenBLAS/OpenMP, and unresolved or
+toolchain dependencies.
+
+The final gate validated the compressed archive after extraction with common
+Homebrew and active Xcode developer paths denied by `sandbox-exec`. Exact CLI
+version checks, the separately built native C API test, and the
+generate/train/predict numerical smoke workflow passed. The temporary test
+branch and workflow were deleted after the run. Complete redistribution
+notices and paired-platform metadata remain assigned to local issue L15.
+
 ## Acceptance criteria
 
 - Implement repeatable packaging for both platforms using the approved

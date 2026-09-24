@@ -1,0 +1,139 @@
+#!/usr/bin/env python3
+# This file is part of the AENET package.
+#
+# Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+import argparse
+import os
+from pathlib import Path
+import platform
+import subprocess
+import sys
+
+from macho_common import (check_dependencies, command_output, dependencies,
+                          dylib_id, is_gcc_runtime, macho_files,
+                          parse_build_versions, parse_architectures,
+                          verify_adhoc_signature)
+
+
+ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_DENIED_PATHS = (
+    "/opt/homebrew",
+    "/usr/local",
+    "/Library/Developer",
+    "/Applications/Xcode.app",
+)
+
+
+def default_denied_paths():
+    paths = list(DEFAULT_DENIED_PATHS)
+    try:
+        developer = Path(
+            subprocess.check_output(["xcode-select", "-p"], text=True).strip()
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return paths
+    paths.append(str(developer))
+    paths.extend(str(parent) for parent in developer.parents
+                 if parent.suffix == ".app")
+    return list(dict.fromkeys(paths))
+
+
+def sandbox_profile(denied_paths):
+    rules = ["(version 1)", "(allow default)"]
+    for path in denied_paths:
+        escaped = str(path).replace("\\", "\\\\").replace('"', '\\"')
+        rules.append(f'(deny file-read* (subpath "{escaped}"))')
+    return "".join(rules)
+
+
+def validate(root, api_smoke, work, denied_paths, otool, lipo, codesign):
+    if platform.system() != "Darwin" or platform.machine() != "arm64":
+        raise ValueError("runtime validation requires native macOS arm64")
+    dyld_path = os.environ.get("DYLD_LIBRARY_PATH")
+    dyld_fallback = os.environ.get("DYLD_FALLBACK_LIBRARY_PATH")
+    if dyld_path or dyld_fallback:
+        raise ValueError("DYLD library path variables must be unset")
+    marker = "-macos-arm64-gnu-serial"
+    if marker not in root.name:
+        raise ValueError("archive root is not the macOS release variant")
+    version = root.name.split("aenet-", 1)[1].split(marker, 1)[0]
+    major = version.split(".", 1)[0]
+    library = root / "lib" / f"libaenet.{version}.dylib"
+    if not library.is_file():
+        raise ValueError("versioned shared library is missing")
+    if os.readlink(root / "lib" / "libaenet.dylib") != f"libaenet.{major}.dylib":
+        raise ValueError("libaenet.dylib link is incorrect")
+    if os.readlink(root / "lib" / f"libaenet.{major}.dylib") != library.name:
+        raise ValueError("libaenet major-version link is incorrect")
+
+    bundled = {path.name for path in (root / "lib").iterdir()}
+    for prefix in ("libgfortran", "libquadmath", "libgcc_s"):
+        if not any(name.startswith(prefix) and is_gcc_runtime(name)
+                   for name in bundled):
+            raise ValueError(f"bundled runtime is missing: {prefix}")
+    objects = macho_files(root, lipo)
+    accelerate = False
+    for path in objects:
+        current = dependencies(path, otool)
+        identity = dylib_id(path, otool)
+        if identity in current:
+            current.remove(identity)
+        check_dependencies(current, bundled)
+        accelerate = accelerate or any("Accelerate.framework" in dependency
+                                      for dependency in current)
+        parse_build_versions(command_output([otool, "-l", path]))
+        subprocess.run([codesign, "--verify", "--strict", str(path)], check=True)
+        verify_adhoc_signature(path, codesign)
+    if not accelerate:
+        raise ValueError("the macOS release does not link system Accelerate")
+    macho_files(root, lipo, include_archives=True)
+
+    parse_architectures(command_output([lipo, "-archs", api_smoke]))
+    parse_build_versions(command_output([otool, "-l", api_smoke]))
+    subprocess.run([codesign, "--verify", "--strict", api_smoke], check=True)
+    verify_adhoc_signature(api_smoke, codesign)
+    profile = sandbox_profile(denied_paths)
+    prefix = ["sandbox-exec", "-p", profile]
+    for name in ("generate", "train", "predict"):
+        output = subprocess.check_output(
+            [*prefix, root / "bin" / f"{name}.x", "--version"], text=True
+        ).strip()
+        if output != f"{name}.x {version}":
+            raise ValueError(f"incorrect version output from {name}.x")
+    subprocess.run([*prefix, api_smoke, library], check=True)
+    subprocess.run(
+        [sys.executable, ROOT / "packaging/tests/runtime_smoke.py", root, work,
+         "--sandbox-profile", profile], check=True,
+    )
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Validate an extracted macOS archive with toolchains blocked."
+    )
+    parser.add_argument("--root", required=True, type=Path)
+    parser.add_argument("--api-smoke", required=True, type=Path)
+    parser.add_argument("--work", required=True, type=Path)
+    parser.add_argument("--deny-path", action="append", dest="denied_paths")
+    parser.add_argument("--otool", default="otool")
+    parser.add_argument("--lipo", default="lipo")
+    parser.add_argument("--codesign", default="codesign")
+    args = parser.parse_args()
+    denied = args.denied_paths or default_denied_paths()
+    try:
+        validate(args.root.resolve(), args.api_smoke.resolve(), args.work,
+                 denied, args.otool, args.lipo, args.codesign)
+    except (OSError, subprocess.CalledProcessError, ValueError) as error:
+        print(f"macOS runtime validation: {error}", file=sys.stderr)
+        return 1
+    print(f"validated macOS runtime {args.root}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

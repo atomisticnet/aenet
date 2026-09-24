@@ -48,7 +48,8 @@ def main():
         "-DUSE_MPI=OFF", "-DUSE_MKL=OFF",
     ]
     if args.platform == "macos-arm64":
-        configure.extend(("-DUSE_OPENBLAS=OFF", "-DBLA_VENDOR=Apple"))
+        configure.extend(("-DUSE_OPENBLAS=OFF", "-DBLA_VENDOR=Apple",
+                          "-DCMAKE_OSX_DEPLOYMENT_TARGET=14.0"))
     else:
         configure.append("-DUSE_OPENBLAS=ON")
 
