@@ -1,0 +1,181 @@
+* Installing a binary release
+  <<binary-installation>>
+
+  Binary releases provide the serial GNU Fortran backend without requiring a
+  Fortran compiler.  The first supported platforms are:
+
+  - macOS 15 or newer on Apple silicon (=arm64=), using system Accelerate;
+  - Linux x86_64 with glibc 2.35 or newer, as provided by Ubuntu 22.04.
+
+  Intel processors, Linux arm64, older operating systems, MPI executables,
+  and Intel Fortran builds are not included in the first binary release.
+  Source builds remain available for other supported configurations.
+
+** Download the correct archive
+
+   Open the [[https://github.com/atomisticnet/aenet/releases][ænet releases page]] and select the required archive and its
+   matching =.sha256= file:
+
+   - =aenet-<version>-macos-arm64-gnu-serial.tar.gz=
+   - =aenet-<version>-linux-x86_64-gnu-serial.tar.gz=
+
+   Here, =<version>= is the release version without the leading =v= used by
+   the Git tag.  For example, tag =v2.1.0= would contain files beginning with
+   =aenet-2.1.0-=.  The direct-download URL convention is:
+
+   #+BEGIN_EXAMPLE
+   https://github.com/atomisticnet/aenet/releases/download/v<version>/<archive>
+   #+END_EXAMPLE
+
+   The first public binary release has not yet been published.  The final
+   links and browser-download behavior will be verified as part of that
+   release; use the release page rather than guessing a version.
+
+** Verify and extract the download
+
+   Keep the archive and checksum sidecar in the same directory.  On macOS,
+   verify and extract them with:
+
+   #+BEGIN_SRC sh
+   shasum -a 256 -c aenet-<version>-macos-arm64-gnu-serial.tar.gz.sha256
+   xattr -d com.apple.quarantine aenet-<version>-macos-arm64-gnu-serial.tar.gz
+   tar -xzf aenet-<version>-macos-arm64-gnu-serial.tar.gz
+   #+END_SRC
+
+   The =xattr= command is the explicit approval step for a quarantined browser
+   download.  Run it only after the checksum reports =OK= and the files came
+   from the official release.  If the archive has no quarantine attribute,
+   =xattr= reports =No such xattr= and can be omitted.
+
+   On Linux, use:
+
+   #+BEGIN_SRC sh
+   sha256sum -c aenet-<version>-linux-x86_64-gnu-serial.tar.gz.sha256
+   tar -xzf aenet-<version>-linux-x86_64-gnu-serial.tar.gz
+   #+END_SRC
+
+   A successful checksum command reports =OK=.  Do not use an archive whose
+   checksum fails.  Each archive extracts into a directory with the same name
+   as the archive without =.tar.gz=.  This directory contains =bin/=,
+   =tools/=, =lib/=, =include/=, =licenses/=, =metadata.json=, and
+   =manifest.txt=.
+
+** Run the executables
+
+   The commands can be run from the extracted directory without setting a
+   library search path.  For example:
+
+   #+BEGIN_SRC sh
+   cd aenet-<version>-<platform>-gnu-serial
+   ./bin/generate.x --version
+   ./bin/train.x --version
+   ./bin/predict.x --version
+   #+END_SRC
+
+   Each command prints its program name and the release version.  To make the
+   main programs and auxiliary tools available in the current shell, run:
+
+   #+BEGIN_SRC sh
+   AENET_ROOT="$PWD"
+   export PATH="$AENET_ROOT/bin:$AENET_ROOT/tools:$PATH"
+   #+END_SRC
+
+   Add equivalent commands to the shell startup file only after choosing a
+   permanent installation directory.  The executables locate their bundled
+   GNU runtime libraries through relative paths, so =DYLD_LIBRARY_PATH= and
+   =LD_LIBRARY_PATH= should not be set for a normal binary installation.
+   Developers compiling against the C interface can find =aenet.h= under
+   =include/= and the shared and static libraries under =lib/=.
+
+** Small generate example
+
+   The following self-contained example creates a two-atom copper structure
+   and converts it into a training-set file.  Run it in a new writable
+   directory after adding the extracted =bin/= directory to =PATH= as shown
+   above.
+
+   #+BEGIN_SRC sh
+   mkdir aenet-binary-example
+   cd aenet-binary-example
+   #+END_SRC
+
+   Create the descriptor setup:
+
+   #+BEGIN_SRC sh
+   cat > Cu.stp <<'EOF'
+   DESCR
+   Binary installation example
+   END DESCR
+   ATOM Cu
+   ENV 1
+   Cu
+   RMIN 0.5
+   BASIS type=chebyshev
+   radial_Rc=5 radial_N=3 angular_Rc=5 angular_N=2
+   EOF
+   #+END_SRC
+
+   Create the two-atom structure:
+
+   #+BEGIN_SRC sh
+   cat > structure.xsf <<'EOF'
+   # total energy = -1.0 eV
+   ATOMS
+   Cu 0.0 0.0 0.0  0.0 0.0 0.0
+   Cu 2.5 0.0 0.0  0.0 0.0 0.0
+   EOF
+   #+END_SRC
+
+   Create the =generate.x= input and run it:
+
+   #+BEGIN_SRC sh
+   cat > generate.in <<'EOF'
+   OUTPUT example.train
+   TYPES
+   1
+   Cu 0.0
+   SETUPS
+   Cu Cu.stp
+   FILES
+   1
+   structure.xsf
+   EOF
+
+   generate.x generate.in
+   test -s example.train
+   #+END_SRC
+
+   The final command succeeds when =generate.x= creates a nonempty
+   =example.train= file.  The synthetic structure only tests the installed
+   executable; it is not scientific training data.
+
+** Troubleshooting
+
+   - *Architecture errors.*  For =cannot execute binary file=, =bad CPU
+     type=, or a similar error, check =uname -m=.  The macOS archive requires
+     =arm64= and the Linux
+     archive requires =x86_64=.  Download the archive matching both the
+     operating system and architecture.
+   - *Operating-system version or =GLIBC= errors.*  The supported minimum is
+     macOS 15 on Apple silicon or glibc 2.35 on Linux x86_64.  Upgrade the
+     operating system or build ænet from source on the older system.
+   - *=Permission denied=.*  Extract with =tar= rather than copying
+     individual files from the archive.  The manifest records executable
+     permissions; rerun the checksum and extract a fresh archive if they were
+     lost.
+   - *Missing shared libraries.*  Do not move individual executables or
+     libraries out of the extracted tree.  Keep =bin/=, =tools/=, and
+     =lib/= together, and remove custom =DYLD_LIBRARY_PATH= or
+     =LD_LIBRARY_PATH= settings before retrying.
+   - *Checksum failures.*  Download both files again from the same GitHub
+     release.  Do not combine an archive and sidecar from different versions.
+   - *macOS cannot open or verify the application.*  The binaries have valid
+     ad-hoc signatures but are not Developer ID signed or notarized.  Delete
+     the extracted directory, verify the downloaded archive again, remove its
+     quarantine attribute with the documented =xattr= command, and extract it
+     again.  Do not disable system-wide security settings.  Signing and
+     notarization are tracked as a future usability improvement.
+
+   When reporting a problem, include the archive name, output of =uname -a=,
+   the failing command and complete error, and =metadata.json= from the
+   extracted directory.

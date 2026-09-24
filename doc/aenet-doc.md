@@ -1,3 +1,16 @@
+---
+author: Nongnuch Artrith Nongnuch Artrith
+header-includes:
+-
+-
+-
+title: "**The Atomic Energy Network (ænet) (release 2.0.4)**"
+---
+
+
+
+
+
 
 
 # What is **ænet**?
@@ -33,53 +46,53 @@ Public License, v. 2.0, for more details.
 ## Short installation summary
 
 1.  Compile the L-BFGS-B library
-    
-      - Enter the directory “./lib”
-        
-        `$ cd ./lib`
-    
-      - Adjust the compiler settings in the “Makefile”
-    
-      - Compile the library with
-        
-        `$ make`
-    
+
+    - Enter the directory “./lib”
+
+      `$ cd ./lib`
+
+    - Adjust the compiler settings in the “Makefile”
+
+    - Compile the library with
+
+      `$ make`
+
     The library file `liblbfgsb.a`, required for compiling **ænet**,
     will be created.
 
 2.  Compile the **ænet** package
-    
-      - Enter the directory “./src”
-        
-        `$ cd ./src`
-    
-      - Compile the ænet source code with
-        
-        `$ make -f makefiles/Makefile.XXX`
-        
-        where `Makefile.XXX` is an approproiate Makefile.
-        
-        To see a list of available Makefiles just type:
-        
-        `$ make`
-    
+
+    - Enter the directory “./src”
+
+      `$ cd ./src`
+
+    - Compile the ænet source code with
+
+      `$ make -f makefiles/Makefile.XXX`
+
+      where `Makefile.XXX` is an approproiate Makefile.
+
+      To see a list of available Makefiles just type:
+
+      `$ make`
+
     The following executables will be generated in “./bin”:
-    
-      - `generate.x`: generate training sets from atomic structure files
-      - `train.x`: train new neural network potentials
-      - `predict.x`: use existing ANN potentials for energy/force
-        prediction
+
+    - `generate.x`: generate training sets from atomic structure files
+    - `train.x`: train new neural network potentials
+    - `predict.x`: use existing ANN potentials for energy/force
+      prediction
 
 3.  (Optional) Install the Python interface
-    
-      - Enter the directory “./python”
-        
-        `$ cd ./python`
-    
-      - Install the Python module with
-        
-        `$ python setup.py install --user`
-    
+
+    - Enter the directory “./python”
+
+      `$ cd ./python`
+
+    - Install the Python module with
+
+      `$ python setup.py install --user`
+
     This will set up the Python **ænet** module for the current user,
     and it will also install the user scripts `aenet-predict.py` and
     `aenet-md.py`.
@@ -132,17 +145,17 @@ All external libraries needed by the ænet code are in the directory
 To compile the external libraries
 
 1.  Enter the directory “./lib”
-    
+
     `$ cd ./lib`
 
 2.  Adjust the compiler settings in the “Makefile”
-    
+
     The Makefile contains settings for the GNU Fortran compiler
     (`gfortran`) and the Intel Fortran compiler (`ifort`). Uncomment the
     section that is appropriate for your system.
 
 3.  Compile the library with
-    
+
     `$ make`
 
 The static library “liblbfgsb.a”, required to build **ænet**, will be
@@ -153,40 +166,252 @@ created.
 The **ænet** source code is located in “./src”.
 
 1.  Enter “./src”
-    
+
     `$ cd ./src`
 
 2.  To see a short explanation of the Makefiles that come with **ænet**,
     just run `make` without any options.
-    
+
     `$ make`
-    
+
     Select the Makefile that is appropriate for your computer.
 
 3.  Compile with
-    
+
     `$ make -f makefiles/Makefile.XXX`
-    
+
     where `Makefile.XXX` is the selected Makefile.
 
 Three executables will be generated and stored in “./bin”:
 
-  - `generate.x`: generate training sets from atomic structure files
-  - `train.x`: train new neural network potentials
-  - `predict.x`: use existing ANN potentials for energy/force prediction
+- `generate.x`: generate training sets from atomic structure files
+- `train.x`: train new neural network potentials
+- `predict.x`: use existing ANN potentials for energy/force prediction
 
 ### Set up the Python interface
 
 1.  Enter the directory “./python”
-    
+
     `$ cd ./python`
 
 2.  Install the Python module with
-    
+
     `$ python setup.py install --user`
 
 This will set up the Python **ænet** module for the current user, and it
 will also install the user scripts `aenet-predict.py` and `aenet-md.py`.
+
+# Installing a binary release
+
+<span id="binary-installation"></span>
+
+Binary releases provide the serial GNU Fortran backend without requiring
+a Fortran compiler. The first supported platforms are:
+
+- macOS 15 or newer on Apple silicon (`arm64`), using system Accelerate;
+- Linux x86_64 with glibc 2.35 or newer, as provided by Ubuntu 22.04.
+
+Intel processors, Linux arm64, older operating systems, MPI executables,
+and Intel Fortran builds are not included in the first binary release.
+Source builds remain available for other supported configurations.
+
+## Download the correct archive
+
+Open the [ænet releases
+page](https://github.com/atomisticnet/aenet/releases) and select the
+required archive and its matching `.sha256` file:
+
+- `aenet-<version>-macos-arm64-gnu-serial.tar.gz`
+- `aenet-<version>-linux-x86_64-gnu-serial.tar.gz`
+
+Here, `<version>` is the release version without the leading `v` used by
+the Git tag. For example, tag `v2.1.0` would contain files beginning
+with `aenet-2.1.0-`. The direct-download URL convention is:
+
+    https://github.com/atomisticnet/aenet/releases/download/v<version>/<archive>
+
+The first public binary release has not yet been published. The final
+links and browser-download behavior will be verified as part of that
+release; use the release page rather than guessing a version.
+
+## Verify and extract the download
+
+Keep the archive and checksum sidecar in the same directory. On macOS,
+verify and extract them with:
+
+``` bash
+shasum -a 256 -c aenet-<version>-macos-arm64-gnu-serial.tar.gz.sha256
+xattr -d com.apple.quarantine aenet-<version>-macos-arm64-gnu-serial.tar.gz
+tar -xzf aenet-<version>-macos-arm64-gnu-serial.tar.gz
+```
+
+The `xattr` command is the explicit approval step for a quarantined
+browser download. Run it only after the checksum reports `OK` and the
+files came from the official release. If the archive has no quarantine
+attribute, `xattr` reports `No such xattr` and can be omitted.
+
+On Linux, use:
+
+``` bash
+sha256sum -c aenet-<version>-linux-x86_64-gnu-serial.tar.gz.sha256
+tar -xzf aenet-<version>-linux-x86_64-gnu-serial.tar.gz
+```
+
+A successful checksum command reports `OK`. Do not use an archive whose
+checksum fails. Each archive extracts into a directory with the same
+name as the archive without `.tar.gz`. This directory contains `bin/`,
+`tools/`, `lib/`, `include/`, `licenses/`, `metadata.json`, and
+`manifest.txt`.
+
+## Run the executables
+
+The commands can be run from the extracted directory without setting a
+library search path. For example:
+
+``` bash
+cd aenet-<version>-<platform>-gnu-serial
+./bin/generate.x --version
+./bin/train.x --version
+./bin/predict.x --version
+```
+
+Each command prints its program name and the release version. To make
+the main programs and auxiliary tools available in the current shell,
+run:
+
+``` bash
+AENET_ROOT="$PWD"
+export PATH="$AENET_ROOT/bin:$AENET_ROOT/tools:$PATH"
+```
+
+Add equivalent commands to the shell startup file only after choosing a
+permanent installation directory. The executables locate their bundled
+GNU runtime libraries through relative paths, so `DYLD_LIBRARY_PATH` and
+`LD_LIBRARY_PATH` should not be set for a normal binary installation.
+Developers compiling against the C interface can find `aenet.h` under
+`include/` and the shared and static libraries under `lib/`.
+
+## Small generate example
+
+The following self-contained example creates a two-atom copper structure
+and converts it into a training-set file. Run it in a new writable
+directory after adding the extracted `bin/` directory to `PATH` as shown
+above.
+
+``` bash
+mkdir aenet-binary-example
+cd aenet-binary-example
+```
+
+Create the descriptor setup:
+
+``` bash
+cat > Cu.stp <<'EOF'
+DESCR
+Binary installation example
+END DESCR
+ATOM Cu
+ENV 1
+Cu
+RMIN 0.5
+BASIS type=chebyshev
+radial_Rc=5 radial_N=3 angular_Rc=5 angular_N=2
+EOF
+```
+
+Create the two-atom structure:
+
+``` bash
+cat > structure.xsf <<'EOF'
+# total energy = -1.0 eV
+ATOMS
+Cu 0.0 0.0 0.0  0.0 0.0 0.0
+Cu 2.5 0.0 0.0  0.0 0.0 0.0
+EOF
+```
+
+Create the `generate.x` input and run it:
+
+``` bash
+cat > generate.in <<'EOF'
+OUTPUT example.train
+TYPES
+1
+Cu 0.0
+SETUPS
+Cu Cu.stp
+FILES
+1
+structure.xsf
+EOF
+
+generate.x generate.in
+test -s example.train
+```
+
+The final command succeeds when `generate.x` creates a nonempty
+`example.train` file. The synthetic structure only tests the installed
+executable; it is not scientific training data.
+
+## Troubleshooting
+
+- **Architecture errors.** For `cannot execute binary file`,
+  `bad CPU       type`, or a similar error, check `uname -m`. The macOS
+  archive requires `arm64` and the Linux archive requires `x86_64`.
+  Download the archive matching both the operating system and
+  architecture.
+- **Operating-system version or `GLIBC` errors.** The supported minimum
+  is macOS 15 on Apple silicon or glibc 2.35 on Linux x86_64. Upgrade
+  the operating system or build ænet from source on the older system.
+- **`Permission denied`.** Extract with `tar` rather than copying
+  individual files from the archive. The manifest records executable
+  permissions; rerun the checksum and extract a fresh archive if they
+  were lost.
+- **Missing shared libraries.** Do not move individual executables or
+  libraries out of the extracted tree. Keep `bin/`, `tools/`, and `lib/`
+  together, and remove custom `DYLD_LIBRARY_PATH` or `LD_LIBRARY_PATH`
+  settings before retrying.
+- **Checksum failures.** Download both files again from the same GitHub
+  release. Do not combine an archive and sidecar from different
+  versions.
+- **macOS cannot open or verify the application.** The binaries have
+  valid ad-hoc signatures but are not Developer ID signed or notarized.
+  Delete the extracted directory, verify the downloaded archive again,
+  remove its quarantine attribute with the documented `xattr` command,
+  and extract it again. Do not disable system-wide security settings.
+  Signing and notarization are tracked as a future usability
+  improvement.
+
+When reporting a problem, include the archive name, output of
+`uname -a`, the failing command and complete error, and `metadata.json`
+from the extracted directory.
+
+# Version queries and release versions
+
+`src/VERSION` is the canonical release version, in `MAJOR.MINOR.PATCH`
+form (currently `2.0.4`). Git release tags add a `v` prefix, for example
+`v2.0.4`. CMake reads this file and automatically reconfigures on
+changes.
+
+Each main executable accepts a standalone `--version` argument. For
+example, `train.x_serial --version` prints exactly `train.x 2.0.4`
+followed by a newline and exits successfully. The reported program name
+omits build suffixes. This query needs no input files and creates no
+application output files. MPI builds print once and finalize all ranks.
+Missing arguments or nonexistent input files produce a nonzero exit.
+
+CMake shared libraries use the full release as `VERSION` and its major
+component as `SOVERSION`. An incompatible public ABI change requires a
+major release. This introduces a versioned library identity; downstream
+binaries should be relinked when adopting this convention. Static
+library names and existing executable suffixes are unchanged. Legacy
+Makefiles also read `src/VERSION` for executable queries and retain
+their existing library naming conventions.
+
+From `src/`, run `./prepare-release.sh MAJOR.MINOR.PATCH` to update the
+version and source license headers. The script rejects prefixed or
+prerelease versions before editing files. It prints the corresponding
+`vMAJOR.MINOR.PATCH` tag commands but does not commit, tag, or publish.
 
 # General concepts
 
@@ -211,11 +436,15 @@ implementations in Fortran and Python that interface with `ænetLib`.
 These tools are discussed in section [simulation](#simulation).
 
 A schematic of the interplay of the different **ænet** tools is shown in
-figure *flowchart* (taken from reference \[[1](#bibliography)\]).
+figure <span class="spurious-link" target="flowchart">*flowchart*</span>
+(taken from reference \[[1](#bibliography)\]).
 
-![Schematic of the connection and workflow between the **ænet** tools
-(see reference \[[1](#bibliography)\]).](./figures/flowchart.png
-"flowchart")
+<figure id="flowchart">
+<img src="./figures/flowchart.png" />
+<figcaption>Schematic of the connection and workflow between the
+<strong>ænet</strong> tools (see reference [<a
+href="#bibliography">1</a>]).</figcaption>
+</figure>
 
 The **ænet** tools `generate.x`, `train.x`, and `predict.x` are
 controlled via keyword-based input files. The keywords understood by
@@ -318,14 +547,12 @@ Note that it is advisable to work with a greater number of decimals for
 the coordinates and atomic forces than used in the example to avoid loss
 of accuracy.
 
-``` example
-# total energy = -19543.67017695 eV
+    # total energy = -19543.67017695 eV
 
-ATOMS
-O   5.900  3.922  0.851 -0.001  0.001 -0.001
-C   5.133  4.445  0.095  0.082  0.104  0.206
-O   4.104  5.151  0.087  0.003 -0.001  0.000
-```
+    ATOMS
+    O   5.900  3.922  0.851 -0.001  0.001 -0.001
+    C   5.133  4.445  0.095  0.082  0.104  0.206
+    O   4.104  5.151  0.087  0.003 -0.001  0.000
 
 ### Example **ænet** XSF file of a periodic structure
 
@@ -337,23 +564,21 @@ for 6 atoms). Note that the number 1 following the atom count is not
 relevant for **ænet**. The same comments as for the isolated structure
 example above apply.
 
-``` example
-# total energy = -4990.44928342 eV
+    # total energy = -4990.44928342 eV
 
-CRYSTAL
-PRIMVEC
-   2.967  0.000  0.000
-   0.000  4.648  0.000
-   0.000 -0.000  4.648
-PRIMCOORD
-6 1
-Ti 1.483  2.324  2.324  0.000  0.000  0.000
-Ti 0.000  0.000  0.000  0.000  0.000  0.000
-O  1.483  0.905  0.905  0.000 -0.004 -0.004
-O  1.483  3.742  3.742  0.000  0.004  0.004
-O  0.000  1.418  3.230  0.000  0.004 -0.004
-O  0.000  3.230  1.418  0.000 -0.004  0.004
-```
+    CRYSTAL
+    PRIMVEC
+       2.967  0.000  0.000
+       0.000  4.648  0.000
+       0.000 -0.000  4.648
+    PRIMCOORD
+    6 1
+    Ti 1.483  2.324  2.324  0.000  0.000  0.000
+    Ti 0.000  0.000  0.000  0.000  0.000  0.000
+    O  1.483  0.905  0.905  0.000 -0.004 -0.004
+    O  1.483  3.742  3.742  0.000  0.004  0.004
+    O  0.000  1.418  3.230  0.000  0.004 -0.004
+    O  0.000  3.230  1.418  0.000 -0.004  0.004
 
 ## Invariant basis (structural fingerprint)
 
@@ -371,74 +596,73 @@ All keywords are case insensitive, but currently have to occur in the
 given order. Blank lines and lines starting with `!`, `#`, or `%` are
 ignored.
 
-  - `descr` (optional)  
-    Short text that describes the structural fingerprint setup and
-    possible reference citations. Has to be terminated by “end descr”.
-  - `atom` (required)  
-    The chemical species (symbol) of the central atom whose environment
-    is captured by the setup.
-  - `env` (required)  
-    A list of all atomic species that may occur in the environment of
-    the central atom and are captured by this setup. No blank lines are
-    allowed.
-  - `rmin` (required)  
-    The minimal allowed distance between two atoms (in the distance unit
-    used in the XSF files). This value is used by the neighbor list.
-  - `basis` (required unless `functions` is present)  
-    Definition of a basis set for the expansion of the local atomic
-    environment. Below, an example for the ‘Chebyshev’ basis type is
-    given.
-  - `functions` (required unless `basis` is present)  
-    Type and parameters of individual basis functions. The example below
-    is for functions of the general type ‘Behler2011’, and the names of
-    the various functions and parameters follows the original
-    publication by Behler. No blank lines allowed.
+`descr` (optional)
+Short text that describes the structural fingerprint setup and possible
+reference citations. Has to be terminated by “end descr”.
+
+`atom` (required)
+The chemical species (symbol) of the central atom whose environment is
+captured by the setup.
+
+`env` (required)
+A list of all atomic species that may occur in the environment of the
+central atom and are captured by this setup. No blank lines are allowed.
+
+`rmin` (required)
+The minimal allowed distance between two atoms (in the distance unit
+used in the XSF files). This value is used by the neighbor list.
+
+`basis` (required unless `functions` is present)
+Definition of a basis set for the expansion of the local atomic
+environment. Below, an example for the ‘Chebyshev’ basis type is given.
+
+`functions` (required unless `basis` is present)
+Type and parameters of individual basis functions. The example below is
+for functions of the general type ‘Behler2011’, and the names of the
+various functions and parameters follows the original publication by
+Behler. No blank lines allowed.
 
 ### Input file template using a pre-defined basis set (atomtype.stp)
 
-``` example
-DESCR
-  short desscription and reference
-END DESCR
+    DESCR
+      short desscription and reference
+    END DESCR
 
-ATOM <atom type>
+    ATOM <atom type>
 
-ENV  <N>
-<T_1>
-<T_2>
-...
-<T_N>
+    ENV  <N>
+    <T_1>
+    <T_2>
+    ...
+    <T_N>
 
-RMIN <R>
+    RMIN <R>
 
-BASIS type=<basis type>
-<basis set parameters>
-```
+    BASIS type=<basis type>
+    <basis set parameters>
 
 ### Input file template using explicit basis function definitions (atomtype.stp)
 
-``` example
-DESCR
-  short desscription and reference
-END DESCR
+    DESCR
+      short desscription and reference
+    END DESCR
 
-ATOM <atom type>
+    ATOM <atom type>
 
-ENV  <N>
-<T_1>
-<T_2>
-...
-<T_N>
+    ENV  <N>
+    <T_1>
+    <T_2>
+    ...
+    <T_N>
 
-RMIN <R>
+    RMIN <R>
 
-FUNCTIONS type=<basis type>
-<NF>
-<parameters of function 1>
-<parameters of function 2>
-...
-<parameters of function NF>
-```
+    FUNCTIONS type=<basis type>
+    <NF>
+    <parameters of function 1>
+    <parameters of function 2>
+    ...
+    <parameters of function NF>
 
 ### Input file example using a Chebyshev basis set (Ti.fingerprint.stp)
 
@@ -446,117 +670,113 @@ The following example uses a Chebyshev basis set with a cutoff of 8.0 Å
 for the radial expansion (expansion order 16) and a cutoff of 6.5 Å for
 the angular expansion (expansion order 4).
 
-``` example
-DESCR
-  Structural fingerprint setup for Ti in bulk TiO2.
-  TiO2 reference data set:
-    N. Artrith and A. Urban, Comput. Mater. Sci. 114 (2016) 135-150.
-  Chebyshev descriptor:
-    N. Artrith, A. Urban, and G. Ceder, Phys. Rev. B 96 (2017) 014112.
-END DESCR
+    DESCR
+      Structural fingerprint setup for Ti in bulk TiO2.
+      TiO2 reference data set:
+        N. Artrith and A. Urban, Comput. Mater. Sci. 114 (2016) 135-150.
+      Chebyshev descriptor:
+        N. Artrith, A. Urban, and G. Ceder, Phys. Rev. B 96 (2017) 014112.
+    END DESCR
 
-ATOM Ti
+    ATOM Ti
 
-ENV  2
-Ti
-O
+    ENV  2
+    Ti
+    O
 
-RMIN 0.75d0
+    RMIN 0.75d0
 
-BASIS type=Chebyshev
-radial_Rc = 8.0  radial_N = 16 angular_Rc = 6.5  angular_N = 4
-```
+    BASIS type=Chebyshev
+    radial_Rc = 8.0  radial_N = 16 angular_Rc = 6.5  angular_N = 4
 
 ### Input file example using explicit Behler2011 basis functions (Ti.fingerprint.stp)
 
-``` example
-DESCR
-  Structural fingerprint setup for Ti in bulk TiO2.
-  Ref.: N. Artrith and A. Urban,
-        Comput. Mater. Sci. 114 (2016) 135-150.
-END DESCR
+    DESCR
+      Structural fingerprint setup for Ti in bulk TiO2.
+      Ref.: N. Artrith and A. Urban,
+            Comput. Mater. Sci. 114 (2016) 135-150.
+    END DESCR
 
-ATOM Ti
+    ATOM Ti
 
-ENV  2
-Ti
-O
+    ENV  2
+    Ti
+    O
 
-RMIN 0.75d0
+    RMIN 0.75d0
 
-FUNCTIONS type=Behler2011
-70
-G=2 type2=O   eta=0.003214  Rs=0.0000  Rc=6.5000
-G=2 type2=Ti  eta=0.003214  Rs=0.0000  Rc=6.5000
-G=2 type2=O   eta=0.035711  Rs=0.0000  Rc=6.5000
-G=2 type2=Ti  eta=0.035711  Rs=0.0000  Rc=6.5000
-G=2 type2=O   eta=0.071421  Rs=0.0000  Rc=6.5000
-G=2 type2=Ti  eta=0.071421  Rs=0.0000  Rc=6.5000
-G=2 type2=O   eta=0.124987  Rs=0.0000  Rc=6.5000
-G=2 type2=Ti  eta=0.124987  Rs=0.0000  Rc=6.5000
-G=2 type2=O   eta=0.214264  Rs=0.0000  Rc=6.5000
-G=2 type2=Ti  eta=0.214264  Rs=0.0000  Rc=6.5000
-G=2 type2=O   eta=0.357106  Rs=0.0000  Rc=6.5000
-G=2 type2=Ti  eta=0.357106  Rs=0.0000  Rc=6.5000
-G=2 type2=O   eta=0.714213  Rs=0.0000  Rc=6.5000
-G=2 type2=Ti  eta=0.714213  Rs=0.0000  Rc=6.5000
-G=2 type2=O   eta=1.428426  Rs=0.0000  Rc=6.5000
-G=2 type2=Ti  eta=1.428426  Rs=0.0000  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.000357 lambda= -1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.000357 lambda= -1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.000357 lambda= -1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.028569 lambda= -1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.028569 lambda= -1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.028569 lambda= -1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.089277 lambda= -1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.089277 lambda= -1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.089277 lambda= -1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.000357 lambda= 1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.000357 lambda= 1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.000357 lambda= 1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.028569 lambda= 1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.028569 lambda= 1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.028569 lambda= 1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.089277 lambda= 1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.089277 lambda= 1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.089277 lambda= 1.0  zeta= 1.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.000357 lambda= -1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.000357 lambda= -1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.000357 lambda= -1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.028569 lambda= -1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.028569 lambda= -1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.028569 lambda= -1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.089277 lambda= -1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.089277 lambda= -1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.089277 lambda= -1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.000357 lambda= 1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.000357 lambda= 1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.000357 lambda= 1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.028569 lambda= 1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.028569 lambda= 1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.028569 lambda= 1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.089277 lambda= 1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.089277 lambda= 1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.089277 lambda= 1.0  zeta= 2.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.000357 lambda= -1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.000357 lambda= -1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.000357 lambda= -1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.028569 lambda= -1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.028569 lambda= -1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.028569 lambda= -1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.089277 lambda= -1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.089277 lambda= -1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.089277 lambda= -1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.000357 lambda= 1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.000357 lambda= 1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.000357 lambda= 1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.028569 lambda= 1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.028569 lambda= 1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.028569 lambda= 1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=O  type3=O    eta=0.089277 lambda= 1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=O  type3=Ti   eta=0.089277 lambda= 1.0  zeta= 4.0  Rc=6.5000
-G=4 type2=Ti type3=Ti   eta=0.089277 lambda= 1.0  zeta= 4.0  Rc=6.5000
-```
+    FUNCTIONS type=Behler2011
+    70
+    G=2 type2=O   eta=0.003214  Rs=0.0000  Rc=6.5000
+    G=2 type2=Ti  eta=0.003214  Rs=0.0000  Rc=6.5000
+    G=2 type2=O   eta=0.035711  Rs=0.0000  Rc=6.5000
+    G=2 type2=Ti  eta=0.035711  Rs=0.0000  Rc=6.5000
+    G=2 type2=O   eta=0.071421  Rs=0.0000  Rc=6.5000
+    G=2 type2=Ti  eta=0.071421  Rs=0.0000  Rc=6.5000
+    G=2 type2=O   eta=0.124987  Rs=0.0000  Rc=6.5000
+    G=2 type2=Ti  eta=0.124987  Rs=0.0000  Rc=6.5000
+    G=2 type2=O   eta=0.214264  Rs=0.0000  Rc=6.5000
+    G=2 type2=Ti  eta=0.214264  Rs=0.0000  Rc=6.5000
+    G=2 type2=O   eta=0.357106  Rs=0.0000  Rc=6.5000
+    G=2 type2=Ti  eta=0.357106  Rs=0.0000  Rc=6.5000
+    G=2 type2=O   eta=0.714213  Rs=0.0000  Rc=6.5000
+    G=2 type2=Ti  eta=0.714213  Rs=0.0000  Rc=6.5000
+    G=2 type2=O   eta=1.428426  Rs=0.0000  Rc=6.5000
+    G=2 type2=Ti  eta=1.428426  Rs=0.0000  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.000357 lambda= -1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.000357 lambda= -1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.000357 lambda= -1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.028569 lambda= -1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.028569 lambda= -1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.028569 lambda= -1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.089277 lambda= -1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.089277 lambda= -1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.089277 lambda= -1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.000357 lambda= 1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.000357 lambda= 1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.000357 lambda= 1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.028569 lambda= 1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.028569 lambda= 1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.028569 lambda= 1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.089277 lambda= 1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.089277 lambda= 1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.089277 lambda= 1.0  zeta= 1.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.000357 lambda= -1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.000357 lambda= -1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.000357 lambda= -1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.028569 lambda= -1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.028569 lambda= -1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.028569 lambda= -1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.089277 lambda= -1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.089277 lambda= -1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.089277 lambda= -1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.000357 lambda= 1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.000357 lambda= 1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.000357 lambda= 1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.028569 lambda= 1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.028569 lambda= 1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.028569 lambda= 1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.089277 lambda= 1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.089277 lambda= 1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.089277 lambda= 1.0  zeta= 2.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.000357 lambda= -1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.000357 lambda= -1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.000357 lambda= -1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.028569 lambda= -1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.028569 lambda= -1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.028569 lambda= -1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.089277 lambda= -1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.089277 lambda= -1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.089277 lambda= -1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.000357 lambda= 1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.000357 lambda= 1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.000357 lambda= 1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.028569 lambda= 1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.028569 lambda= 1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.028569 lambda= 1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=O  type3=O    eta=0.089277 lambda= 1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=O  type3=Ti   eta=0.089277 lambda= 1.0  zeta= 4.0  Rc=6.5000
+    G=4 type2=Ti type3=Ti   eta=0.089277 lambda= 1.0  zeta= 4.0  Rc=6.5000
 
 ## Training set generation with `generate.x`
 
@@ -579,58 +799,59 @@ following.
 All keywords are case insensitive and independent of the order. Blank
 lines and lines starting with `!`, `#`, or `%` are ignored.
 
-  - `debug` (optional)  
-    Activate debugging mode; additional output will be generated.
-  - `files` (required)  
-    Specifies number of and path to reference structures in the **ænet**
-    XSF format. The first line following the keyword contains the number
-    `<NF>` of structure files. Each of the `<NF>` following lines
-    contains a file system path.
-  - `output` (optional)  
-    Defines the path to the training set file that is going to be
-    generated. The default name is “refdata.train”. Note that the
-    training set file is in a binary format and cannot be viewed by a
-    text editor. Depending on the number of reference structures, the
-    file can become very large (e.g., 1 GB).
-  - `setups` (required)  
-    Specifies paths to structural fingerprint basis function setup
-    files. Each of the `<NT>` lines following the keyword contains the
-    chemical symbol `<T_i>` and the path to the setup file for one
-    species.
-  - `timing` (optional)  
-    Activate timing; additional output files will be created.
-  - `types` (required)  
-    Defines the number of atomic species, their names, and atomic
-    energies. The first line after the keyword contains the number of
-    different species `<NT>`; the following `<NT>` lines each contain
-    the chemical symbol `<T_i>` and atomic energy `<E_atom-i>` of one
-    species.
+`debug` (optional)
+Activate debugging mode; additional output will be generated.
+
+`files` (required)
+Specifies number of and path to reference structures in the **ænet** XSF
+format. The first line following the keyword contains the number `<NF>`
+of structure files. Each of the `<NF>` following lines contains a file
+system path.
+
+`output` (optional)
+Defines the path to the training set file that is going to be generated.
+The default name is “refdata.train”. Note that the training set file is
+in a binary format and cannot be viewed by a text editor. Depending on
+the number of reference structures, the file can become very large
+(e.g., 1 GB).
+
+`setups` (required)
+Specifies paths to structural fingerprint basis function setup files.
+Each of the `<NT>` lines following the keyword contains the chemical
+symbol `<T_i>` and the path to the setup file for one species.
+
+`timing` (optional)
+Activate timing; additional output files will be created.
+
+`types` (required)
+Defines the number of atomic species, their names, and atomic energies.
+The first line after the keyword contains the number of different
+species `<NT>`; the following `<NT>` lines each contain the chemical
+symbol `<T_i>` and atomic energy `<E_atom-i>` of one species.
 
 ### Input file template (generate.in)
 
-``` example
-OUTPUT  <path/to/output/file>
+    OUTPUT  <path/to/output/file>
 
-TYPES
-<NT>
-<T_1>   <E_atom-1>
-<T_2>   <E_atom-2>
-...
-<T_NT>  <E_atom-NT>
+    TYPES
+    <NT>
+    <T_1>   <E_atom-1>
+    <T_2>   <E_atom-2>
+    ...
+    <T_NT>  <E_atom-NT>
 
-SETUPS
-<T_1>   <path/to/setup-1>
-<T_2>   <path/to/setup-2>
-...
-<T_NT>  <path/to/setup-NT>
+    SETUPS
+    <T_1>   <path/to/setup-1>
+    <T_2>   <path/to/setup-2>
+    ...
+    <T_NT>  <path/to/setup-NT>
 
-FILES
-<NF>
-<path/to/file-1.xsf>
-<path/to/file-2.xsf>
-...
-<path/to/file-NF.xsf>
-```
+    FILES
+    <NF>
+    <path/to/file-1.xsf>
+    <path/to/file-2.xsf>
+    ...
+    <path/to/file-NF.xsf>
 
 ### Input file example (generate.in) for TiO<sub>2</sub>
 
@@ -645,25 +866,23 @@ choice, the trained energy (total energy minus atomic energies)
 corresponds to the *cohesive energy*, which is reported by ænet’s
 `predict.x` tool.
 
-``` example
-OUTPUT  TiO2.train
+    OUTPUT  TiO2.train
 
-TYPES
-2
-O   -432.503149303  ! eV
-Ti -1604.604515075  ! eV
+    TYPES
+    2
+    O   -432.503149303  ! eV
+    Ti -1604.604515075  ! eV
 
-SETUPS
-O   O.fingerprint.stp
-Ti Ti.fingerprint.stp
+    SETUPS
+    O   O.fingerprint.stp
+    Ti Ti.fingerprint.stp
 
-FILES
-7815
-./structures/0001.xsf
-./structures/0002.xsf
-...
-./structures/7815.xsf
-```
+    FILES
+    7815
+    ./structures/0001.xsf
+    ./structures/0002.xsf
+    ...
+    ./structures/7815.xsf
 
 Alternatively, the atomic energies can be set to the average atomic
 energy of all structures in the reference data set to minimize the range
@@ -672,25 +891,23 @@ of the target energy (e.g., [*Phys. Rev. B* **96**, 2017,
 this approach is that the energy difference is no longer interpretable,
 i.e., it does not correspond to the cohesive energy.
 
-``` example
-OUTPUT TiO.train
+    OUTPUT TiO.train
 
-TYPES
-2
-O   -433.23448532  | eV
-Ti -1626.66972707  | eV
+    TYPES
+    2
+    O   -433.23448532  | eV
+    Ti -1626.66972707  | eV
 
-SETUPS
-O   O.fingerprint.stp
-Ti Ti.fingerprint.stp
+    SETUPS
+    O   O.fingerprint.stp
+    Ti Ti.fingerprint.stp
 
-FILES
-7815
-./structures/0001.xsf
-./structures/0002.xsf
-...
-./structures/7815.xsf
-```
+    FILES
+    7815
+    ./structures/0001.xsf
+    ./structures/0002.xsf
+    ...
+    ./structures/7815.xsf
 
 ## ANN potential training with `train.x`
 
@@ -719,43 +936,50 @@ following.
 All keywords are case insensitive and independent of the order. Blank
 lines and lines starting with `!`, `#`, or `%` are ignored.
 
-  - `debug` (optional)  
-    Activate debugging mode; additional output files will be created.
-  - `iterations` (optional)  
-    Specifies the number of training iterations/epochs (default: 10).
-  - `maxenergy` (optional)  
-    Highest formation energy to include in the training set.
-  - `method` (optional)  
-    Specifies the training method/algorithm to be used for the weight
-    optimization. The line following the keyword contains as first item
-    the name of the method (e.g., `bfgs`, `online_gd`, `lm`) and as
-    further items the parameters of the method (if applicable). The
-    default method is `bfgs`.
-  - `networks` (required)  
-    Defines the architectures and specifies files for all ANNs. Each of
-    the `<NT>` (= number of types) lines following the keyword contains
-    the chemical symbol `<T_i>` of the *i*-th atomic species in the
-    training set, the path to the ANN output file (binary), and the
-    architecture of the hidden network layers. The latter is defined by
-    the number of hidden layers followed by the number of nodes and the
-    activation function separated by a colon (see example below for two
-    hidden layers of 5 nodes each and the hyperbolic tangent
-    activation).
-  - `save_energies` (optional)  
-    Activate output of the final energies of all training and testing
-    structures. The resulting output files can be used to visualize the
-    quality of the ANN fit and to identify structures that are not well
-    represented. One file per process will be generated, containing only
-    the energies of all structures handled by the process. The files can
-    simply be concatenated.
-  - `testpercent` (optional)  
-    Specifies the percentage of reference structures to be used as
-    independent testing set (default: 10%).
-  - `timing` (optional)  
-    Activate timing; additional output files will be created.
-  - `trainingset` (required)  
-    Defines the name/path to the binary training set file (output of
-    generate.x, e.g., “refdata.train”).
+`debug` (optional)
+Activate debugging mode; additional output files will be created.
+
+`iterations` (optional)
+Specifies the number of training iterations/epochs (default: 10).
+
+`maxenergy` (optional)
+Highest formation energy to include in the training set.
+
+`method` (optional)
+Specifies the training method/algorithm to be used for the weight
+optimization. The line following the keyword contains as first item the
+name of the method (e.g., `bfgs`, `online_gd`, `lm`) and as further
+items the parameters of the method (if applicable). The default method
+is `bfgs`.
+
+`networks` (required)
+Defines the architectures and specifies files for all ANNs. Each of the
+`<NT>` (= number of types) lines following the keyword contains the
+chemical symbol `<T_i>` of the *i*-th atomic species in the training
+set, the path to the ANN output file (binary), and the architecture of
+the hidden network layers. The latter is defined by the number of hidden
+layers followed by the number of nodes and the activation function
+separated by a colon (see example below for two hidden layers of 5 nodes
+each and the hyperbolic tangent activation).
+
+`save_energies` (optional)
+Activate output of the final energies of all training and testing
+structures. The resulting output files can be used to visualize the
+quality of the ANN fit and to identify structures that are not well
+represented. One file per process will be generated, containing only the
+energies of all structures handled by the process. The files can simply
+be concatenated.
+
+`testpercent` (optional)
+Specifies the percentage of reference structures to be used as
+independent testing set (default: 10%).
+
+`timing` (optional)
+Activate timing; additional output files will be created.
+
+`trainingset` (required)
+Defines the name/path to the binary training set file (output of
+generate.x, e.g., “refdata.train”).
 
 ### Training methods
 
@@ -765,35 +989,31 @@ offers three different optimization methods: online gradient descent,
 the limited-memory BFGS algorithm and the Levenberg-Marquardt method.
 
 1.  Online gradient descent (`online_gd`)
-    
+
     Gradient descent is implemented as *online* learning method which
     currently prevents efficient parallelization. The method is selected
     with the identifier `online_gd` and has two parameters, the
     *learning rate* (`gamma`) that is a measure of the stepsize per
     iteration, and the *momentum parameter* (`alpha`) that controls
     fluctuations.
-    
+
     An example definition with reasonable parameters is:
-    
-    ``` example
-    METHOD
-    online_gd gamma=3.0d-2 alpha=0.05d0
-    ```
+
+        METHOD
+        online_gd gamma=3.0d-2 alpha=0.05d0
 
 2.  Limited-Memory Broyden-Fletcher-Goldfarb-Shanno (L-BFGS) method
-    
+
     The L-BFGS method is implemented as *batch* training method, which
     enables efficient parallelization of the error function evaluation.
     The method is selected with the identifier `bfgs` and does not
     currently offer any adjustable parameters:
-    
-    ``` example
-    METHOD
-    bfgs
-    ```
+
+        METHOD
+        bfgs
 
 3.  Levenberg-Marquardt method
-    
+
     The Levenberg-Marquardt method that is presently only available in
     serial is selected with the identifier `lm`. The method supports a
     number of parameters: `batchsize` sets the number of training points
@@ -806,78 +1026,72 @@ the limited-memory BFGS algorithm and the Levenberg-Marquardt method.
     and the factor used for this adjustment is defined with `adjust`.
     Finally, a convergence threshold for the error function can be
     specified with `conv`.
-    
+
     Example of reasonable parameters
-    
-    ``` example
-    METHOD
-    lm batchsize=5000 learnrate=0.1d0 iter=3 conv=0.001 adjust=5.0
-    ```
+
+        METHOD
+        lm batchsize=5000 learnrate=0.1d0 iter=3 conv=0.001 adjust=5.0
 
 ### Input file template (train.in)
 
-``` example
-TRAININGSET <path/to/data/file>
-TESTPERCENT <percentage>
-ITERATIONS  <NI>
-MAXENERGY <emax e.g. -0.05 eV>
-SAVE_ENERGIES
+    TRAININGSET <path/to/data/file>
+    TESTPERCENT <percentage>
+    ITERATIONS  <NI>
+    MAXENERGY <emax e.g. -0.05 eV>
+    SAVE_ENERGIES
 
-METHOD
-<method name>  <parameters>
+    METHOD
+    <method name>  <parameters>
 
-# Examples
-#
-# (1) online steepest descent
-# METHOD
-# online_gd gamma=5.0d-7 alpha=0.25d0
-# (2) BFGS
-# METHOD
-# bfgs
-# (3) Levenberg-Marquardt
-# METHOD
-# lm batchsize=1000 learnrate=0.1 iter=1 conv=0.001 adjust=10.0
+    # Examples
+    #
+    # (1) online steepest descent
+    # METHOD
+    # online_gd gamma=5.0d-7 alpha=0.25d0
+    # (2) BFGS
+    # METHOD
+    # bfgs
+    # (3) Levenberg-Marquardt
+    # METHOD
+    # lm batchsize=1000 learnrate=0.1 iter=1 conv=0.001 adjust=10.0
 
-NETWORKS
-# atom   network           hidden
-# types  file-name         layers   nodes:activation
-<T_1>    <path/to/net-1>     2      5:tanh  5:tanh
-<T_2>    <path/to/net-2>     2      5:tanh  5:tanh
-...
-<T_NT>   <path/to/net-NT>    2      5:tanh  5:tanh
+    NETWORKS
+    # atom   network           hidden
+    # types  file-name         layers   nodes:activation
+    <T_1>    <path/to/net-1>     2      5:tanh  5:tanh
+    <T_2>    <path/to/net-2>     2      5:tanh  5:tanh
+    ...
+    <T_NT>   <path/to/net-NT>    2      5:tanh  5:tanh
 
-# Example using different activation functions:
-# For details see Eq. (1) in:
-# N. Artrith and A. Urban, Comput. Mater. Sci. 114 (2016) 135-150.
-#
-# <T_1>    <path/to/net-1>     2      5:linear  5:linear
-# <T_2>    <path/to/net-2>     2      5:linear  5:linear
+    # Example using different activation functions:
+    # For details see Eq. (1) in:
+    # N. Artrith and A. Urban, Comput. Mater. Sci. 114 (2016) 135-150.
+    #
+    # <T_1>    <path/to/net-1>     2      5:linear  5:linear
+    # <T_2>    <path/to/net-2>     2      5:linear  5:linear
 
-# <T_1>    <path/to/net-1>     2      5:tanh    5:tanh
-# <T_2>    <path/to/net-2>     2      5:tanh    5:tanh
+    # <T_1>    <path/to/net-1>     2      5:tanh    5:tanh
+    # <T_2>    <path/to/net-2>     2      5:tanh    5:tanh
 
-# <T_1>    <path/to/net-1>     2      5:sigmoid 5:sigmoid
-# <T_2>    <path/to/net-2>     2      5:twist   5:twist
-```
+    # <T_1>    <path/to/net-1>     2      5:sigmoid 5:sigmoid
+    # <T_2>    <path/to/net-2>     2      5:twist   5:twist
 
 ### Example input file (train.in)
 
-``` example
-TRAININGSET TiO2.train
-TESTPERCENT  10
-ITERATIONS  500
+    TRAININGSET TiO2.train
+    TESTPERCENT  10
+    ITERATIONS  500
 
-TIMING
+    TIMING
 
-METHOD
-lm batchsize=5000 learnrate=0.1d0 iter=3 conv=0.001 adjust=5.0
+    METHOD
+    lm batchsize=5000 learnrate=0.1d0 iter=3 conv=0.001 adjust=5.0
 
-NETWORKS
-! atom   network        hidden
-! types  file-name      layers  nodes:activation
-  O       O.10t-10t.ann    2    10:twist 10:twist
-  Ti     Ti.10t-10t.ann    2    10:twist 10:twist
-```
+    NETWORKS
+    ! atom   network        hidden
+    ! types  file-name      layers  nodes:activation
+      O       O.10t-10t.ann    2    10:twist 10:twist
+      Ti     Ti.10t-10t.ann    2    10:twist 10:twist
 
 ## Restarting training from existing ANN potential
 
@@ -943,99 +1157,100 @@ following.
 All keywords are case insensitive and independent of the order. Blank
 lines and lines starting with `!`, `#`, or `%` are ignored.
 
-  - `debug` (optional)  
-    Activate debugging mode; additional output files will be created.
-  - `files` (optional)  
-    Specifies a list of paths to input structures. This keyword may be
-    used for batch processing of a larger number of structures. The line
-    following the keyword contains the number of input files `<NF>`, and
-    each of the following `<NF>` lines contains a single file system
-    path. Alternatively, a single input structure may be passed to
-    `predict.x` as command line argument. The command line takes
-    precedence over the list specified with the “files” keyword.
-  - `forces` (optional)  
-    Activates evaluation of the atomic forces. Forces are also
-    calculated, when the “relax” keyword is present.
-  - `networks` (required)  
-    Specifies the ANN potential files for each chemical species. On each
-    of the `<NT>` lines following the keyword a chemical species `<T_i>`
-    and the path to its corresponding ANN file is given.
-  - `relax` (optional)  
-    Activate structural relaxation; this will automatically also
-    activate the calculation of the atomic forces. On the line following
-    the `relax` keyword, several options can be specified. See the
-    example below.
-  - `timing` (optional)  
-    Activate timing; additional output files will be created.
-  - `types` (required)  
-    Specifies the number of different atomic species that may occur in
-    structures and their chemical symbols. The first line following the
-    keyword specifies the number `<NT>` of different atom types; the
-    following lines each contain one chemical symbol `<T_i>`.
+`debug` (optional)
+Activate debugging mode; additional output files will be created.
+
+`files` (optional)
+Specifies a list of paths to input structures. This keyword may be used
+for batch processing of a larger number of structures. The line
+following the keyword contains the number of input files `<NF>`, and
+each of the following `<NF>` lines contains a single file system path.
+Alternatively, a single input structure may be passed to `predict.x` as
+command line argument. The command line takes precedence over the list
+specified with the “files” keyword.
+
+`forces` (optional)
+Activates evaluation of the atomic forces. Forces are also calculated,
+when the “relax” keyword is present.
+
+`networks` (required)
+Specifies the ANN potential files for each chemical species. On each of
+the `<NT>` lines following the keyword a chemical species `<T_i>` and
+the path to its corresponding ANN file is given.
+
+`relax` (optional)
+Activate structural relaxation; this will automatically also activate
+the calculation of the atomic forces. On the line following the `relax`
+keyword, several options can be specified. See the example below.
+
+`timing` (optional)
+Activate timing; additional output files will be created.
+
+`types` (required)
+Specifies the number of different atomic species that may occur in
+structures and their chemical symbols. The first line following the
+keyword specifies the number `<NT>` of different atom types; the
+following lines each contain one chemical symbol `<T_i>`.
 
 ### Input file template (predict.in)
 
-``` example
-TYPES
-<NT>
-<T_1>
-<T_2>
-...
-<T_NT>
+    TYPES
+    <NT>
+    <T_1>
+    <T_2>
+    ...
+    <T_NT>
 
-NETWORKS
-<T_1>  <path/to/NN-1>
-<T_2>  <path/to/NN-2>
-...
-<T_NT> <path/to/NN-NT>
+    NETWORKS
+    <T_1>  <path/to/NN-1>
+    <T_2>  <path/to/NN-2>
+    ...
+    <T_NT> <path/to/NN-NT>
 
-FORCES
+    FORCES
 
-# or optimize coordinates:
-#
-# RELAX
-# method=bfgs  F_conv=1.0d-2  E_conv=1.0d-6  steps=99
-#
-#    method: optimization method (currently only BFGS)
-#    F_conv: convergence thershold for the forces
-#    E_conv: convergence threshold for the energy
-#    steps:  max. number of iterations
+    # or optimize coordinates:
+    #
+    # RELAX
+    # method=bfgs  F_conv=1.0d-2  E_conv=1.0d-6  steps=99
+    #
+    #    method: optimization method (currently only BFGS)
+    #    F_conv: convergence thershold for the forces
+    #    E_conv: convergence threshold for the energy
+    #    steps:  max. number of iterations
 
-FILES
-<NF>
-<path/to/structure-1.xsf>
-<path/to/structure-2.xsf>
-...
-<path/to/structure-NF.xsf>
-```
+    FILES
+    <NF>
+    <path/to/structure-1.xsf>
+    <path/to/structure-2.xsf>
+    ...
+    <path/to/structure-NF.xsf>
 
 ### Input file example (predict.in) for TiO<sub>2</sub>
 
-``` example
-TYPES
-2
-Ti
-O
+    TYPES
+    2
+    Ti
+    O
 
-NETWORKS
-  Ti Ti.10tw-10tw.ann
-  O  O.10tw-10tw.ann
+    NETWORKS
+      Ti Ti.10tw-10tw.ann
+      O  O.10tw-10tw.ann
 
-FORCES
+    FORCES
 
-FILES
-10
-structure0001.xsf
-structure0002.xsf
-structure0003.xsf
-structure0004.xsf
-structure0005.xsf
-structure0006.xsf
-structure0007.xsf
-structure0008.xsf
-structure0009.xsf
-structure0010.xsf
-```
+    FILES
+    10
+    structure0001.xsf
+    structure0002.xsf
+    structure0003.xsf
+    structure0004.xsf
+    structure0005.xsf
+    structure0006.xsf
+    structure0007.xsf
+    structure0008.xsf
+    structure0009.xsf
+    structure0010.xsf
 
 ## ASE Interface: `aenet-predict.py` and `aenet-md.py`
 
@@ -1065,57 +1280,59 @@ The input files of `aenet-predict.py` and `aenet-md.py` both use the
 [JSON](http://www.json.org/) format. Keywords that are specific to one
 tool are ignored by the other.
 
-  - `potentials` (required)  
-    Specifies the ANN potentials for all atomic species.
-  - `structure_file` (MD only)  
-    Path to the file with the initial structure. Every structure format
-    that is understood by ASE can be used.
-  - `trajectory_file` (MD only)  
-    Path to the trajectory file (in ASE’s format) to be generated during
-    the MD simulation.
-  - `temperature` (MD only)  
-    Temperatur for MD simulations in the canonical ensemble.
-  - `md_steps` (MD only)  
-    Number of MD steps.
-  - `print_steps` (MD only)  
-    Number of MD steps between writing output.
-  - `time_step` (MD only)  
-    MD time step in femtoseconds.
+`potentials` (required)
+Specifies the ANN potentials for all atomic species.
+
+`structure_file` (MD only)
+Path to the file with the initial structure. Every structure format that
+is understood by ASE can be used.
+
+`trajectory_file` (MD only)
+Path to the trajectory file (in ASE’s format) to be generated during the
+MD simulation.
+
+`temperature` (MD only)
+Temperatur for MD simulations in the canonical ensemble.
+
+`md_steps` (MD only)
+Number of MD steps.
+
+`print_steps` (MD only)
+Number of MD steps between writing output.
+
+`time_step` (MD only)
+MD time step in femtoseconds.
 
 ### Input file template (input.json)
 
-``` example
-{
-    "potentials" : {
-        <T1> : <potential1>,
-        <T2> : <potential2>,
-        ...
-    },
-    "structure_file" : <initial-structure>,
-    "trajectory_file" : <output-file>,
-    "temperature" : <T>,
-    "md_steps"    : <N_MD>,
-    "time_step"   : <dt>,
-    "print_steps" : <N_print>
-}
-```
+    {
+        "potentials" : {
+            <T1> : <potential1>,
+            <T2> : <potential2>,
+            ...
+        },
+        "structure_file" : <initial-structure>,
+        "trajectory_file" : <output-file>,
+        "temperature" : <T>,
+        "md_steps"    : <N_MD>,
+        "time_step"   : <dt>,
+        "print_steps" : <N_print>
+    }
 
 ### Input file example (input.json)
 
-``` example
-{
-    "potentials" : {
-        "Ti" : "Ti.10t-10t.ann",
-        "O"  : "O.10t-10t.ann"
-    },
-    "structure_file" : "input.vasp",
-    "trajectory_file" : "md.traj",
-    "temperature" : 300.0,
-    "md_steps"    : 100,
-    "time_step"   : 1.0,
-    "print_steps" : 1
-}
-```
+    {
+        "potentials" : {
+            "Ti" : "Ti.10t-10t.ann",
+            "O"  : "O.10t-10t.ann"
+        },
+        "structure_file" : "input.vasp",
+        "trajectory_file" : "md.traj",
+        "temperature" : 300.0,
+        "md_steps"    : 100,
+        "time_step"   : 1.0,
+        "print_steps" : 1
+    }
 
 # Acknowledgment
 
@@ -1135,8 +1352,8 @@ question, please contact Dr. Nongnuch Artrith (nartrith@atomistic.net).
 `[1]` N. Artrith and A. Urban, [ *Comput. Mater. Sci.* **114** (2016)
 135-150](http://dx.doi.org/10.1016/j.commatsci.2015.11.047).
 
-`[2]` N. Artrith, A. Urban, and Gerbrand Ceder, [ *Phys. Rev. B* **96**
-(2017) 014112](http://dx.doi.org/10.1103/PhysRevB.96.014112).
+`[2]` N. Artrith, A. Urban, and G. Ceder, [ *Phys. Rev. B* **96** (2017)
+014112](http://dx.doi.org/10.1103/PhysRevB.96.014112).
 
 `[3]` J. Behler and M. Parrinello, [ *Phys. Rev. Lett.* **98** (2007)
 146401](http://dx.doi.org/10.1103/PhysRevLett.98.146401).

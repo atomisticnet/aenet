@@ -1,5 +1,5 @@
 #+AUTHOR: Nongnuch Artrith
-#+TITLE: *The Atomic Energy Network (ænet) (release 2.0.0)*
+#+TITLE: *The Atomic Energy Network (ænet) (release 2.0.4)*
 
 #+OPTIONS: ^:{}
 #+LATEX_HEADER: \usepackage{microtype}
@@ -16,6 +16,8 @@
 
 # contents from the main README.org file
 #+INCLUDE: "../README.org" :lines "3-"
+
+#+INCLUDE: "./binary-installation.org"
 
 * Version queries and release versions
 

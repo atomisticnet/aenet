@@ -33,11 +33,13 @@ shared children; investigations and release operations use local issues.
 | [3](../closed-issues/3-installed-artifacts.md) | Stable installed names and layout | Release contract, 2 |
 | [7](../closed-issues/7-relocatable-packaging.md) | Reproducible archives and runtime validation | Release contract, 2, 3 |
 | [4](../closed-issues/4-binary-release-automation.md) | CI orchestration and release-candidate artifacts | 7 |
-| [8](8-binary-installation-docs.md) | Tested installation/troubleshooting guidance | 7 |
+| [8](../closed-issues/8-binary-installation-docs.md) | Tested installation/troubleshooting guidance | 7 |
 
-[Issue 5](5-python-binary-integration.md) is a deferred follow-up, not a
-first-release dependency. New concrete work discovered during delivery must
-be assigned to an appropriate shared or local issue before implementation.
+[Issue 5](5-python-binary-integration.md) and Developer ID
+[signing/notarization](10-macos-signing-notarization.md) are deferred
+follow-ups, not first-release dependencies. New concrete work discovered
+during delivery must be assigned to an appropriate shared or local issue
+before implementation.
 
 ## Acceptance criteria
 
