@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+# This file is part of the AENET package.
+#
+# Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+import argparse
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+
+TAG_PATTERN = re.compile(r"v([0-9]+\.[0-9]+\.[0-9]+)")
+
+
+def git(repository, *arguments):
+    return subprocess.run(
+        ["git", "-C", repository, *arguments],
+        text=True,
+        capture_output=True,
+    )
+
+
+def verify(repository, tag):
+    match = TAG_PATTERN.fullmatch(tag)
+    if match is None:
+        raise ValueError("release tag must have the form vMAJOR.MINOR.PATCH")
+    reference = f"refs/tags/{tag}"
+    object_type = git(repository, "cat-file", "-t", reference)
+    if object_type.returncode != 0:
+        raise ValueError(f"release tag does not exist: {tag}")
+    if object_type.stdout.strip() != "tag":
+        raise ValueError(f"release tag must be annotated: {tag}")
+    revision = git(repository, "rev-parse", f"{reference}^{{commit}}")
+    if revision.returncode != 0:
+        raise ValueError(f"release tag does not resolve to a commit: {tag}")
+    version = git(repository, "show", f"{reference}:src/VERSION")
+    if version.returncode != 0:
+        raise ValueError(f"release tag does not contain src/VERSION: {tag}")
+    if version.stdout.strip() != match.group(1):
+        raise ValueError(
+            f"release tag {tag} does not match its src/VERSION "
+            f"({version.stdout.strip()})"
+        )
+    return revision.stdout.strip()
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Verify an annotated AENET release tag and print its commit."
+    )
+    parser.add_argument("tag")
+    parser.add_argument("--repository", type=Path, default=Path.cwd())
+    args = parser.parse_args()
+    try:
+        revision = verify(args.repository.resolve(), args.tag)
+    except (OSError, ValueError) as error:
+        print(f"verify release tag: {error}", file=sys.stderr)
+        return 1
+    print(revision)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

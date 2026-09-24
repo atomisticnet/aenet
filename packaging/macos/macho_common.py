@@ -71,8 +71,8 @@ def parse_build_versions(output):
                 legacy_block = False
     if not versions:
         raise ValueError("Mach-O deployment target is missing")
-    if any(version > (14, 0) for version in versions):
-        raise ValueError("Mach-O deployment target is newer than macOS 14.0")
+    if any(version > (15, 0) for version in versions):
+        raise ValueError("Mach-O deployment target is newer than macOS 15.0")
     return versions
 
 

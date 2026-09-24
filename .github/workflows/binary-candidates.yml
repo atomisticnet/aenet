@@ -1,0 +1,224 @@
+name: Binary release candidates
+
+on:
+  workflow_call:
+    inputs:
+      source_ref:
+        description: Git ref to build; defaults to the calling workflow commit
+        required: false
+        type: string
+    outputs:
+      source_revision:
+        description: Resolved commit included in both candidate archives
+        value: ${{ jobs.resolve.outputs.revision }}
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Branch, tag, or full commit to build
+        required: true
+        default: dev
+        type: string
+  push:
+    branches: [dev]
+    paths:
+      - CMakeLists.txt
+      - src/**
+      - lib/**
+      - packaging/**
+      - .github/workflows/binary-candidates.yml
+  pull_request:
+    paths:
+      - CMakeLists.txt
+      - src/**
+      - lib/**
+      - packaging/**
+      - .github/workflows/binary-candidates.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: binary-candidates-${{ github.workflow }}-${{ inputs.source_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  resolve:
+    runs-on: ubuntu-22.04
+    outputs:
+      revision: ${{ steps.source.outputs.revision }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ inputs.source_ref || github.event.pull_request.head.sha || github.sha }}
+      - id: source
+        name: Resolve source commit
+        run: echo "revision=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  linux:
+    needs: resolve
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    env:
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ needs.resolve.outputs.revision }}
+      - name: Install build and packaging tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cmake gfortran libopenblas-dev patchelf
+      - name: Run packaging regressions
+        run: python3 -m unittest discover -s packaging/tests -p 'test_*.py'
+      - name: Build and stage
+        run: |
+          set -o pipefail
+          compiler="$(command -v gfortran)"
+          log="$RUNNER_TEMP/linux-build.log"
+          if ! packaging/build \
+              --platform linux-x86_64 \
+              --compiler "$compiler" \
+              --build-dir "$RUNNER_TEMP/build" \
+              --stage-parent "$RUNNER_TEMP/stage" 2>&1 | tee "$log"
+          then
+            message="$(tail -30 "$log" | tr '\n' ' ')"
+            echo "::error title=Linux build or CTest failed::$message"
+            exit 1
+          fi
+      - name: Prepare, finalize, and package
+        run: |
+          compiler="$(command -v gfortran)"
+          version="$(cat src/VERSION)"
+          root="$RUNNER_TEMP/stage/aenet-$version-linux-x86_64-gnu-serial"
+          packaging/linux/prepare --stage "$root" --compiler "$compiler"
+          packaging/finalize \
+            --stage "$root" \
+            --compiler "$compiler" \
+            --source-revision "${{ needs.resolve.outputs.revision }}" \
+            --openblas-version "$(pkg-config --modversion openblas)"
+          packaging/package \
+            --stage "$root" \
+            --output "$RUNNER_TEMP/dist" \
+            --epoch "$(git show -s --format=%ct HEAD)"
+          packaging/linux/build_api_smoke \
+            --output "$RUNNER_TEMP/validation/api-smoke"
+      - name: Validate the extracted archive independently
+        run: |
+          set -o pipefail
+          version="$(cat src/VERSION)"
+          log="$RUNNER_TEMP/linux-validation.log"
+          if ! packaging/linux/validate_container \
+              "$RUNNER_TEMP/dist/aenet-$version-linux-x86_64-gnu-serial.tar.gz" \
+              --api-smoke "$RUNNER_TEMP/validation/api-smoke" 2>&1 | tee "$log"
+          then
+            message="$(tail -20 "$log" | tr '\n' ' ')"
+            echo "::error title=Linux archive validation failed::$message"
+            exit 1
+          fi
+      - name: Retain validated Linux candidate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: aenet-candidate-linux-x86_64
+          path: |
+            ${{ runner.temp }}/dist/*.tar.gz
+            ${{ runner.temp }}/dist/*.sha256
+          if-no-files-found: error
+          retention-days: 14
+
+  macos:
+    needs: resolve
+    runs-on: macos-15
+    timeout-minutes: 30
+    env:
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ needs.resolve.outputs.revision }}
+      - name: Record the native build environment
+        run: |
+          sw_vers
+          test "$(uname -m)" = arm64
+          gfortran-14 --version
+          cmake --version
+      - name: Run packaging regressions
+        run: python3 -m unittest discover -s packaging/tests -p 'test_*.py'
+      - name: Build and stage
+        run: |
+          compiler="$(command -v gfortran-14)"
+          packaging/build \
+            --platform macos-arm64 \
+            --compiler "$compiler" \
+            --build-dir "$RUNNER_TEMP/build" \
+            --stage-parent "$RUNNER_TEMP/stage"
+      - name: Prepare relocated runtime
+        run: |
+          set -o pipefail
+          compiler="$(command -v gfortran-14)"
+          version="$(cat src/VERSION)"
+          root="$RUNNER_TEMP/stage/aenet-$version-macos-arm64-gnu-serial"
+          log="$RUNNER_TEMP/macos-prepare.log"
+          if ! packaging/macos/prepare \
+              --stage "$root" --compiler "$compiler" 2>&1 | tee "$log"
+          then
+            message="$(tail -30 "$log" | tr '\n' ' ')"
+            echo "::error title=macOS runtime preparation failed::$message"
+            exit 1
+          fi
+      - name: Finalize and package
+        run: |
+          compiler="$(command -v gfortran-14)"
+          version="$(cat src/VERSION)"
+          root="$RUNNER_TEMP/stage/aenet-$version-macos-arm64-gnu-serial"
+          packaging/finalize \
+            --stage "$root" \
+            --compiler "$compiler" \
+            --source-revision "${{ needs.resolve.outputs.revision }}"
+          packaging/package \
+            --stage "$root" \
+            --output "$RUNNER_TEMP/dist" \
+            --epoch "$(git show -s --format=%ct HEAD)"
+          packaging/macos/build_api_smoke \
+            --output "$RUNNER_TEMP/validation/api-smoke"
+      - name: Validate the extracted archive independently
+        run: |
+          version="$(cat src/VERSION)"
+          packaging/macos/validate_archive \
+            "$RUNNER_TEMP/dist/aenet-$version-macos-arm64-gnu-serial.tar.gz" \
+            --api-smoke "$RUNNER_TEMP/validation/api-smoke"
+      - name: Retain validated macOS candidate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: aenet-candidate-macos-arm64
+          path: |
+            ${{ runner.temp }}/dist/*.tar.gz
+            ${{ runner.temp }}/dist/*.sha256
+          if-no-files-found: error
+          retention-days: 14
+
+  candidate-set:
+    needs: [resolve, linux, macos]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ needs.resolve.outputs.revision }}
+      - name: Download native candidates
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: aenet-candidate-*
+          path: ${{ runner.temp }}/candidates
+          merge-multiple: true
+      - name: Verify paired candidates
+        run: |
+          packaging/verify_candidates \
+            --directory "$RUNNER_TEMP/candidates" \
+            --source-revision "${{ needs.resolve.outputs.revision }}"
+      - name: Retain paired candidate set
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: aenet-binary-candidates
+          path: ${{ runner.temp }}/candidates
+          if-no-files-found: error
+          retention-days: 14

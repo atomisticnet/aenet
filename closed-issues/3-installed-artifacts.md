@@ -40,7 +40,7 @@ option was introduced.
 The release contract fixes the archive names as
 `aenet-<version>-macos-arm64-gnu-serial.tar.gz` and
 `aenet-<version>-linux-x86_64-gnu-serial.tar.gz`. The first-release runtime
-baselines are macOS 14 or newer on arm64 and Ubuntu 22.04/glibc 2.35 or newer
+baselines are macOS 15 or newer on arm64 and Ubuntu 22.04/glibc 2.35 or newer
 on x86_64. Issue 7 still owns runtime bundling and final extracted-archive
 validation.
 

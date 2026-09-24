@@ -1,8 +1,8 @@
 # Issue 4: Automate GNU serial binary releases
 
-**Status:** Pending
+**Status:** Done
 **Legacy ID:** CI001
-**Parent:** [Issue 1](1-binary-distribution.md)
+**Parent:** [Issue 1](../issues/1-binary-distribution.md)
 **Dependency:** [Issue 7](../closed-issues/7-relocatable-packaging.md)
 
 ## Problem
@@ -33,3 +33,28 @@ authorize a push, remote dispatch, or publication.
 See the [proposed release contract](../doc/binary-release-contract.md) for
 experimental evidence and limitations. Before enabling parallel builds,
 resolve the observed static/shared Fortran module-output race or retain single-job builds as an explicit limitation.
+
+## Resolution
+
+Added commit-pinned GitHub Actions workflows that build GNU serial candidates
+on Ubuntu 22.04 x86_64 and macOS 15 arm64, invoke the maintained packaging and
+independent runtime checks, and retain a verified paired candidate set. The
+manual release workflow requires an existing annotated version tag, matching
+source and artifact metadata, an unpublished tag, and approval through the
+protected `release` environment. Only its final publication job receives
+`contents: write`, and that job downloads the already validated artifacts
+from the same run instead of rebuilding them.
+
+The `release` environment requires review by `alexurba`, disallows
+administrator bypass, and accepts deployments only from `master`.
+
+## Validation
+
+Thirty packaging tests pass locally, including candidate-set and release-tag
+regressions. Candidate run 36039685568 passed both native build, CTest,
+packaging, independent-runtime, and paired-artifact jobs. Full dry run
+36042038039 additionally passed the annotated-tag, absence-of-release, and
+prepublication gates; its publication job was skipped and no release was
+created. The temporary validation branch and tag were deleted. An earlier
+unchanged Linux attempt intermittently failed `symmfunc:derivatives`; its
+successful rerun passed all 31 CTest entries, and L18 tracks that test issue.

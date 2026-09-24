@@ -49,7 +49,7 @@ def main():
     ]
     if args.platform == "macos-arm64":
         configure.extend(("-DUSE_OPENBLAS=OFF", "-DBLA_VENDOR=Apple",
-                          "-DCMAKE_OSX_DEPLOYMENT_TARGET=14.0"))
+                          "-DCMAKE_OSX_DEPLOYMENT_TARGET=15.0"))
     else:
         configure.append("-DUSE_OPENBLAS=ON")
 

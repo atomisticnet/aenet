@@ -39,17 +39,17 @@ class MachOPolicyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "arm64"):
             parse_architectures("x86_64 arm64\n")
 
-    def test_requires_deployment_target_no_newer_than_macos_14(self):
+    def test_requires_deployment_target_no_newer_than_macos_15(self):
         output = """      cmd LC_BUILD_VERSION
-    minos 14.0
-      sdk 14.4
+    minos 15.0
+      sdk 15.4
       cmd LC_BUILD_VERSION
-    minos 13.3
-      sdk 14.4
+    minos 14.6
+      sdk 15.4
 """
-        self.assertEqual(parse_build_versions(output), [(14, 0), (13, 3)])
+        self.assertEqual(parse_build_versions(output), [(15, 0), (14, 6)])
         with self.assertRaisesRegex(ValueError, "deployment target"):
-            parse_build_versions("minos 14.1\n")
+            parse_build_versions("minos 15.1\n")
 
     def test_rejects_toolchain_and_openblas_dependencies(self):
         with self.assertRaisesRegex(ValueError, "toolchain path"):

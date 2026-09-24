@@ -1,0 +1,88 @@
+#!/usr/bin/env python3
+# This file is part of the AENET package.
+#
+# Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# v. 2.0. If a copy of the MPL was not distributed with this file, You can
+# obtain one at http://mozilla.org/MPL/2.0/.
+
+import argparse
+import json
+from pathlib import Path
+import re
+import subprocess
+import sys
+import tarfile
+
+
+ROOT = Path(__file__).resolve().parent.parent
+PLATFORMS = ("linux-x86_64", "macos-arm64")
+
+
+def candidate_names(version):
+    names = set()
+    for platform in PLATFORMS:
+        archive = f"aenet-{version}-{platform}-gnu-serial.tar.gz"
+        names.update((archive, archive + ".sha256"))
+    return names
+
+
+def read_archive_metadata(archive):
+    root = archive.name[:-len(".tar.gz")]
+    with tarfile.open(archive, "r:gz") as source:
+        stream = source.extractfile(f"{root}/metadata.json")
+        if stream is None:
+            raise ValueError(f"metadata.json is missing from {archive.name}")
+        return json.loads(stream.read().decode("utf-8"))
+
+
+def verify(directory, source_revision, tag):
+    version = (ROOT / "src" / "VERSION").read_text(encoding="ascii").strip()
+    if re.fullmatch(r"[0-9a-f]{40}", source_revision) is None:
+        raise ValueError("source revision must be a full lowercase Git hash")
+    if tag and tag != f"v{version}":
+        raise ValueError(f"tag does not match AENET version {version}: {tag}")
+    expected = candidate_names(version)
+    actual = {path.name for path in directory.iterdir() if path.is_file()}
+    if actual != expected:
+        missing = sorted(expected - actual)
+        extra = sorted(actual - expected)
+        raise ValueError(
+            f"candidate files do not match; missing={missing}, extra={extra}"
+        )
+    for platform in PLATFORMS:
+        archive = directory / (
+            f"aenet-{version}-{platform}-gnu-serial.tar.gz"
+        )
+        subprocess.run([ROOT / "packaging" / "validate", archive], check=True)
+        metadata = read_archive_metadata(archive)
+        if metadata.get("source_revision") != source_revision:
+            raise ValueError(f"candidate source revision differs: {archive.name}")
+        if metadata.get("platform") != platform:
+            raise ValueError(f"candidate platform differs: {archive.name}")
+    return version
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Verify the paired Linux and macOS release candidates."
+    )
+    parser.add_argument("--directory", required=True, type=Path)
+    parser.add_argument("--source-revision", required=True)
+    parser.add_argument("--tag")
+    args = parser.parse_args()
+    try:
+        version = verify(args.directory.resolve(), args.source_revision,
+                         args.tag)
+    except (json.JSONDecodeError, KeyError, OSError,
+            subprocess.CalledProcessError, tarfile.TarError,
+            UnicodeError, ValueError) as error:
+        print(f"verify candidates: {error}", file=sys.stderr)
+        return 1
+    print(f"validated candidate set for {version} at {args.source_revision}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,133 @@
+name: Binary release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing annotated release tag (vMAJOR.MINOR.PATCH)
+        required: true
+        type: string
+      publish:
+        description: Publish the validated candidates as a GitHub release
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: binary-release-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    runs-on: ubuntu-22.04
+    outputs:
+      revision: ${{ steps.tag.outputs.revision }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          fetch-depth: 0
+      - id: tag
+        name: Verify annotated release tag
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          revision="$(packaging/verify_release_tag "$RELEASE_TAG")"
+          echo "revision=$revision" >> "$GITHUB_OUTPUT"
+      - name: Require an unpublished tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          status="$(curl --silent --show-error \
+            --output "$RUNNER_TEMP/release-response.json" \
+            --write-out '%{http_code}' \
+            --header 'Accept: application/vnd.github+json' \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG")"
+          test "$status" = 404 && exit 0
+          test "$status" = 200 && echo "GitHub release already exists for $RELEASE_TAG" >&2
+          test "$status" = 200 || echo "GitHub release lookup failed with HTTP $status" >&2
+          exit 1
+
+  candidates:
+    needs: preflight
+    uses: ./.github/workflows/binary-candidates.yml
+    with:
+      source_ref: ${{ needs.preflight.outputs.revision }}
+
+  prepublish:
+    needs: [preflight, candidates]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ needs.preflight.outputs.revision }}
+      - name: Download validated candidate set
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: aenet-binary-candidates
+          path: ${{ runner.temp }}/candidates
+      - name: Verify release candidates and tag
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          packaging/verify_candidates \
+            --directory "$RUNNER_TEMP/candidates" \
+            --source-revision "${{ needs.preflight.outputs.revision }}" \
+            --tag "$RELEASE_TAG"
+      - name: Recheck that the release does not exist
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          status="$(curl --silent --show-error \
+            --output "$RUNNER_TEMP/release-response.json" \
+            --write-out '%{http_code}' \
+            --header 'Accept: application/vnd.github+json' \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG")"
+          test "$status" = 404 && exit 0
+          test "$status" = 200 && echo "GitHub release already exists for $RELEASE_TAG" >&2
+          test "$status" = 200 || echo "GitHub release lookup failed with HTTP $status" >&2
+          exit 1
+
+  publish:
+    if: ${{ inputs.publish }}
+    needs: [preflight, prepublish]
+    runs-on: ubuntu-22.04
+    environment: release
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ needs.preflight.outputs.revision }}
+      - name: Download the validated candidate set
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: aenet-binary-candidates
+          path: ${{ runner.temp }}/candidates
+      - name: Verify the approved candidate set again
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          packaging/verify_candidates \
+            --directory "$RUNNER_TEMP/candidates" \
+            --source-revision "${{ needs.preflight.outputs.revision }}" \
+            --tag "$RELEASE_TAG"
+      - name: Publish release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          gh release create "$RELEASE_TAG" \
+            "$RUNNER_TEMP"/candidates/*.tar.gz \
+            "$RUNNER_TEMP"/candidates/*.sha256 \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            --generate-notes

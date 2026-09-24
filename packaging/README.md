@@ -73,6 +73,34 @@ with:
 python3 packaging/tests/test_archive.py
 ```
 
+## Automated candidates and releases
+
+The `Binary release candidates` GitHub Actions workflow builds the Linux and
+macOS archives from one resolved commit, runs the platform checks above, and
+retains each archive with its checksum. Its final job verifies that both
+archives have the same source revision before retaining the paired candidate
+set for 14 days. Pushes to `dev` and relevant pull requests run this workflow;
+it can also be dispatched manually for a branch, tag, or full commit.
+
+The `Binary release` workflow is a manual entry point for a prepared release.
+The supplied tag must already exist as an annotated `vMAJOR.MINOR.PATCH` tag,
+point to a commit whose `src/VERSION` has the same version, and have no existing
+GitHub release. The default `publish=false` mode performs the tag checks,
+native candidate builds, independent runtime validation, and final paired-set
+validation without creating a release.
+
+For publication, first use `src/prepare-release.sh` and the normal review
+process, then create and push the annotated tag. Dispatch `Binary release`
+from `master` with that tag and `publish=false` to inspect a complete dry run.
+When the same tag is ready for publication, dispatch it from `master` with
+`publish=true` and approve the `release` environment. Repository administrators
+must configure that GitHub environment with the intended required reviewers
+before the first release.
+Only the final publication job receives `contents: write`; it downloads and
+revalidates the paired artifacts produced earlier in the same run, then
+uploads both archives and both checksum sidecars. It does not rebuild them.
+Publication remains a separately authorized release action.
+
 ## Linux x86_64
 
 After `build` produces the Linux install tree, bundle the runtime libraries
@@ -130,7 +158,7 @@ point.
 ## macOS arm64
 
 The first macOS candidate uses GNU Fortran 14 and system Accelerate. The common
-build command sets `CMAKE_OSX_DEPLOYMENT_TARGET=14.0`; runtime preparation
+build command sets `CMAKE_OSX_DEPLOYMENT_TARGET=15.0`; runtime preparation
 rejects other GNU major versions:
 
 ```sh
@@ -144,7 +172,7 @@ support libraries. Accelerate, libSystem, and other `/System/Library` or
 `/usr/lib` dependencies remain operating-system dependencies. OpenBLAS and
 OpenMP runtimes are rejected. The command rewrites bundled dependencies to
 `@loader_path`, assigns relative dynamic-library IDs, verifies that every
-Mach-O object is arm64 with a deployment target no newer than macOS 14.0, and
+Mach-O object is arm64 with a deployment target no newer than macOS 15.0, and
 applies and verifies ad-hoc signatures after all load-command changes.
 
 Finalize the stage with the common command shown above, then use `package`.

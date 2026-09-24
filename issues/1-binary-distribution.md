@@ -32,7 +32,7 @@ shared children; investigations and release operations use local issues.
 | [2](../closed-issues/2-canonical-versioning.md) | Versioning and checks | Release contract |
 | [3](../closed-issues/3-installed-artifacts.md) | Stable installed names and layout | Release contract, 2 |
 | [7](../closed-issues/7-relocatable-packaging.md) | Reproducible archives and runtime validation | Release contract, 2, 3 |
-| [4](4-binary-release-automation.md) | CI orchestration and release-candidate artifacts | 7 |
+| [4](../closed-issues/4-binary-release-automation.md) | CI orchestration and release-candidate artifacts | 7 |
 | [8](8-binary-installation-docs.md) | Tested installation/troubleshooting guidance | 7 |
 
 [Issue 5](5-python-binary-integration.md) is a deferred follow-up, not a

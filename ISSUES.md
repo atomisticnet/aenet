@@ -8,13 +8,12 @@ Details live in issues/; completed issue files move to closed-issues/.
 | ID | Status | Issue |
 | --- | --- | --- |
 | 1 | Active | [Umbrella: first backend binary release](issues/1-binary-distribution.md) |
-| 4 | Pending | [Automate GNU serial binary releases](issues/4-binary-release-automation.md) |
 | 5 | Deferred | [Integrate binaries with aenet-python](issues/5-python-binary-integration.md) |
 | 8 | Pending | [Document binary installation](issues/8-binary-installation-docs.md) |
 
-Issue 1 is an umbrella only. Packaging issue 7 is complete; proceed with
-release automation in issue 4 and installation documentation in issue 8,
-followed by local release publication and verification.
+Issue 1 is an umbrella only. Packaging issue 7 and release-automation issue 4
+are complete; proceed with installation documentation in issue 8, followed by
+local release publication and verification.
 Issue 5 remains deferred and does not block the first-release milestone.
 
 Retired IDs: [6](closed-issues/6-platform-feasibility.md) and

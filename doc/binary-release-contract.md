@@ -68,13 +68,13 @@ state, atom-type conversion with known expected mapping, and finalization.
 - Require Ubuntu 22.04/glibc 2.35 or newer for the first Linux release. This
   is the demonstrated runtime baseline; do not claim generic Linux or
   older-glibc compatibility yet.
-- Require macOS 14 or newer on arm64 for the first macOS release and use GNU
-  14 to build it. The hosted
-  experiment ran on macOS 14.6 (Darwin 23.6), and predict reports minos 14.0
-  and SDK 14.0. This does not establish every macOS 14 patch level or every
-  bundled library deployment target; inspect the full closure and validate
-  the advertised minimum before release. Local GNU 14.2 artifacts with minos
-  16.0 are not the proposed release artifacts.
+- Require macOS 15 or newer on arm64 for the first macOS release and use GNU
+  14 to build it. Earlier hosted experiments demonstrated the application on
+  macOS 14, but the maintained macOS 15 runner's GNU runtime libraries require
+  a newer deployment target. The release contract therefore favors the
+  current toolchain's complete, validated runtime closure over an additional
+  pinned legacy runtime source. Inspect every bundled Mach-O object and reject
+  deployment targets newer than macOS 15.0.
 - Prefer Accelerate for the macOS candidate on the demonstrated correctness
   and packaging evidence: it removes the OpenBLAS/OpenMP runtime dependency.
   This is not a measured speedup recommendation. Keep OpenBLAS for Linux.
@@ -222,6 +222,29 @@ and macOS arm64 production validation is recorded in
 The completed notice and metadata contract passed for both native candidates
 from one revision in [paired run
 36027659670](https://github.com/atomisticnet/aenet/actions/runs/36027659670).
+Permanent candidate automation uses GitHub's native macOS 15 arm64 runner with
+GNU Fortran 14 and enforces a macOS 15.0 deployment target throughout the
+bundled Mach-O closure. The previous macOS 14 runs remain historical evidence
+and are not the support baseline for automated release candidates.
+The permanent read-only candidate workflow passed for both platforms in
+[run 36039685568](https://github.com/atomisticnet/aenet/actions/runs/36039685568).
+Its combined gate verified archive structure, checksums, metadata, notices,
+platform identities, and the shared source revision before retaining the
+paired candidate set for 14 days. No release was created.
+The manual release workflow accepts only an existing annotated version tag
+whose target contains a matching `src/VERSION`. Its default dry-run mode
+executes candidate generation and all prepublication checks. Publication is a
+separate input and job, requires approval through the GitHub `release`
+environment, and alone receives repository write permission. It downloads
+the validated paired candidate set from the same run and never rebuilds in
+the publication job.
+The complete nonpublishing path passed in [dry run
+36042038039](https://github.com/atomisticnet/aenet/actions/runs/36042038039):
+both native candidates, independent runtime checks, paired-set verification,
+and prepublication tag/release checks succeeded, while the publication job
+was skipped. An earlier unchanged Linux attempt failed
+`symmfunc:derivatives` while its other 30 CTest entries passed; the successful
+rerun passed all 31, so the intermittent test behavior is tracked separately.
 The maintained commands under `packaging/` now own build, runtime relocation,
 metadata/notices, deterministic archive creation, and extracted-archive
 validation. Issue 4 consumes these commands for CI orchestration; issue 8 owns

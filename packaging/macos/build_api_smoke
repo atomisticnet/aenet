@@ -27,7 +27,7 @@ def main():
     args.output.parent.mkdir(parents=True, exist_ok=True)
     command = [
         args.cc, "-std=c99", "-Wall", "-Wextra", "-Werror",
-        "-mmacosx-version-min=14.0", "-I", ROOT / "src",
+        "-mmacosx-version-min=15.0", "-I", ROOT / "src",
         ROOT / "packaging/tests/api_smoke.c", "-o", args.output,
     ]
     try:
