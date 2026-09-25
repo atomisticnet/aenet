@@ -1,10 +1,10 @@
 ---
-author: Nongnuch Artrith Nongnuch Artrith
+author: Nongnuch Artrith
 header-includes:
 -
 -
 -
-title: "**The Atomic Energy Network (ænet) (release 2.0.4)**"
+title: "**The Atomic Energy Network (ænet) (release 2.0.5)**"
 ---
 
 
@@ -28,7 +28,8 @@ dynamics or Monte-Carlo simulations.
 
 # License
 
-Copyright (C) 2012-2018 Nongnuch Artrith (nartrith@atomistic.net)
+Copyright (C) 2012-2026 The Aenet Developers. See `DEVELOPERS` for the
+developer list.
 
 The **aenet** source code is subject to the terms of the Mozilla Public
 License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -389,12 +390,12 @@ from the extracted directory.
 # Version queries and release versions
 
 `src/VERSION` is the canonical release version, in `MAJOR.MINOR.PATCH`
-form (currently `2.0.4`). Git release tags add a `v` prefix, for example
-`v2.0.4`. CMake reads this file and automatically reconfigures on
+form (currently `2.0.5`). Git release tags add a `v` prefix, for example
+`v2.0.5`. CMake reads this file and automatically reconfigures on
 changes.
 
 Each main executable accepts a standalone `--version` argument. For
-example, `train.x_serial --version` prints exactly `train.x 2.0.4`
+example, `train.x_serial --version` prints exactly `train.x 2.0.5`
 followed by a newline and exits successfully. The reported program name
 omits build suffixes. This query needs no input files and creates no
 application output files. MPI builds print once and finalize all ranks.

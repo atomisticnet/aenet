@@ -27,7 +27,7 @@ candidate identifies the code that produced it:
 
 ```sh
 packaging/finalize \
-  --stage /tmp/aenet-stage/aenet-2.0.4-macos-arm64-gnu-serial \
+  --stage /tmp/aenet-stage/aenet-2.0.5-macos-arm64-gnu-serial \
   --compiler /path/to/gfortran-14 \
   --source-revision "$(git rev-parse HEAD)"
 ```
@@ -43,7 +43,7 @@ inventory in `manifest.txt`, and SHA-256 sidecar:
 
 ```sh
 packaging/package \
-  --stage /tmp/aenet-stage/aenet-2.0.4-macos-arm64-gnu-serial \
+  --stage /tmp/aenet-stage/aenet-2.0.5-macos-arm64-gnu-serial \
   --output /tmp/aenet-dist \
   --epoch 1789920000
 ```
@@ -62,7 +62,7 @@ links, file modes, content hashes, and manifest:
 
 ```sh
 packaging/validate \
-  /tmp/aenet-dist/aenet-2.0.4-macos-arm64-gnu-serial.tar.gz
+  /tmp/aenet-dist/aenet-2.0.5-macos-arm64-gnu-serial.tar.gz
 ```
 
 Platform-specific dependency inspection and independent-runtime smoke tests
@@ -108,7 +108,7 @@ reported by the same GNU compiler and rewrite every ELF runtime search path:
 
 ```sh
 packaging/linux/prepare \
-  --stage /tmp/aenet-stage/aenet-2.0.4-linux-x86_64-gnu-serial \
+  --stage /tmp/aenet-stage/aenet-2.0.5-linux-x86_64-gnu-serial \
   --compiler /usr/bin/gfortran
 ```
 
@@ -121,7 +121,7 @@ version, then create the archive with the common `package` command:
 
 ```sh
 packaging/finalize \
-  --stage /tmp/aenet-stage/aenet-2.0.4-linux-x86_64-gnu-serial \
+  --stage /tmp/aenet-stage/aenet-2.0.5-linux-x86_64-gnu-serial \
   --compiler /usr/bin/gfortran \
   --source-revision "$(git rev-parse HEAD)" \
   --openblas-version "$(pkg-config --modversion openblas)"
@@ -143,7 +143,7 @@ and checks it in an Ubuntu 22.04 container:
 
 ```sh
 packaging/linux/validate_container \
-  /tmp/aenet-dist/aenet-2.0.4-linux-x86_64-gnu-serial.tar.gz \
+  /tmp/aenet-dist/aenet-2.0.5-linux-x86_64-gnu-serial.tar.gz \
   --api-smoke /tmp/aenet-validation/api-smoke
 ```
 
@@ -163,7 +163,7 @@ rejects other GNU major versions:
 
 ```sh
 packaging/macos/prepare \
-  --stage /tmp/aenet-stage/aenet-2.0.4-macos-arm64-gnu-serial \
+  --stage /tmp/aenet-stage/aenet-2.0.5-macos-arm64-gnu-serial \
   --compiler /path/to/gfortran-14
 ```
 
@@ -182,7 +182,7 @@ Build the separately mounted API test and validate the final archive with:
 packaging/macos/build_api_smoke \
   --output /tmp/aenet-validation/api-smoke
 packaging/macos/validate_archive \
-  /tmp/aenet-dist/aenet-2.0.4-macos-arm64-gnu-serial.tar.gz \
+  /tmp/aenet-dist/aenet-2.0.5-macos-arm64-gnu-serial.tar.gz \
   --api-smoke /tmp/aenet-validation/api-smoke
 ```
 

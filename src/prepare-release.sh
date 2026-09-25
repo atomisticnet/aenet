@@ -15,7 +15,8 @@ usage="
 
  The script does the following:
    1. Update the VERSION file.
-   2. Update the license header in every source file.
+   2. Update the common license header in every source file while preserving
+      contributor-specific copyright lines.
 "
 
 if [[ $# == 1 && ( "$1" == "-h" || "$1" == "--help" ) ]]; then
@@ -34,6 +35,7 @@ if [[ ! -f VERSION || ! -f license-header.txt ]]; then
     exit 1
 fi
 set -e
+shopt -s nullglob
 
 #-------------- make sure all required tools are present --------------#
 
@@ -61,40 +63,69 @@ echo "${version}" > ./VERSION
 
 #----------------------- update license headers -----------------------#
 
+format_header() {
+  local source_file="$1"
+  local comment_prefix="$2"
+  local contributor_lines
+
+  # The common header owns the joint-maintainer range. Per-file contributor
+  # notices are historical records and must pass through unchanged.
+  contributor_lines="$(sed -n 's/^[!#][+] //p' "$source_file" | \
+    grep '^Copyright (C)' | \
+    grep -v 'Nongnuch Artrith and Alexander Urban' || true)"
+
+  while IFS= read -r line
+  do
+    printf '%s\n' "$line"
+    if [[ "$line" == Copyright*"Nongnuch Artrith and Alexander Urban" ]]
+    then
+      if [[ -n "$contributor_lines" ]]
+      then
+        printf '%s\n' "$contributor_lines"
+      fi
+    fi
+  done < license-header.txt | fold -w 69 -s | awk -v prefix="$comment_prefix" '
+    {s=sprintf("%s %s", prefix, $0); sub(/ *$/, "", s); print s;}'
+}
+
 # Fortran files
-header="$(fold -w 69 -s license-header.txt | \
-  awk '{s=sprintf("!+ %s", $0); sub(/ *$/, "", s); printf("%s\\n", s);}')"
 for f in *.f90 *.F90 ./tests/*.f90 ./tools/*.f90 ./ext/*.f90
 do
+  format_header "$f" '!+' > "$f-header-tmp"
   awk '
+    NR == FNR { replacement = replacement $0 ORS; next }
     BEGIN { header = 0 }
     /^!\+/{
       if (header == 0) {
         header = 1;
-        printf("'"${header}"'");
+        printf("%s", replacement);
       };
       next
     }
     { print }
-  ' $f > $f-tmp && mv $f-tmp $f
+  ' "$f-header-tmp" "$f" > "$f-tmp"
+  mv "$f-tmp" "$f"
+  rm "$f-header-tmp"
 done
 
 # Makefiles
-header="$(fold -w 69 -s license-header.txt | \
-  awk '{s=sprintf("#+ %s", $0); sub(/ *$/, "", s); printf("%s\\n", s);}')"
 for f in Makefile $(find . -name "Makefile.inc") $(ls makefiles/Makefile.*)
 do
+  format_header "$f" '#+' > "$f-header-tmp"
   awk '
+    NR == FNR { replacement = replacement $0 ORS; next }
     BEGIN { header = 0 }
     /^#\+/{
       if (header == 0) {
         header = 1;
-        printf("'"${header}"'");
+        printf("%s", replacement);
       };
       next
     }
     { print }
-  ' $f > $f-tmp && mv $f-tmp $f
+  ' "$f-header-tmp" "$f" > "$f-tmp"
+  mv "$f-tmp" "$f"
+  rm "$f-header-tmp"
 done
 
 #----------------------------------------------------------------------#

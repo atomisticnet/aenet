@@ -1,4 +1,4 @@
-# This file is part of the AENET package.  Copyright (C) 2012-2019
+# This file is part of the AENET package.  Copyright (C) 2012-2026
 # Nongnuch Artrith and Alexander Urban  This Source Code Form is subject
 # to the terms of the Mozilla Public License, v. 2.0. If a copy of the
 # MPL was not distributed with this file, You can obtain one at
@@ -17,10 +17,16 @@
 file(MAKE_DIRECTORY "${WORK}")
 file(COPY "${SOURCE}/prepare-release.sh" "${SOURCE}/license-header.txt"
   DESTINATION "${WORK}")
-foreach(name sample.f90 sample.F90 tests/sample.f90 tools/sample.f90
+foreach(name sample.F90 tests/sample.f90 tools/sample.f90
     ext/sample.f90 Makefile Makefile.inc makefiles/Makefile.test)
   file(WRITE "${WORK}/${name}" "fixture\n")
 endforeach()
+file(WRITE "${WORK}/tests/sample.f90"
+  "!+ Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban\n"
+  "!+ Copyright (C) 2018 John Kitchin\n"
+  "!+ Copyright (C) 2025 Shusuke Kasamatsu\nprogram sample\n")
+file(WRITE "${WORK}/sample.F90"
+  "!+ Copyright (C) 2012-2019 Nongnuch Artrith and Alexander Urban\nprogram sample\n")
 file(WRITE "${WORK}/VERSION" "2.0.4\n")
 foreach(version v2.0.5 2.0 2.0.5-rc1 02.0.5 "2.0.5\n3.0.0")
   execute_process(COMMAND bash prepare-release.sh "${version}"
@@ -36,8 +42,18 @@ execute_process(COMMAND bash prepare-release.sh 2.0.5
   WORKING_DIRECTORY "${WORK}" RESULT_VARIABLE result
   OUTPUT_VARIABLE output ERROR_VARIABLE error)
 file(READ "${WORK}/VERSION" actual)
+file(READ "${WORK}/tests/sample.f90" developer_header)
+file(READ "${WORK}/sample.F90" founder_header)
 if(NOT result STREQUAL "0" OR NOT actual STREQUAL "2.0.5\n"
-    OR NOT output MATCHES "git tag -a v2.0.5")
+    OR NOT output MATCHES "git tag -a v2.0.5"
+    OR NOT developer_header MATCHES
+      "Copyright \\(C\\) 2012-2026 Nongnuch Artrith and Alexander Urban"
+    OR NOT developer_header MATCHES
+      "Copyright \\(C\\) 2018 John Kitchin"
+    OR NOT developer_header MATCHES
+      "Copyright \\(C\\) 2025 Shusuke Kasamatsu"
+    OR NOT founder_header MATCHES
+      "Copyright \\(C\\) 2012-2026 Nongnuch Artrith and Alexander Urban")
   message(FATAL_ERROR
     "Release preparation failed: ${result}; ${output}; ${error}")
 endif()

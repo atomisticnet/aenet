@@ -4,7 +4,7 @@ The Atomic Energy NETwork (**ænet**) package (http://ann.atomistic.net) is a co
 
 # License
 
-Copyright (C) 2012-2025 Nongnuch Artrith (nartrith@atomistic.net)
+Copyright (C) 2012-2026 The Aenet Developers. See [DEVELOPERS](DEVELOPERS).
 
 The **ænet** source code is subject to the terms of the Mozilla Public
 License, v. 2.0. If a copy of the MPL was not distributed with this
